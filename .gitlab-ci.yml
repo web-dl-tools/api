@@ -1,8 +1,5 @@
 image: docker:18.09.2-dind
 
-services:
-  - docker:dind
-
 before_script:
   - docker info
   - docker-compose version
