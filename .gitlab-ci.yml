@@ -1,6 +1,7 @@
 image: docker:18.09.2-dind
 
 before_script:
+  - pip install docker-compose
   - docker info
   - docker-compose version
 
