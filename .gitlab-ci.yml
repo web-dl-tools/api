@@ -10,7 +10,7 @@ before_script:
   - docker info
   - docker-compose version
 
-build image:
+build image(s):
   stage: build
   script:
     - docker-compose build
