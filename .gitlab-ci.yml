@@ -4,12 +4,13 @@ services:
   - docker:dind
 
 before_script:
-  - apk add --update py2-pip
+  - apk add --no-cache py2-pip
+  - pip install --no-cache-dir docker-compose==1.23.2
   - pip install docker-compose
   - docker info
   - docker-compose version
 
-build image(s):
+build image:
   stage: build
   script:
     - docker-compose build
