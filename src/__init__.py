@@ -1,0 +1,3 @@
+"""
+Src package root.
+"""

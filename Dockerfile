@@ -1,4 +1,6 @@
-FROM python:3.7.3-stretch
+FROM python:3.8.1-buster
+
+MAINTAINER rinesh.ramadhin@gmail.com
 
 ENV PYTHONUNBUFFERED 1
 
@@ -6,8 +8,13 @@ RUN mkdir /code
 
 WORKDIR /code
 
-COPY requirements.txt /code/
+COPY requirements.txt .
 
+RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
-COPY . /code/
+COPY . .
+
+ENTRYPOINT ["./service-check.sh", "./prepare.sh"]
+
+CMD ["python manage.py runserver 0.0.0.0:8000"]

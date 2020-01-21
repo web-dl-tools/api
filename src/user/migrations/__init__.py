@@ -1,0 +1,3 @@
+"""
+User migrations init.
+"""
