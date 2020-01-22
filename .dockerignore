@@ -3,5 +3,7 @@ docker-compose*
 .dockerignore
 .git
 .gitignore
+.idea
 .env
+.env.dist
 .postgres_data
