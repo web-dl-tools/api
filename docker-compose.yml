@@ -14,7 +14,12 @@ services:
       - .postgres_data:/var/lib/postgresql/data
 
   django: &base
-    build: .
+    build:
+      context: .
+      dockerfile: ./compose/django/Dockerfile
+      args:
+        - POSTGRES_USER=${POSTGRES_USER}
+        - POSTGRES_DB=${POSTGRES_DB}
     depends_on:
       - postgres
     environment:
