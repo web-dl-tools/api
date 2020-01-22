@@ -1,3 +1,3 @@
 """
-Handlers package init.
+Handlers package root.
 """
