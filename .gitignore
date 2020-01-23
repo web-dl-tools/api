@@ -2,3 +2,4 @@
 .env
 .postgres_data
 *.pyc
+.DS_Store
