@@ -20,11 +20,23 @@ class IdMixin(models.Model):
         abstract = True
 
 
-class TimestampMixin(models.Model):
+class CreatedAtMixin(models.Model):
     """
-    Timestamp mixin.
+    Created at mixin.
     """
     created_at = models.DateTimeField(_('created at'), auto_now_add=True)
+
+    class Meta:
+        """
+        Meta properties.
+        """
+        abstract = True
+
+
+class ModifiedAtMixin(models.Model):
+    """
+    Modified at mixin.
+    """
     modified_at = models.DateTimeField(_('modified at'), auto_now=True)
 
     class Meta:

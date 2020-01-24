@@ -28,18 +28,28 @@ class Handler(BaseHandler):
 
         :return: None
         """
+        super()._pre_process()
         self.options = {
             'format': self.request.format,
+            'logger': self.logger,
+            'progress_hooks': [self.progress_hook],
         }
-        super()._pre_process()
 
-    def _process(self) -> None:
+    def _download(self) -> None:
         """
         Process the request.
 
         :return: None
         """
+        super()._download()
         with youtube_dl.YoutubeDL(self.options) as ydl:
             ydl.download([self.request.url])
 
-        super().process()
+    def progress_hook(self, d: dict) -> None:
+        """
+        Progress hook for youtube-dl.
+
+        :param d: dict
+        :return: None
+        """
+        print(f'PROGRESS: {d}')

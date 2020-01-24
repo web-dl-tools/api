@@ -6,10 +6,11 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.conf import settings
 
-from src.db.models import IdMixin, TimestampMixin
+from src.db.models import IdMixin, CreatedAtMixin, ModifiedAtMixin
+from .exceptions import BaseRequestSetStatusException
 
 
-class BaseRequest(TimestampMixin, IdMixin, PolymorphicModel):
+class BaseRequest(ModifiedAtMixin, CreatedAtMixin, IdMixin, PolymorphicModel):
     """
     Concrete base request model.
     """
@@ -36,15 +37,42 @@ class BaseRequest(TimestampMixin, IdMixin, PolymorphicModel):
     class Meta:
         db_table = 'base_request'
 
-    def set_status(self, status: str):
+    def set_status(self, status: str) -> None:
         """
         Set the status.
 
         :param status: str
         :return: None
         """
-        self.status = status
-        self.save(update_fields=['status'])
+        if status == self.status:
+            return
+        elif self.status == self.STATUS_COMPLETED:
+            raise BaseRequestSetStatusException(f"Request has already completed.")
+        elif (status == self.STATUS_FAILED) or \
+             (self.status == self.STATUS_FAILED and status == self.STATUS_PENDING) or \
+             (self.status == self.STATUS_PENDING and status == self.STATUS_PRE_PROCESSING) or \
+             (self.status == self.STATUS_PRE_PROCESSING and status == self.STATUS_DOWNLOADING) or \
+             (self.status == self.STATUS_DOWNLOADING and status == self.STATUS_POST_PROCESSING) or \
+             (self.status == self.STATUS_POST_PROCESSING and status == self.STATUS_COMPLETED):
+            self.status = status
+            self.save(update_fields=['status'])
+        elif status in (s[0] for s in self.STATUSES):
+            raise BaseRequestSetStatusException(
+                f"Status state change to {status} is nog possible from current status state {self.state}.")
+        else:
+            raise BaseRequestSetStatusException(f"Status {status} is not supported.")
+
+    @property
+    def type(self) -> str:
+        """
+        Get the handler type.
+
+        :return: str
+        """
+        try:
+            return self.get_name()
+        except NotImplementedError:
+            return ''
 
     def get_handler(self) -> 'src.download.handlers.BaseHandler':
         """
