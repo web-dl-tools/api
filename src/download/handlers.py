@@ -2,6 +2,7 @@
 Download handlers.
 """
 from .models import BaseRequest
+from .loggers import BaseLogger
 
 
 class BaseHandler(object):
@@ -9,6 +10,7 @@ class BaseHandler(object):
     Abstract base handler.
     """
     request = None
+    logger = None
 
     @staticmethod
     def handles(url: str) -> bool:
@@ -27,6 +29,7 @@ class BaseHandler(object):
         :param request: BaseRequest
         """
         self.request = request
+        self.logger = BaseLogger(self.request, f'{self.request.get_name()}.{self.request.id}')
 
         super().__init__()
 
@@ -38,13 +41,13 @@ class BaseHandler(object):
         """
         try:
             self._pre_process()
-            self._process()
+            self._download()
             self._post_process()
             self._complete()
             return True
         except Exception as e:
             self._reset()
-            print(e)
+            print(f'Exception: {str(e)}')
             return False
 
     def _pre_process(self) -> None:
@@ -55,9 +58,9 @@ class BaseHandler(object):
         """
         self.request.set_status(BaseRequest.STATUS_PRE_PROCESSING)
 
-    def _process(self) -> None:
+    def _download(self) -> None:
         """
-        Process the request.
+        Download the request.
 
         :return: None
         """

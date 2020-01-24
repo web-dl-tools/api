@@ -20,6 +20,7 @@ services:
       args:
         - POSTGRES_USER=${POSTGRES_USER}
         - POSTGRES_DB=${POSTGRES_DB}
+    command: python manage.py runserver 0.0.0.0:8000
     depends_on:
       - postgres
     environment:
