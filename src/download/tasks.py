@@ -1,3 +1,6 @@
+"""
+Download tasks.
+"""
 import uuid
 
 from .models import BaseRequest
