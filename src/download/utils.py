@@ -1,6 +1,3 @@
 """
-Download utils.
+Download tasks.
 """
-
-
-handlers = ()
