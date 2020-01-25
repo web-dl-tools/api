@@ -6,7 +6,7 @@ import youtube_dl
 from src.download.handlers import BaseHandler
 
 
-class Handler(BaseHandler):
+class AudioVisualHandler(BaseHandler):
     """
     Audio visual handler.
     """

@@ -35,6 +35,9 @@ class BaseRequest(ModifiedAtMixin, CreatedAtMixin, IdMixin, PolymorphicModel):
     url = models.URLField(_('url'))
 
     class Meta:
+        """
+        Model metadata.
+        """
         db_table = 'base_request'
 
     def set_status(self, status: str) -> None:
