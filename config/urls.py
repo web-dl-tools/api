@@ -19,10 +19,12 @@ from rest_framework.routers import DefaultRouter
 
 from src.user import urls as user_urls
 from src.user.views import UserViewSet
+from src.download.views import RequestViewSet
 
 router = DefaultRouter()
 
 router.register('user', UserViewSet)
+router.register('requests', RequestViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),

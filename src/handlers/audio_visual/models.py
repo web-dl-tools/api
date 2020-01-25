@@ -4,12 +4,12 @@ Audio visual handler models.
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
-from .handlers import Handler
+from .handlers import AudioVisualHandler
 from src.download.models import BaseRequest
 from src.download.handlers import BaseHandler
 
 
-class Request(BaseRequest):
+class AudioVisualRequest(BaseRequest):
     """
     Audio visual handler request model.
     """
@@ -22,6 +22,13 @@ class Request(BaseRequest):
     )
 
     format = models.CharField(_('format'), max_length=15, choices=FORMATS, default=FORMAT_BEST_VIDEO)
+    randd = models.CharField(_('randdd'), max_length=200)
+
+    class Meta:
+        """
+        Model metadata.
+        """
+        db_table = 'audio_visual_request'
 
     def get_handler(self) -> BaseHandler:
         """
@@ -29,7 +36,7 @@ class Request(BaseRequest):
 
         :return: BaseHandler
         """
-        return Handler(self)
+        return AudioVisualHandler(self)
 
     def get_name(self) -> str:
         """
