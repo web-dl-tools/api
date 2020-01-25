@@ -2,11 +2,8 @@
 User urls.
 """
 from django.urls import path
-
-from .views import GetCurrentUserView, AuthenticateView
-
+from rest_framework.authtoken.views import ObtainAuthToken
 
 urlpatterns = [
-    path('authenticate', AuthenticateView.as_view()),
-    path('me', GetCurrentUserView.as_view()),
+    path('authenticate/', ObtainAuthToken.as_view()),
 ]
