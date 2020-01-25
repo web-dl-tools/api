@@ -55,7 +55,7 @@ LOCAL_APPS = [
     'src.db',
     'src.user',
     'src.download',
-    'src.handlers.youtube_dl',
+    'src.handlers.audio_visual',
 ]
 
 INSTALLED_APPS = PRE_DJANGO_APPS + DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS

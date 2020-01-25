@@ -1,5 +1,5 @@
 """
-Youtube-dl handlers.
+Audio visual handlers.
 """
 import youtube_dl
 
@@ -8,7 +8,7 @@ from src.download.handlers import BaseHandler
 
 class Handler(BaseHandler):
     """
-    Youtube-dl handler.
+    Audio visual handler.
     """
     options = None
 
