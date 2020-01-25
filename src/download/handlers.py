@@ -5,6 +5,48 @@ from .models import BaseRequest
 from .loggers import BaseLogger
 
 
+class BaseHandlerStatus(object):
+    """
+    Base handler status.
+    """
+    handler = None
+    supported = False
+    options = {}
+
+    def __init__(self, handler: str) -> None:
+        """
+        Initialize the handler status.
+        """
+        self.handler = handler
+        super().__init__()
+
+    def set_supported(self, supported: bool) -> None:
+        """
+        Set supported status.
+
+        :param supported: bool
+        :return: None
+        """
+        self.supported = supported
+
+    def set_options(self, options: dict) -> None:
+        """
+        Set options.
+
+        :param options: dict
+        :return: None
+        """
+        self.options = options
+
+    def get_status(self) -> dict:
+        """
+        get handler status.
+
+        :return: dict
+        """
+        return {'handler': self.handler, 'supported': self.supported, 'options': self.options}
+
+
 class BaseHandler(object):
     """
     Abstract base handler.
@@ -13,7 +55,7 @@ class BaseHandler(object):
     logger = None
 
     @staticmethod
-    def handles(url: str) -> bool:
+    def handles(url: str) -> BaseHandlerStatus:
         """
         Notify if the given url can be handled by the handler.
 

@@ -15,7 +15,7 @@ class AudioVisualRequestSerializer(serializers.ModelSerializer):
         Serializer metadata.
         """
         model = AudioVisualRequest
-        fields = ('id', 'user', 'status', 'url', 'format', 'randd')
+        fields = ('id', 'user', 'status', 'url', 'format_selection')
         read_only_fields = ('id', 'status')
         extra_kwargs = {
             'user': {
