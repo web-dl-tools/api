@@ -19,8 +19,5 @@ def handle_request(sender, instance, created, **kwargs) -> None:
     :param kwargs: *
     :return: None
     """
-    print(sender)
-    print(instance)
-    print(created)
     if isinstance(instance, BaseRequest) and created:
-        handle_request_task(instance.id)
+        handle_request_task.delay(instance.id)

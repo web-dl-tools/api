@@ -30,6 +30,7 @@ class Handler(BaseHandler):
         """
         super()._pre_process()
         self.options = {
+            'outtmpl': f'{self.request.path}/%(title)s.%(ext)s',
             'format': self.request.format,
             'logger': self.logger,
             'progress_hooks': [self.progress_hook],

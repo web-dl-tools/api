@@ -72,7 +72,16 @@ class BaseRequest(ModifiedAtMixin, CreatedAtMixin, IdMixin, PolymorphicModel):
         try:
             return self.get_name()
         except NotImplementedError:
-            return ''
+            return 'base'
+
+    @property
+    def path(self) -> str:
+        """
+        Get the associated folder path.
+
+        :return: str
+        """
+        return f'files/{self.user.id}/{self.id}'
 
     def get_handler(self) -> 'src.download.handlers.BaseHandler':
         """
@@ -89,3 +98,32 @@ class BaseRequest(ModifiedAtMixin, CreatedAtMixin, IdMixin, PolymorphicModel):
         :return: str
         """
         raise NotImplementedError('Child request must implement get_name() function.')
+
+
+class Log(CreatedAtMixin, IdMixin):
+    """
+    Request log model.
+    """
+    LEVEL_CRITICAL = 50
+    LEVEL_FATAL = LEVEL_CRITICAL
+    LEVEL_ERROR = 40
+    LEVEL_WARNING = 30
+    LEVEL_WARN = LEVEL_WARNING
+    LEVEL_INFO = 20
+    LEVEL_DEBUG = 10
+    LEVEL_NOTSET = 0
+
+    LEVELS = (
+        (LEVEL_CRITICAL, 'Critical'),
+        (LEVEL_FATAL, 'Fatal'),
+        (LEVEL_ERROR, 'Error'),
+        (LEVEL_WARNING, 'Warning'),
+        (LEVEL_WARN, 'Warn'),
+        (LEVEL_INFO, 'Info'),
+        (LEVEL_DEBUG, 'Debug'),
+        (LEVEL_NOTSET, ''),
+    )
+
+    request = models.ForeignKey(BaseRequest, verbose_name=_('request'), on_delete=models.CASCADE)
+    level = models.IntegerField(_('level'), choices=LEVELS, default=LEVEL_NOTSET)
+    message = models.TextField(_('message'), blank=False)

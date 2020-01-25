@@ -23,4 +23,4 @@ RUN pip install -r requirements.txt
 
 COPY . .
 
-ENTRYPOINT ["./compose/services-check.sh", "./compose/django/prepare.sh"]
+ENTRYPOINT ["./compose/services-check.sh"]

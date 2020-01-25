@@ -6,6 +6,6 @@ from django.apps import AppConfig
 
 class UserConfig(AppConfig):
     """
-    User Django app.
+    User app config.
     """
     name = 'src.user'

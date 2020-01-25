@@ -3,7 +3,7 @@ Download loggers
 """
 import logging
 
-from .models import BaseRequest
+from .models import BaseRequest, Log
 
 
 class BaseLogger(logging.Logger):
@@ -24,22 +24,22 @@ class BaseLogger(logging.Logger):
 
         super().__init__(name, level)
 
-    def debug(self, msg, *args, **kwargs):
-        print(f'DEBUG: {msg}')
-        super().debug(msg, *args, **kwargs)
+    def makeRecord(self, name, level, fn, lno, msg, args, exc_info, func=None, extra=None, sinfo=None):
+        """
+        Intercept the Logger's LogRecord creation call and create a Download Log entity.
 
-    def info(self, msg, *args, **kwargs):
-        print(f'INFO: {msg}')
-        super().info(msg, *args, **kwargs)
-
-    def warning(self, msg, *args, **kwargs):
-        print(f'WARN: {msg}')
-        super().warning(msg, *args, **kwargs)
-
-    def error(self, msg, *args, **kwargs):
-        print(f'ERR: {msg}')
-        super().error(msg, *args, **kwargs)
-
-    def critical(self, msg, *args, **kwargs):
-        print(f'CRIT: {msg}')
-        super().critical(msg, *args, **kwargs)
+        :param name: *
+        :param level: int
+        :param fn: *
+        :param lno: *
+        :param msg: str
+        :param args: *
+        :param exc_info: *
+        :param func: *
+        :param extra: *
+        :param sinfo: *
+        :return: *
+        """
+        if msg:
+            Log.objects.create(request=self.request, level=level, message=msg.strip())
+        return super().makeRecord(name, level, fn, lno, msg, args, exc_info, func, extra, sinfo)
