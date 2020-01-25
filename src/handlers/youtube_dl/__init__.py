@@ -1,3 +1,0 @@
-"""
-Youtube-dl package root.
-"""

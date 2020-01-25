@@ -1,5 +1,5 @@
 """
-Youtube-dl models.
+Audio visual handler models.
 """
 from django.db import models
 from django.utils.translation import gettext_lazy as _
@@ -11,7 +11,7 @@ from src.download.handlers import BaseHandler
 
 class Request(BaseRequest):
     """
-    Youtube-dl request model.
+    Audio visual handler request model.
     """
     FORMAT_BEST_VIDEO = 'bestvideo'
     FORMAT_BEST_AUDIO = 'bestaudio'
@@ -37,4 +37,4 @@ class Request(BaseRequest):
 
         :return: str
         """
-        return 'youtube-dl'
+        return 'audio_visual'
