@@ -1,2 +1,0 @@
-- fix options in request child models
-- add put /request/id/retry endpoint
