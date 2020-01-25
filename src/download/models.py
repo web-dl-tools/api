@@ -1,6 +1,7 @@
 """
 Download models.
 """
+from typing import Type
 from polymorphic.models import PolymorphicModel
 from django.db import models
 from django.utils.translation import gettext_lazy as _
@@ -92,6 +93,10 @@ class BaseRequest(ModifiedAtMixin, CreatedAtMixin, IdMixin, PolymorphicModel):
 
         :return: BaseHandler
         """
+        return self.get_handler_object()(self)
+
+    @staticmethod
+    def get_handler_object() -> 'Type[src.download.handlers.BaseHandler]':
         raise NotImplementedError('Child request must implement get_handler() function.')
 
     def get_name(self) -> str:

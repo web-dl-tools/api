@@ -40,6 +40,15 @@ services:
     image: redis:5.0.7-alpine
     restart: always
 
+  flower:
+    image: mher/flower
+    command: flower --port=5555 --broker=redis://redis:6379//
+    depends_on:
+      - redis
+    restart: always
+    ports:
+      - 5555:5555
+
   celery:
     build:
       context: .

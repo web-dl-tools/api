@@ -1,6 +1,8 @@
 """
 Download views.
 """
+import re
+
 from django.db.models import QuerySet
 from rest_framework import viewsets, mixins
 from rest_framework.response import Response
@@ -10,6 +12,7 @@ from rest_framework.authentication import TokenAuthentication
 
 from .models import BaseRequest
 from .serializers import PolymorphicRequestSerializer, LogSerializer
+from .tasks import handle_request, get_handlers
 
 
 class RequestViewSet(mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.ListModelMixin,
@@ -29,6 +32,20 @@ class RequestViewSet(mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.
         :return: QuerySet
         """
         return super().get_queryset().filter(user=self.request.user)
+
+    @action(detail=False)
+    def handlers(self, request, *args, **kwargs):
+        """
+        Traverse all handlers to retrieve handler options and support status.
+
+        :param request: *
+        :param args: *
+        :param kwargs: *
+        :return: Response
+        """
+        url = self.request.query_params.get('url')
+        regexp = re.compile(r'[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)')
+        return Response(status=200, data=get_handlers(url)) if url and regexp.search(url) else Response(status=400)
 
     def create(self, request, *args, **kwargs):
         """
@@ -53,3 +70,21 @@ class RequestViewSet(mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.
         """
         request = self.get_object()
         return Response(LogSerializer(request.log_set, many=True).data)
+
+    @action(detail=True, methods=['PUT'])
+    def retry(self, request, pk=None) -> Response:
+        """
+        Retry a failed request.
+
+        :param request: *
+        :param pk: str
+        :return: Response
+        """
+        request = self.get_object()
+        serializer = self.get_serializer(request)
+        if request.status != BaseRequest.STATUS_FAILED:
+            return Response(status=400)
+        else:
+            request.set_status(BaseRequest.STATUS_PENDING)
+            handle_request.delay(request.id)
+            return Response(serializer.data)
