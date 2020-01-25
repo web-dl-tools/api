@@ -20,9 +20,10 @@ services:
       args:
         - POSTGRES_USER=${POSTGRES_USER}
         - POSTGRES_DB=${POSTGRES_DB}
-    command: python manage.py runserver 0.0.0.0:8000
+    command: compose/django/start.sh
     depends_on:
       - postgres
+      - celery
     environment:
       - DJANGO_DEBUG=${DJANGO_DEBUG}
       - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
@@ -31,6 +32,31 @@ services:
       - POSTGRES_DB=${POSTGRES_DB}
     ports:
       - 8000:8000
+    restart: always
+    volumes:
+      - .:/code
+
+  redis:
+    image: redis:5.0.7-alpine
+    restart: always
+
+  celery:
+    build:
+      context: .
+      dockerfile: ./compose/django/Dockerfile
+      args:
+        - POSTGRES_USER=${POSTGRES_USER}
+        - POSTGRES_DB=${POSTGRES_DB}
+    command: celery worker -A config.celery --concurrency=1
+    depends_on:
+      - redis
+      - postgres
+    environment:
+      - DJANGO_DEBUG=${DJANGO_DEBUG}
+      - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
     restart: always
     volumes:
       - .:/code

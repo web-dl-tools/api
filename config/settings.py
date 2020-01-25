@@ -72,7 +72,7 @@ MIDDLEWARE = [
 ]
 
 
-# config
+# Config
 
 ROOT_URLCONF = 'config.urls'
 
@@ -159,3 +159,24 @@ STATIC_URL = '/static/'
 # Cross-Origin Resource Sharing (CORS)
 # https://github.com/adamchainz/django-cors-headers
 CORS_ORIGIN_WHITELIST = os.getenv('CORS_ORIGIN_WHITELIST', [])
+
+
+# Redis
+BROKER_URL = "redis://redis"
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "redis.RedisChannelLayer",
+        "ROUTING": "config.routing.channel_routing",
+        "CONFIG": {
+            "hosts": [(BROKER_URL, 6379)],
+        },
+    },
+}
+
+
+# Celery
+CELERY_RESULT_BACKEND = 'redis://redis:6379'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'Europe/Amsterdam'

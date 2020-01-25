@@ -3,9 +3,11 @@ Download tasks.
 """
 import uuid
 
+from config.celery import app
 from .models import BaseRequest
 
 
+@app.task
 def handle_request(request_id: uuid) -> None:
     """
     Handle the request.

@@ -1,5 +1,7 @@
 .idea
-.env
-.postgres_data
 *.pyc
 .DS_Store
+
+.env
+.postgres_data
+files
