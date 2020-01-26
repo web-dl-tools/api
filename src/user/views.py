@@ -1,5 +1,7 @@
 """
 User views.
+
+This file contains a viewset for the custom User model object and associated Serializer.
 """
 from rest_framework import viewsets, mixins
 from rest_framework.decorators import action
@@ -23,6 +25,10 @@ class UserViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
     def get_permissions(self) -> list:
         """
         Instantiates and returns the list of permissions that the given requires.
+        This allows us to use the create method without any authentication while
+        enforcing authentication for the other endpoints in the viewset.
+
+        :return: a list containing permission class objects for a given action.
         """
         if self.action == 'create':
             permission_classes = []
@@ -34,7 +40,7 @@ class UserViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
     @action(detail=False)
     def me(self, request, *args, **kwargs):
         """
-        Get current authenticated user.
+        Get the currently authenticated user.
 
         :param request: *
         :param args: *

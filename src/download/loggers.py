@@ -1,5 +1,7 @@
 """
-Download loggers
+Download loggers.
+
+This file contains a custom Logger object for use by BaseHandler objects.
 """
 import logging
 
@@ -8,7 +10,7 @@ from .models import BaseRequest, Log
 
 class BaseLogger(logging.Logger):
     """
-    Base logger.
+    a Base logger object which intercepts Logger calls.
     """
     request = None
 
@@ -16,9 +18,9 @@ class BaseLogger(logging.Logger):
         """
         Initialize the logger.
 
-        :param request: BaseRequest
-        :param name: str
-        :param level: int
+        :param request: a BaseRequest for setting a relationship when creating a Download Log object.
+        :param name: a str for naming the Logger.
+        :param level: a int for the minimum Logger level.
         """
         self.request = request
 

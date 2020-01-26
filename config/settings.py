@@ -31,10 +31,10 @@ ALLOWED_HOSTS = ['*']
 AUTH_USER_MODEL = 'user.User'
 
 
-# Application definition
-
+# Third party apps that must initialize before Django apps.
 PRE_DJANGO_APPS = []
 
+# Django apps and third party apps that must initialize in between.
 DJANGO_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -45,12 +45,14 @@ DJANGO_APPS = [
     'django.contrib.staticfiles',
 ]
 
+# Third party apps that can run after Django app initialization.
 THIRD_PARTY_APPS = [
     'corsheaders',
     'rest_framework',
     'rest_framework.authtoken'
 ]
 
+# Locally installed apps.
 LOCAL_APPS = [
     'src.db',
     'src.user',
@@ -58,8 +60,11 @@ LOCAL_APPS = [
     'src.handlers.audio_visual',
 ]
 
+# Application definition
 INSTALLED_APPS = PRE_DJANGO_APPS + DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
+# Django middleware
+# See https://docs.djangoproject.com/en/3.0/ref/middleware/
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -72,13 +77,11 @@ MIDDLEWARE = [
 ]
 
 
-# Config
-
+# URL root config file
 ROOT_URLCONF = 'config.urls'
 
 
 # Templates
-
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -97,13 +100,11 @@ TEMPLATES = [
 
 
 # WSGI
-
 WSGI_APPLICATION = 'config.wsgi.application'
 
 
 # Database
-# https://docs.djangoproject.com/en/3.0/ref/settings/#databases
-
+# See https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -118,8 +119,7 @@ DATABASES = {
 
 
 # Password validation
-# https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
-
+# See https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -137,16 +137,11 @@ AUTH_PASSWORD_VALIDATORS = [
 
 
 # Internationalization
-# https://docs.djangoproject.com/en/3.0/topics/i18n/
-
+# See https://docs.djangoproject.com/en/3.0/topics/i18n/
 LANGUAGE_CODE = 'en-us'
-
 TIME_ZONE = 'Europe/Amsterdam'
-
 USE_I18N = True
-
 USE_L10N = True
-
 USE_TZ = True
 
 
@@ -161,7 +156,7 @@ STATIC_URL = '/static/'
 CORS_ORIGIN_WHITELIST = os.getenv('CORS_ORIGIN_WHITELIST', [])
 
 
-# Redis
+# Redis configuration
 BROKER_URL = "redis://redis"
 CHANNEL_LAYERS = {
     "default": {
@@ -175,6 +170,8 @@ CHANNEL_LAYERS = {
 
 
 # Celery
+# All prefixed with 'CELERY_' are automatically loaded as Celery config values.
+# See https://docs.celeryproject.org/en/stable/userguide/configuration.html
 CELERY_RESULT_BACKEND = 'redis://redis:6379'
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'

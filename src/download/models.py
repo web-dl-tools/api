@@ -1,5 +1,7 @@
 """
 Download models.
+
+This file contains the model object definitions for the polymorphic BaseRequest and custom Log object.
 """
 from typing import Type
 from polymorphic.models import PolymorphicModel
@@ -13,7 +15,8 @@ from .exceptions import BaseRequestSetStatusException
 
 class BaseRequest(ModifiedAtMixin, CreatedAtMixin, IdMixin, PolymorphicModel):
     """
-    Concrete base request model.
+    A concrete polymorphic base request model which can be implemented to extend it with custom handler specific fields.
+    Due to the polymorphic nature of this model a relationship is automatically added between the parent-child models.
     """
     STATUS_PENDING = 'pending'
     STATUS_PRE_PROCESSING = 'pre_processing'
@@ -38,14 +41,15 @@ class BaseRequest(ModifiedAtMixin, CreatedAtMixin, IdMixin, PolymorphicModel):
     class Meta:
         """
         Model metadata.
+        See https://docs.djangoproject.com/en/3.0/ref/models/options/
         """
         db_table = 'base_request'
 
     def set_status(self, status: str) -> None:
         """
-        Set the status.
+        Set the status of the request after validating the given status and status change from the current status.
 
-        :param status: str
+        :param status: a str containing a (hopefully) valid status.
         :return: None
         """
         if status == self.status:
@@ -67,29 +71,17 @@ class BaseRequest(ModifiedAtMixin, CreatedAtMixin, IdMixin, PolymorphicModel):
             raise BaseRequestSetStatusException(f"Status {status} is not supported.")
 
     @property
-    def type(self) -> str:
-        """
-        Get the handler type.
-
-        :return: str
-        """
-        try:
-            return self.get_name()
-        except NotImplementedError:
-            return 'base'
-
-    @property
     def path(self) -> str:
         """
-        Get the associated folder path.
+        Get the associated relative folder path for storing files when handling the request.
 
-        :return: str
+        :return: a str containing a relative custom file path for the current request.
         """
         return f'files/{self.user.id}/{self.id}'
 
     def get_handler(self) -> 'src.download.handlers.BaseHandler':
         """
-        Get the handler for the request.
+        Initialize the associated handler with the current request and return it.
 
         :return: BaseHandler
         """
@@ -97,20 +89,18 @@ class BaseRequest(ModifiedAtMixin, CreatedAtMixin, IdMixin, PolymorphicModel):
 
     @staticmethod
     def get_handler_object() -> 'Type[src.download.handlers.BaseHandler]':
+        """
+        Return the type of the associated handler. This method is called when retrieving
+        the type of the associated handler object in order to perform a static function call.
+
+        :return: a Type[BaseHandler] of the BaseHandler object.
+        """
         raise NotImplementedError('Child request must implement get_handler() function.')
-
-    def get_name(self) -> str:
-        """
-        Get the handler verbose/url name.
-
-        :return: str
-        """
-        raise NotImplementedError('Child request must implement get_name() function.')
 
 
 class Log(CreatedAtMixin, IdMixin):
     """
-    Request log model.
+    A request log model object for storing logging data from the associated BaseHandler when handling the request.
     """
     LEVEL_CRITICAL = 50
     LEVEL_FATAL = LEVEL_CRITICAL

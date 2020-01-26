@@ -1,5 +1,7 @@
 """
 Audio visual handlers.
+
+This file contains the BaseHandler implementation of the audio visual handler.
 """
 import youtube_dl
 
@@ -8,17 +10,17 @@ from src.download.handlers import BaseHandler, BaseHandlerStatus
 
 class AudioVisualHandler(BaseHandler):
     """
-    Audio visual handler.
+    a Audio visual handler which implements the BaseHandler object.
     """
     options = None
 
     @staticmethod
     def handles(url: str) -> BaseHandlerStatus:
         """
-        Notify if the given url can be handler by the handler.
+        Notify the status of a handler for a given url.
 
-        :param url: str
-        :return: bool
+        :param url: a str containing a valid url.
+        :return: a BaseHandlerStatus object containing the status for the linked handler.
         """
         from .models import AudioVisualRequest
 
@@ -38,7 +40,8 @@ class AudioVisualHandler(BaseHandler):
 
     def _pre_process(self) -> None:
         """
-        Pre process the request.
+        An extension of the _pre_process method which configures the options
+        for use when downloading the request.
 
         :return: None
         """
@@ -58,7 +61,8 @@ class AudioVisualHandler(BaseHandler):
 
     def _download(self) -> None:
         """
-        Process the request.
+        An extension of the _download method which
+        download the audio visual request using youtube-dl.
 
         :return: None
         """
@@ -68,7 +72,7 @@ class AudioVisualHandler(BaseHandler):
 
     def progress_hook(self, d: dict) -> None:
         """
-        Progress hook for youtube-dl.
+        a Progress hook function for youtube-dl which log's the progress to stdout.
 
         :param d: dict
         :return: None
