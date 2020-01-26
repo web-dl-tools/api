@@ -1,8 +1,9 @@
 """
 Download serializers.
 
-This file contains serializer definitions for the BaseRequest, Log as well as a PolymorphicRequestSerializer.
-This file also acts as a registration of handler Request and Serializer bindings.
+This file contains serializer definitions for the BaseRequest and Log
+as well as a PolymorphicRequestSerializer.
+This file also acts as a registration of handler Request models and Serializer object bindings.
 """
 from rest_framework import serializers
 from rest_polymorphic.serializers import PolymorphicSerializer
@@ -15,7 +16,7 @@ from src.handlers.audio_visual.serializers import AudioVisualRequestSerializer
 
 class BaseRequestSerializer(serializers.ModelSerializer):
     """
-    a Base request serializer for the BaseRequest model object.
+    A base request serializer for the BaseRequest model object.
     """
     class Meta:
         """
@@ -34,8 +35,10 @@ class BaseRequestSerializer(serializers.ModelSerializer):
 
 class PolymorphicRequestSerializer(PolymorphicSerializer):
     """
-    a Polymorphic request serializer contains all sub handlers als well as the parent BaseRequest and their serializers.
-    This serializer object also acts as a registration of custom handler Requests and Serializers and their bindings.
+    A polymorphic request serializer containing all sub handlers
+    as well as the parent BaseRequest and their serializers.
+    This serializer object also acts as a registration definition
+    of custom handler Requests models and Serializers objects and their bindings.
     """
     resource_type_field_name = 'request_type'
     model_serializer_mapping = {
@@ -46,7 +49,7 @@ class PolymorphicRequestSerializer(PolymorphicSerializer):
 
 class LogSerializer(serializers.ModelSerializer):
     """
-    a Log serializer for the Log model object.
+    A log serializer for the Log model object.
     """
     class Meta:
         """

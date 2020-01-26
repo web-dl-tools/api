@@ -8,7 +8,7 @@ for more precise handling when errors occur.
 
 class BaseRequestModelException(Exception):
     """
-    a base exception related to the base request model.
+    A base exception related to the base request model.
     This must only be used as a parent exception.
     """
     pass
@@ -16,5 +16,5 @@ class BaseRequestModelException(Exception):
 
 class BaseRequestSetStatusException(BaseRequestModelException):
     """
-    an exception related to incorrectly setting the status of the base request model.
+    An exception related to incorrectly setting the status of the base request model.
     """

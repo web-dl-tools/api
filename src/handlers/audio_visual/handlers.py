@@ -10,7 +10,7 @@ from src.download.handlers import BaseHandler, BaseHandlerStatus
 
 class AudioVisualHandler(BaseHandler):
     """
-    a Audio visual handler which implements the BaseHandler object.
+    A audio visual handler which implements the BaseHandler object.
     """
     options = None
 
@@ -72,7 +72,7 @@ class AudioVisualHandler(BaseHandler):
 
     def progress_hook(self, d: dict) -> None:
         """
-        a Progress hook function for youtube-dl which log's the progress to stdout.
+        A progress hook function for youtube-dl which log's the progress to stdout.
 
         :param d: dict
         :return: None

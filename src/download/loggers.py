@@ -10,7 +10,7 @@ from .models import BaseRequest, Log
 
 class BaseLogger(logging.Logger):
     """
-    a Base logger object which intercepts Logger calls.
+    A base logger object which intercepts Logger calls.
     """
     request = None
 

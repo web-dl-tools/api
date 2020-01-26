@@ -12,7 +12,7 @@ from django.utils.translation import gettext_lazy as _
 
 class IdMixin(models.Model):
     """
-    a Primary ID mixin that adds a unique UUID4 id on object creation.
+    A primary ID mixin that adds a unique UUID4 id on object creation.
     """
     id = models.UUIDField(_('id'), primary_key=True, default=uuid.uuid4, editable=False)
 
@@ -26,7 +26,7 @@ class IdMixin(models.Model):
 
 class CreatedAtMixin(models.Model):
     """
-    a Created at mixin that adds a created_at datetime field
+    A created at mixin that adds a created_at datetime field
     with the object creation datetime automatically filled in.
     """
     created_at = models.DateTimeField(_('created at'), auto_now_add=True)

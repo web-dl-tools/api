@@ -15,7 +15,7 @@ from src.download.handlers import BaseHandler
 
 class AudioVisualRequest(BaseRequest):
     """
-    a Audio visual handler request model which implements the BaseRequest object.
+    A audio visual handler request model which implements the BaseRequest object.
     """
     format_selection = models.CharField(_('format selection'), max_length=15)
 
