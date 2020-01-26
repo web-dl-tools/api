@@ -1,5 +1,10 @@
 """
 Download views.
+
+This file contains a viewset for the BaseRequests.
+Due to the polymorphic nature of the BaseRequests and
+use of the polymorphic serializers all registered handler Requests
+are automatically handled by this viewset.
 """
 import re
 
@@ -18,7 +23,7 @@ from .tasks import handle_request, get_handlers
 class RequestViewSet(mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.ListModelMixin,
                      viewsets.GenericViewSet):
     """
-    A view set for creating, viewing and retrying Request instances.
+    A Polymorphic view set for creating, viewing and retrying Request instances and associated logs.
     """
     queryset = BaseRequest.objects.all()
     serializer_class = PolymorphicRequestSerializer
@@ -29,7 +34,7 @@ class RequestViewSet(mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.
         """
         Filter the queryset based on the user, so that it can only view it's own requests.
 
-        :return: QuerySet
+        :return: a QuerySet containing BaseRequests created by the user.
         """
         return super().get_queryset().filter(user=self.request.user)
 
@@ -49,7 +54,7 @@ class RequestViewSet(mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.
 
     def create(self, request, *args, **kwargs):
         """
-        Create a Request and add the user from the request to the payload.
+        Create a Request and add the user from the request to the payload to prevent overwriting the user.
 
         :param request: *
         :param args: *
@@ -62,7 +67,7 @@ class RequestViewSet(mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.
     @action(detail=True)
     def logs(self, request, pk=None) -> Response:
         """
-        Get request logs.
+        Get request logs for a given BaseRequest.
 
         :param request: Request
         :param pk: str
@@ -74,7 +79,7 @@ class RequestViewSet(mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.
     @action(detail=True, methods=['PUT'])
     def retry(self, request, pk=None) -> Response:
         """
-        Retry a failed request.
+        Retry a failed request by resetting the status and planning the asynchronous handle request task (again).
 
         :param request: *
         :param pk: str

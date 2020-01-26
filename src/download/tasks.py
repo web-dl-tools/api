@@ -1,5 +1,7 @@
 """
 Download tasks.
+
+This file contains commonly used tasks and Celery tasks for asynchronous task handling.
 """
 import uuid
 
@@ -11,9 +13,12 @@ from .serializers import PolymorphicRequestSerializer
 @app.task
 def handle_request(request_id: uuid) -> None:
     """
-    Handle the request.
+    Handle a given BaseRequest in a asynchronous task queue.
+    The BaseRequest is retrieved in task instead of given as a request param in order to ensure
+    no model mutations have been made and prevent conflicts.
 
-    :return: bool
+    :param request_id: a UUID4 containing the id of a valid BaseRequest.
+    :return: None
     """
     request = BaseRequest.objects.get(id=request_id)
     request.get_handler().handle()
@@ -21,10 +26,10 @@ def handle_request(request_id: uuid) -> None:
 
 def get_handlers(url: str) -> list:
     """
-    Get a list of all handlers' status and options.
+    Traverse all registered handlers and retrieve handler statuses for all handlers for a given url.
 
-    :param url: str
-    :return: list
+    :param url: a str containing a valid url.
+    :return: a list containing all handler status results.
     """
     handlers = []
     for a in PolymorphicRequestSerializer.model_serializer_mapping:

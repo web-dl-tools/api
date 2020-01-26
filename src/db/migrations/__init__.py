@@ -1,3 +1,0 @@
-"""
-Db migrations init.
-"""

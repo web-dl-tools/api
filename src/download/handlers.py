@@ -1,5 +1,8 @@
 """
 Download handlers.
+
+This file contains custom objects for the BaseHandler and BaseHandlerStatus.
+Custom handlers must at a minimum implement the BaseHandler.
 """
 from .models import BaseRequest
 from .loggers import BaseLogger
@@ -7,24 +10,32 @@ from .loggers import BaseLogger
 
 class BaseHandlerStatus(object):
     """
-    Base handler status.
+    a base handler status object which is used to enforce a fixed status response
+    when retrieving support status from all registered handlers.
     """
     handler = None
     supported = False
     options = {}
 
-    def __init__(self, handler: str) -> None:
+    def __init__(self, handler: str, supported=False, options=dict) -> None:
         """
-        Initialize the handler status.
+        Initialize the handler status object.
+
+        :param handler: a BaseHandler object to notify the BaseHandler the status belongs to.
+        :param supported: a optional bool for the handler supported status.
+        :param options: a optional dict containing custom options the handler may support/require.
         """
         self.handler = handler
+        self.supported = supported
+        self.options = options
+
         super().__init__()
 
     def set_supported(self, supported: bool) -> None:
         """
         Set supported status.
 
-        :param supported: bool
+        :param supported: a bool for the handler supported status.
         :return: None
         """
         self.supported = supported
@@ -33,23 +44,27 @@ class BaseHandlerStatus(object):
         """
         Set options.
 
-        :param options: dict
+        :param options: a dict containing custom options the handler may support/require.
         :return: None
         """
         self.options = options
 
     def get_status(self) -> dict:
         """
-        get handler status.
+        get the handler status.
 
-        :return: dict
+        :return: a dict containing an enforced handler status.
         """
         return {'handler': self.handler, 'supported': self.supported, 'options': self.options}
 
 
 class BaseHandler(object):
     """
-    Abstract base handler.
+    an abstract base handler which processing a base download request and
+    automatically updates the status and linked logs.
+
+    In it's current state it immediately completes a request without performing any commands.
+    When implemented _action function can be extended where needed.
     """
     request = None
     logger = None
@@ -57,44 +72,45 @@ class BaseHandler(object):
     @staticmethod
     def handles(url: str) -> BaseHandlerStatus:
         """
-        Notify if the given url can be handled by the handler.
+        Notify the status of a handler for a given url.
 
-        :param url: str
-        :return: bool
+        :param url: a str containing a valid url.
+        :return: a BaseHandlerStatus object containing the status for the linked handler.
         """
         raise NotImplementedError('Child handler must implement handles() function.')
 
     def __init__(self, request: BaseRequest) -> None:
         """
-        Initialize the handler.
+        Initialize the handler object with an associated request.
 
-        :param request: BaseRequest
+        :param request: a BaseRequest containing the request options.
+        :return: None
         """
         self.request = request
-        self.logger = BaseLogger(self.request, f'{self.request.get_name()}.{self.request.id}')
+        self.logger = BaseLogger(self.request, f'{self.request.__name__}.{self.request.id}')
 
         super().__init__()
 
-    def handle(self) -> bool:
+    def handle(self) -> None:
         """
-        Handle the request.
+        Traverse through the _action methods and possibly trigger a full reset.
 
-        :return: bool
+        :return: None
         """
         try:
             self._pre_process()
             self._download()
             self._post_process()
             self._complete()
-            return True
         except Exception as e:
             self._reset()
-            print(f'Exception: {str(e)}')
-            return False
+            self.logger.error(str(e))
 
     def _pre_process(self) -> None:
         """
-        Pre process the request.
+        Pre process the request by setting the request status to PRE_PROCESSING.
+        Handler objects extending this method must call super()._pre_process()
+        before continuing with custom handler commands.
 
         :return: None
         """
@@ -102,7 +118,9 @@ class BaseHandler(object):
 
     def _download(self) -> None:
         """
-        Download the request.
+        Download the request by setting the request status to DOWNLOADING.
+        Handler objects extending this method must call super()._download()
+        before continuing with custom handler commands.
 
         :return: None
         """
@@ -110,7 +128,9 @@ class BaseHandler(object):
 
     def _post_process(self) -> None:
         """
-        Post process the request results.
+        Post process the request by setting the request status to POST_PROCESSING.
+        Handler objects extending this method must call super()._post_processing()
+        before continuing with custom handler commands.
 
         :return: None
         """
@@ -118,7 +138,9 @@ class BaseHandler(object):
 
     def _complete(self) -> None:
         """
-        Complete the request.
+        Complete the request by setting the request status to COMPLETED.
+        Handler objects extending this method must call super()._complete()
+        before continuing with custom handler commands.
 
         :return: None
         """
@@ -126,7 +148,9 @@ class BaseHandler(object):
 
     def _reset(self) -> None:
         """
-        Reset the handler and clear previously generated files.
+        Reset the handler and clears all previously generated files.
+        Handler objects extending this method must call super()._reset()
+        before continuing with custom handler commands.
 
         :return: None
         """

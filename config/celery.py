@@ -1,5 +1,8 @@
 """
-Celery config.
+Celery config for Web DL API project.
+
+It configures the Celery scheduler with the current application
+and automatically discovers all tasks registered in the registered apps.
 """
 import os
 
