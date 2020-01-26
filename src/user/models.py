@@ -10,7 +10,7 @@ from src.db.models import ModifiedAtMixin
 
 class User(ModifiedAtMixin, AbstractUser):
     """
-    a User entity which extends the Django admin user in order to implement additional custom fields.
+    A user entity which extends the Django admin user in order to implement additional custom fields.
     """
     class Meta:
         db_table = 'user'

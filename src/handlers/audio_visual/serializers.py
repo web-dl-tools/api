@@ -1,5 +1,7 @@
 """
 Audio visual handler serializers.
+
+This file contains the serializer definition for the AudioVisualRequest model object.
 """
 from rest_framework import serializers
 

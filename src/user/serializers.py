@@ -10,7 +10,7 @@ from .models import User
 
 class UserSerializer(serializers.ModelSerializer):
     """
-    a User serializer extending the Django serializer in order
+    A user serializer extending the Django serializer in order
     to use the already defined serializer configuration
     for the Django admin fields already present on the custom User model.
     """
