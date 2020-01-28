@@ -87,7 +87,7 @@ class BaseHandler(object):
         :return: None
         """
         self.request = request
-        self.logger = BaseLogger(self.request, f'{self.request.__name__}.{self.request.id}')
+        self.logger = BaseLogger(self.request, f'logger.{self.request.get_handler_object().__name__}.{self.request.id}')
 
         super().__init__()
 
@@ -155,3 +155,4 @@ class BaseHandler(object):
         :return: None
         """
         self.request.set_status(BaseRequest.STATUS_FAILED)
+        self.request.set_data({})

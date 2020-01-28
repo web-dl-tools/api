@@ -6,6 +6,7 @@ This file contains the model object definitions for the polymorphic BaseRequest 
 from typing import Type
 from polymorphic.models import PolymorphicModel
 from django.db import models
+from django.contrib.postgres.fields import JSONField
 from django.utils.translation import gettext_lazy as _
 from django.conf import settings
 
@@ -37,6 +38,7 @@ class BaseRequest(ModifiedAtMixin, CreatedAtMixin, IdMixin, PolymorphicModel):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name=_('user'), on_delete=models.CASCADE)
     status = models.CharField(_('status'), max_length=15, choices=STATUSES, default=STATUS_PENDING)
     url = models.URLField(_('url'))
+    data = JSONField(_('data'), default=dict)
 
     class Meta:
         """
@@ -49,7 +51,7 @@ class BaseRequest(ModifiedAtMixin, CreatedAtMixin, IdMixin, PolymorphicModel):
         """
         Set the status of the request after validating the given status and status change from the current status.
 
-        :param status: a str containing a (hopefully) valid status.
+        :param status: A str containing a (hopefully) valid status.
         :return: None
         """
         if status == self.status:
@@ -69,6 +71,16 @@ class BaseRequest(ModifiedAtMixin, CreatedAtMixin, IdMixin, PolymorphicModel):
                 f"Status state change to {status} is nog possible from current status state {self.state}.")
         else:
             raise BaseRequestSetStatusException(f"Status {status} is not supported.")
+
+    def set_data(self, data: dict) -> None:
+        """
+        Set the data payload field.
+
+        :param data: An dict of handler data.
+        :return: None
+        """
+        self.data = data
+        self.save(update_fields=['data'])
 
     @property
     def path(self) -> str:
