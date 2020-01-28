@@ -46,18 +46,22 @@ class AudioVisualHandler(BaseHandler):
         :return: None
         """
         super()._pre_process()
-        self.options = {
-            # 'verbose': True,
-            # 'writedescription': True,
-            # 'writeannotations': True,
-            # 'writethumbnail': True,
-            # 'writesubtitles': True,
-            'outtmpl': f'{self.request.path}/%(title)s.%(ext)s',
-            'format': self.request.format_selection,
-            'logger': self.logger,
-            'progress_hooks': [self.progress_hook],
-        }
-        print(self.options)
+
+        with youtube_dl.YoutubeDL({}) as ydl:
+            meta = ydl.extract_info(self.request.url, download=False)
+            self.request.set_data(meta)
+
+            self.options = {
+                'verbose': True,
+                'writedescription': True,
+                'writeannotations': True,
+                'writethumbnail': True,
+                'writesubtitles': True,
+                'outtmpl': f'{self.request.path}/%(title)s.%(ext)s',
+                'format': self.request.format_selection,
+                'logger': self.logger,
+                'progress_hooks': [self.progress_hook],
+            }
 
     def _download(self) -> None:
         """

@@ -24,8 +24,8 @@ class BaseRequestSerializer(serializers.ModelSerializer):
         See https://www.django-rest-framework.org/api-guide/serializers/
         """
         model = BaseRequest
-        fields = ('id', 'user', 'status', 'url', 'path', )
-        read_only_fields = ('id', 'status')
+        fields = ('id', 'created_at', 'modified_at', 'user', 'status', 'url', 'data', 'path', )
+        read_only_fields = ('id', 'status', 'data')
         extra_kwargs = {
             'user': {
                 'write_only': True
