@@ -6,8 +6,6 @@ Due to the polymorphic nature of the BaseRequests and
 use of the polymorphic serializers all registered handler Requests
 are automatically handled by this viewset.
 """
-import re
-
 from django.db.models import QuerySet
 from rest_framework import viewsets, mixins
 from rest_framework.response import Response
@@ -17,7 +15,7 @@ from rest_framework.authentication import TokenAuthentication
 
 from .models import BaseRequest
 from .serializers import PolymorphicRequestSerializer, LogSerializer
-from .tasks import handle_request, get_handlers
+from .tasks import handle_request
 
 
 class RequestViewSet(mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.ListModelMixin,
@@ -37,20 +35,6 @@ class RequestViewSet(mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.
         :return: a QuerySet containing BaseRequests created by the user.
         """
         return super().get_queryset().filter(user=self.request.user)
-
-    @action(detail=False)
-    def handlers(self, request, *args, **kwargs):
-        """
-        Traverse all handlers to retrieve handler options and support status.
-
-        :param request: *
-        :param args: *
-        :param kwargs: *
-        :return: Response
-        """
-        url = self.request.query_params.get('url')
-        regexp = re.compile(r'[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)')
-        return Response(status=200, data=get_handlers(url)) if url and regexp.search(url) else Response(status=400)
 
     def create(self, request, *args, **kwargs):
         """

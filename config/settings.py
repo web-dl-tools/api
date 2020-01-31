@@ -57,6 +57,7 @@ LOCAL_APPS = [
     'src.db',
     'src.user',
     'src.download',
+    'src.handlers',
     'src.handlers.audio_visual',
 ]
 
