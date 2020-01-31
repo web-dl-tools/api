@@ -10,7 +10,7 @@ from .loggers import BaseLogger
 
 class BaseHandlerStatus(object):
     """
-    a base handler status object which is used to enforce a fixed status response
+    A base handler status object which is used to enforce a fixed status response
     when retrieving support status from all registered handlers.
     """
     request = None
@@ -21,9 +21,9 @@ class BaseHandlerStatus(object):
         """
         Initialize the handler status object.
 
-        :param request: a BaseRequest object to notify the BaseRequest the status belongs to.
-        :param supported: a optional bool for the handler supported status.
-        :param options: a optional dict containing custom options the handler may support/require.
+        :param request: A BaseRequest object to notify the BaseRequest the status belongs to.
+        :param supported: An optional bool for the handler supported status.
+        :param options: An optional dict containing custom options the handler may support/require.
         """
         self.request = request
         self.supported = supported
@@ -35,7 +35,7 @@ class BaseHandlerStatus(object):
         """
         Set supported status.
 
-        :param supported: a bool for the handler supported status.
+        :param supported: A bool for the handler supported status.
         :return: None
         """
         self.supported = supported
@@ -44,7 +44,7 @@ class BaseHandlerStatus(object):
         """
         Set options.
 
-        :param options: a dict containing custom options the handler may support/require.
+        :param options: A dict containing custom options the handler may support/require.
         :return: None
         """
         self.options = options
@@ -53,7 +53,7 @@ class BaseHandlerStatus(object):
         """
         get the handler status.
 
-        :return: a dict containing an enforced handler status.
+        :return: A dict containing an enforced handler status.
         """
         return {'request': self.request, 'supported': self.supported, 'options': self.options}
 
@@ -83,7 +83,7 @@ class BaseHandler(object):
         """
         Initialize the handler object with an associated request.
 
-        :param request: a BaseRequest containing the request options.
+        :param request: A BaseRequest containing the request options.
         :return: None
         """
         self.request = request

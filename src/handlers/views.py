@@ -12,6 +12,9 @@ from .tasks import get_handlers
 
 
 class GethandlerStatusesView(APIView):
+    """
+    An APIView for retrieving all handler options and support statuses.
+    """
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
