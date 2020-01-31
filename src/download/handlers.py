@@ -13,19 +13,19 @@ class BaseHandlerStatus(object):
     a base handler status object which is used to enforce a fixed status response
     when retrieving support status from all registered handlers.
     """
-    handler = None
+    request = None
     supported = False
     options = {}
 
-    def __init__(self, handler: str, supported=False, options=dict) -> None:
+    def __init__(self, request: str, supported=False, options=dict) -> None:
         """
         Initialize the handler status object.
 
-        :param handler: a BaseHandler object to notify the BaseHandler the status belongs to.
+        :param request: a BaseRequest object to notify the BaseRequest the status belongs to.
         :param supported: a optional bool for the handler supported status.
         :param options: a optional dict containing custom options the handler may support/require.
         """
-        self.handler = handler
+        self.request = request
         self.supported = supported
         self.options = options
 
@@ -55,7 +55,7 @@ class BaseHandlerStatus(object):
 
         :return: a dict containing an enforced handler status.
         """
-        return {'handler': self.handler, 'supported': self.supported, 'options': self.options}
+        return {'request': self.request, 'supported': self.supported, 'options': self.options}
 
 
 class BaseHandler(object):
