@@ -154,6 +154,7 @@ STATIC_URL = '/static/'
 
 # Cross-Origin Resource Sharing (CORS)
 # https://github.com/adamchainz/django-cors-headers
+CORS_ORIGIN_ALLOW_ALL = True
 CORS_ORIGIN_WHITELIST = os.getenv('CORS_ORIGIN_WHITELIST', [])
 
 

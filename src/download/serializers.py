@@ -24,7 +24,7 @@ class BaseRequestSerializer(serializers.ModelSerializer):
         See https://www.django-rest-framework.org/api-guide/serializers/
         """
         model = BaseRequest
-        fields = ('id', 'created_at', 'modified_at', 'user', 'status', 'url', 'data', 'path', )
+        fields = ('id', 'created_at', 'modified_at', 'user', 'status', 'status_display', 'url', 'data', 'path', )
         read_only_fields = ('id', 'status', 'data')
         extra_kwargs = {
             'user': {
@@ -57,4 +57,4 @@ class LogSerializer(serializers.ModelSerializer):
         See https://www.django-rest-framework.org/api-guide/serializers/
         """
         model = Log
-        fields = '__all__'
+        fields = ('id', 'created_at', 'level', 'level_display', 'message')

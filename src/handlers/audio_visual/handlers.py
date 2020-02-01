@@ -25,6 +25,7 @@ class AudioVisualHandler(BaseHandler):
         from .models import AudioVisualRequest
 
         status = BaseHandlerStatus(AudioVisualRequest.__name__)
+        status.set_description('A handler for downloading audio and visual resources.')
         status.set_supported(True)   # TODO: traverse youtube-dl extractors for support status.
 
         try:
