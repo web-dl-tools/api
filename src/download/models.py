@@ -91,6 +91,15 @@ class BaseRequest(ModifiedAtMixin, CreatedAtMixin, IdMixin, PolymorphicModel):
         """
         return f'files/{self.user.id}/{self.id}'
 
+    @property
+    def status_display(self) -> str:
+        """
+        Get the status display value.
+
+        :return: A str containing the status display value.
+        """
+        return self.get_status_display()
+
     def get_handler(self) -> 'src.download.handlers.BaseHandler':
         """
         Initialize the associated handler with the current request and return it.
@@ -137,3 +146,12 @@ class Log(CreatedAtMixin, IdMixin):
     request = models.ForeignKey(BaseRequest, verbose_name=_('request'), on_delete=models.CASCADE)
     level = models.IntegerField(_('level'), choices=LEVELS, default=LEVEL_NOTSET)
     message = models.TextField(_('message'), blank=False)
+
+    @property
+    def level_display(self) -> str:
+        """
+        Get the level display value.
+
+        :return: A str containing the status display value.
+        """
+        return self.get_level_display()
