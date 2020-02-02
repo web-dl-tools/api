@@ -16,6 +16,7 @@ from rest_framework.authentication import TokenAuthentication
 from .models import BaseRequest
 from .serializers import PolymorphicRequestSerializer, LogSerializer
 from .tasks import handle_request
+from .utils import list_files
 
 
 class RequestViewSet(mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.ListModelMixin,
@@ -57,8 +58,20 @@ class RequestViewSet(mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.
         :param pk: str
         :return: Response
         """
-        request = self.get_object()
-        return Response(LogSerializer(request.log_set, many=True).data)
+        request_object = self.get_object()
+        return Response(LogSerializer(request_object.log_set, many=True).data)
+
+    @action(detail=True)
+    def files(self, request, pk=None) -> Response:
+        """
+        Get request files for a given BaseRequest.
+
+        :param request: Request
+        :param pk: str
+        :return: Response
+        """
+        request_object = self.get_object()
+        return Response(list_files(request_object))
 
     @action(detail=True, methods=['PUT'])
     def retry(self, request, pk=None) -> Response:
@@ -69,11 +82,11 @@ class RequestViewSet(mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.
         :param pk: str
         :return: Response
         """
-        request = self.get_object()
-        serializer = self.get_serializer(request)
-        if request.status != BaseRequest.STATUS_FAILED:
+        request_object = self.get_object()
+        serializer = self.get_serializer(request_object)
+        if request_object.status != BaseRequest.STATUS_FAILED:
             return Response(status=400)
         else:
-            request.set_status(BaseRequest.STATUS_PENDING)
-            handle_request.delay(request.id)
+            request_object.set_status(BaseRequest.STATUS_PENDING)
+            handle_request.delay(request_object.id)
             return Response(serializer.data)
