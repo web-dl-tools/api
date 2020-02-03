@@ -5,27 +5,35 @@ This file contains functions and action not fit for standard Django files.
 """
 import os
 
-from src.download.models import BaseRequest
 
-
-def list_files(request: BaseRequest) -> list:
+def list_files(path: str) -> list:
     """
-    List the file belonging to a BaseRequest.
+    List all files of the given directory and
+    recursively traverses down all folders to do the same.
 
-    :param request: A BaseRequest object.
-    :return: A list containing the files belonging to the BaseRequest.
+    :param path: A str of the path to list the files of.
+    :return: A list containing the files belonging to root path.
     """
     content = []
 
-    for root, dirs, files in os.walk(request.path):
+    for root, dirs, files in os.walk(path):
         for dir in dirs:
-            content.append({'path': f'{root}/{dir}', 'children': []})
+            content.append({
+                'dir': f'{root}/{dir}',
+                'name': dir,
+                'children': list_files(f'{root}/{dir}')
+            })
+            print(f'{root}/{dir}')
 
         for file in files:
-            sub_dirs = list(filter(lambda i: i['path'] == root, content))
-            if len(sub_dirs):
-                sub_dirs[0]['children'].append({'path': f'{root}/{file}', 'name': file})
-            else:
-                content.append({'path': f'{root}/{file}', 'name': file})
+            filename, extension = os.path.splitext(file)
+            content.append({
+                'path': f'{root}/{file}',
+                'name': file,
+                'filename': filename,
+                'extension': extension,
+                'size': os.path.getsize(f'{root}/{file}')
+            })
+        break
 
     return content
