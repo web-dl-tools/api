@@ -71,7 +71,7 @@ class RequestViewSet(mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.
         :return: Response
         """
         request_object = self.get_object()
-        return Response(list_files(request_object))
+        return Response(list_files(request_object.path))
 
     @action(detail=True, methods=['PUT'])
     def retry(self, request, pk=None) -> Response:
