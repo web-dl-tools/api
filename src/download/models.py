@@ -8,6 +8,7 @@ from polymorphic.models import PolymorphicModel
 from django.db import models
 from django.contrib.postgres.fields import JSONField
 from django.utils.translation import gettext_lazy as _
+from django.utils import timezone
 from django.conf import settings
 
 from src.db.models import IdMixin, CreatedAtMixin, ModifiedAtMixin
@@ -43,6 +44,9 @@ class BaseRequest(ModifiedAtMixin, CreatedAtMixin, IdMixin, PolymorphicModel):
         _("status"), max_length=15, choices=STATUSES, default=STATUS_PENDING
     )
     url = models.URLField(_("url"))
+    start_processing_at = models.DateTimeField(_("start processing at"), null=True)
+    completed_at = models.DateTimeField(_("completed at"), null=True)
+    title = models.CharField(_("title"), max_length=200, blank=True)
     data = JSONField(_("data"), default=dict)
 
     class Meta:
@@ -84,14 +88,33 @@ class BaseRequest(ModifiedAtMixin, CreatedAtMixin, IdMixin, PolymorphicModel):
                 and status == self.STATUS_COMPLETED
             )
         ):
+            update_fields = ["status"]
+
+            if status == self.STATUS_PRE_PROCESSING:
+                self.start_processing_at = timezone.now()
+                update_fields.append("start_processing_at")
+            elif status == self.STATUS_COMPLETED:
+                self.completed_at = timezone.now()
+                update_fields.append("completed_at")
+
             self.status = status
-            self.save(update_fields=["status"])
+            self.save(update_fields=update_fields)
         elif status in (s[0] for s in self.STATUSES):
             raise BaseRequestSetStatusException(
                 f"Status state change to {status} is nog possible from current status state {self.state}."
             )
         else:
             raise BaseRequestSetStatusException(f"Status {status} is not supported.")
+
+    def set_title(self, title: str) -> None:
+        """
+        Set the title of the request.
+
+        :param title: A str of the request title.
+        :return: None
+        """
+        self.title = title
+        self.save(update_fields=["title"])
 
     def set_data(self, data: dict) -> None:
         """

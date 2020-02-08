@@ -48,7 +48,6 @@ class ModifiedAtMixin(models.Model):
     a Modified at mixin that adds a modified_at datetime field
     which automatically get's updated with the current datetime at each object save.
     """
-
     modified_at = models.DateTimeField(_("modified at"), auto_now=True)
 
     class Meta:

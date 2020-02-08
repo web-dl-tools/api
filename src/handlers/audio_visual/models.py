@@ -19,6 +19,7 @@ class AudioVisualRequest(BaseRequest):
     """
 
     format_selection = models.CharField(_("format selection"), max_length=15)
+    output = models.CharField(_("output"), max_length=100)
 
     class Meta:
         """
