@@ -19,6 +19,7 @@ from rest_framework.routers import DefaultRouter
 
 from src.user import urls as user_urls
 from src.handlers import urls as handler_urls
+from src.download import urls as download_urls
 
 from src.user.views import UserViewSet
 from src.download.views import RequestViewSet
@@ -32,5 +33,6 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/user/", include(user_urls)),
     path("api/handlers/", include(handler_urls)),
+    path("api/download/", include(download_urls)),
     path("api/", include(router.urls)),
 ]

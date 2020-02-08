@@ -8,4 +8,5 @@ django-polymorphic==2.1.2
 django-rest-polymorphic==0.1.8
 celery==4.4.0
 redis==3.3.11
+python-magic==0.4.15
 youtube_dl==2020.1.15

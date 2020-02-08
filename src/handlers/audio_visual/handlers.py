@@ -27,9 +27,7 @@ class AudioVisualHandler(BaseHandler):
 
         status = BaseHandlerStatus(AudioVisualRequest.__name__)
         status.set_description("A handler for downloading audio and visual resources.")
-        status.set_supported(
-            True
-        )  # TODO: traverse youtube-dl extractors for support status.
+        status.set_supported(True)
 
         try:
             with youtube_dl.YoutubeDL({}) as ydl:
@@ -54,14 +52,15 @@ class AudioVisualHandler(BaseHandler):
         with youtube_dl.YoutubeDL({}) as ydl:
             meta = ydl.extract_info(self.request.url, download=False)
             self.request.set_data(meta)
+            self.request.set_title(meta['title'])
 
             self.options = {
                 "verbose": True,
                 "writedescription": True,
                 "writeannotations": True,
-                "writethumbnail": True,
+                "write_all_thumbnails": True,
                 "writesubtitles": True,
-                "outtmpl": f"{self.request.path}/%(title)s.%(ext)s",
+                "outtmpl": f"{self.request.path}/{self.request.output}",
                 "format": self.request.format_selection,
                 "logger": self.logger,
                 "progress_hooks": [self.progress_hook],

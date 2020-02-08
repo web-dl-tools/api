@@ -34,10 +34,23 @@ class BaseRequestSerializer(serializers.ModelSerializer):
             "status",
             "status_display",
             "url",
+            "start_processing_at",
+            "completed_at",
+            "title",
             "data",
             "path",
         )
-        read_only_fields = ("id", "status", "data")
+        read_only_fields = (
+            "id",
+            "created_at",
+            "modified_at",
+            "status",
+            "start_processing_at",
+            "completed_at",
+            "title",
+            "data",
+            "path",
+        )
         extra_kwargs = {"user": {"write_only": True}}
 
 

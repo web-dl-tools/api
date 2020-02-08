@@ -52,6 +52,7 @@ THIRD_PARTY_APPS = ["corsheaders", "rest_framework", "rest_framework.authtoken"]
 
 # Locally installed apps.
 LOCAL_APPS = [
+    "src.auth_token",
     "src.db",
     "src.user",
     "src.download",

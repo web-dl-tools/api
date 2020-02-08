@@ -1,7 +1,7 @@
 """
 Audio visual apps.
 
-This file defines the current app configuration. For more see
+This file defines the audio visual handler app configuration. For more see
 https://docs.djangoproject.com/en/3.0/ref/applications/#configuring-applications
 """
 from django.apps import AppConfig

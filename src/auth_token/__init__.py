@@ -1,0 +1,3 @@
+"""
+Auth token package init.
+"""
