@@ -12,6 +12,7 @@ class AudioVisualHandler(BaseHandler):
     """
     A audio visual handler which implements the BaseHandler object.
     """
+
     options = None
 
     @staticmethod
@@ -25,13 +26,15 @@ class AudioVisualHandler(BaseHandler):
         from .models import AudioVisualRequest
 
         status = BaseHandlerStatus(AudioVisualRequest.__name__)
-        status.set_description('A handler for downloading audio and visual resources.')
-        status.set_supported(True)   # TODO: traverse youtube-dl extractors for support status.
+        status.set_description("A handler for downloading audio and visual resources.")
+        status.set_supported(
+            True
+        )  # TODO: traverse youtube-dl extractors for support status.
 
         try:
             with youtube_dl.YoutubeDL({}) as ydl:
                 meta = ydl.extract_info(url, download=False)
-                formats = meta.get('formats', [meta])
+                formats = meta.get("formats", [meta])
                 status.set_options(formats)
         except Exception:
             status.set_supported(False)
@@ -53,15 +56,15 @@ class AudioVisualHandler(BaseHandler):
             self.request.set_data(meta)
 
             self.options = {
-                'verbose': True,
-                'writedescription': True,
-                'writeannotations': True,
-                'writethumbnail': True,
-                'writesubtitles': True,
-                'outtmpl': f'{self.request.path}/%(title)s.%(ext)s',
-                'format': self.request.format_selection,
-                'logger': self.logger,
-                'progress_hooks': [self.progress_hook],
+                "verbose": True,
+                "writedescription": True,
+                "writeannotations": True,
+                "writethumbnail": True,
+                "writesubtitles": True,
+                "outtmpl": f"{self.request.path}/%(title)s.%(ext)s",
+                "format": self.request.format_selection,
+                "logger": self.logger,
+                "progress_hooks": [self.progress_hook],
             }
 
     def _download(self) -> None:
@@ -82,4 +85,4 @@ class AudioVisualHandler(BaseHandler):
         :param d: dict
         :return: None
         """
-        print(f'PROGRESS: {d}')
+        print(f"PROGRESS: {d}")

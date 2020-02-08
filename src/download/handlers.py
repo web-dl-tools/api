@@ -13,12 +13,15 @@ class BaseHandlerStatus(object):
     A base handler status object which is used to enforce a fixed status response
     when retrieving support status from all registered handlers.
     """
+
     request = None
-    description = ''
+    description = ""
     supported = False
     options = {}
 
-    def __init__(self, request: str, description=str, supported=False, options=dict) -> None:
+    def __init__(
+        self, request: str, description=str, supported=False, options=dict
+    ) -> None:
         """
         Initialize the handler status object.
 
@@ -67,8 +70,12 @@ class BaseHandlerStatus(object):
 
         :return: A dict containing an enforced handler status.
         """
-        return {'request': self.request, 'description': self.description, 'supported': self.supported,
-                'options': self.options}
+        return {
+            "request": self.request,
+            "description": self.description,
+            "supported": self.supported,
+            "options": self.options,
+        }
 
 
 class BaseHandler(object):
@@ -79,6 +86,7 @@ class BaseHandler(object):
     In it's current state it immediately completes a request without performing any commands.
     When implemented _action function can be extended where needed.
     """
+
     request = None
     logger = None
 
@@ -90,7 +98,7 @@ class BaseHandler(object):
         :param url: a str containing a valid url.
         :return: a BaseHandlerStatus object containing the status for the linked handler.
         """
-        raise NotImplementedError('Child handler must implement handles() function.')
+        raise NotImplementedError("Child handler must implement handles() function.")
 
     def __init__(self, request: BaseRequest) -> None:
         """
@@ -100,7 +108,10 @@ class BaseHandler(object):
         :return: None
         """
         self.request = request
-        self.logger = BaseLogger(self.request, f'logger.{self.request.get_handler_object().__name__}.{self.request.id}')
+        self.logger = BaseLogger(
+            self.request,
+            f"logger.{self.request.get_handler_object().__name__}.{self.request.id}",
+        )
 
         super().__init__()
 

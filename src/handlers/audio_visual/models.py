@@ -17,14 +17,16 @@ class AudioVisualRequest(BaseRequest):
     """
     A audio visual handler request model which implements the BaseRequest object.
     """
-    format_selection = models.CharField(_('format selection'), max_length=15)
+
+    format_selection = models.CharField(_("format selection"), max_length=15)
 
     class Meta:
         """
         Model metadata.
         See https://docs.djangoproject.com/en/3.0/ref/models/options/
         """
-        db_table = 'audio_visual_request'
+
+        db_table = "audio_visual_request"
 
     @staticmethod
     def get_handler_object() -> Type[BaseHandler]:

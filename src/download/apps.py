@@ -11,7 +11,8 @@ class DownloadAppConfig(AppConfig):
     """
     Download app config.
     """
-    name = 'src.download'
+
+    name = "src.download"
     verbose_name = "Download"
 
     def ready(self):

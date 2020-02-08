@@ -11,5 +11,6 @@ class AudioVisualHandlerAppConfig(AppConfig):
     """
     Audio visual handler app config.
     """
-    name = 'src.handlers.audio_visual'
+
+    name = "src.handlers.audio_visual"
     verbose_name = "Audio & Visual"

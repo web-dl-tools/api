@@ -12,5 +12,6 @@ class User(ModifiedAtMixin, AbstractUser):
     """
     A user entity which extends the Django admin user in order to implement additional custom fields.
     """
+
     class Meta:
-        db_table = 'user'
+        db_table = "user"

@@ -11,6 +11,7 @@ class BaseRequestModelException(Exception):
     A base exception related to the base request model.
     This must only be used as a parent exception.
     """
+
     pass
 
 

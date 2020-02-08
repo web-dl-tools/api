@@ -14,19 +14,33 @@ class UserSerializer(serializers.ModelSerializer):
     to use the already defined serializer configuration
     for the Django admin fields already present on the custom User model.
     """
+
     class Meta:
         """
         Serializer metadata.
         See https://www.django-rest-framework.org/api-guide/serializers/
         """
+
         model = User
-        fields = ('username', 'password', 'first_name', 'last_name', 'email', 'last_login', 'date_joined')
-        read_only_fields = ('id', 'last_login', 'is_superuser', 'is_staff', 'is_active', 'date_joined', 'modified_at')
-        extra_kwargs = {
-            'password': {
-                'write_only': True
-            }
-        }
+        fields = (
+            "username",
+            "password",
+            "first_name",
+            "last_name",
+            "email",
+            "last_login",
+            "date_joined",
+        )
+        read_only_fields = (
+            "id",
+            "last_login",
+            "is_superuser",
+            "is_staff",
+            "is_active",
+            "date_joined",
+            "modified_at",
+        )
+        extra_kwargs = {"password": {"write_only": True}}
 
     def create(self, validated_data):
         """

@@ -17,6 +17,7 @@ class UserViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
     """
     A view set for authenticating and viewing a user instances.
     """
+
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = [IsAuthenticated]
@@ -30,7 +31,7 @@ class UserViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
 
         :return: a list containing permission class objects for a given action.
         """
-        if self.action == 'create':
+        if self.action == "create":
             permission_classes = []
         else:
             permission_classes = [IsAuthenticated]
