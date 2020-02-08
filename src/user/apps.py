@@ -11,5 +11,6 @@ class UserConfig(AppConfig):
     """
     User app config.
     """
-    name = 'src.user'
+
+    name = "src.user"
     verbose_name = "User"

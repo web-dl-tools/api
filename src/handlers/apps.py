@@ -11,5 +11,6 @@ class HandlersConfig(AppConfig):
     """
     Handlers app config.
     """
-    name = 'src.handlers'
+
+    name = "src.handlers"
     verbose_name = "Handlers"

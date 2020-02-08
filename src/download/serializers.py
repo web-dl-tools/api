@@ -18,19 +18,27 @@ class BaseRequestSerializer(serializers.ModelSerializer):
     """
     A base request serializer for the BaseRequest model object.
     """
+
     class Meta:
         """
         Serializer metadata.
         See https://www.django-rest-framework.org/api-guide/serializers/
         """
+
         model = BaseRequest
-        fields = ('id', 'created_at', 'modified_at', 'user', 'status', 'status_display', 'url', 'data', 'path', )
-        read_only_fields = ('id', 'status', 'data')
-        extra_kwargs = {
-            'user': {
-                'write_only': True
-            }
-        }
+        fields = (
+            "id",
+            "created_at",
+            "modified_at",
+            "user",
+            "status",
+            "status_display",
+            "url",
+            "data",
+            "path",
+        )
+        read_only_fields = ("id", "status", "data")
+        extra_kwargs = {"user": {"write_only": True}}
 
 
 class PolymorphicRequestSerializer(PolymorphicSerializer):
@@ -40,7 +48,8 @@ class PolymorphicRequestSerializer(PolymorphicSerializer):
     This serializer object also acts as a registration definition
     of custom handler Requests models and Serializers objects and their bindings.
     """
-    resource_type_field_name = 'request_type'
+
+    resource_type_field_name = "request_type"
     model_serializer_mapping = {
         BaseRequest: BaseRequestSerializer,
         AudioVisualRequest: AudioVisualRequestSerializer,
@@ -51,10 +60,12 @@ class LogSerializer(serializers.ModelSerializer):
     """
     A log serializer for the Log model object.
     """
+
     class Meta:
         """
         Serializer metadata.
         See https://www.django-rest-framework.org/api-guide/serializers/
         """
+
         model = Log
-        fields = ('id', 'created_at', 'level', 'level_display', 'message')
+        fields = ("id", "created_at", "level", "level_display", "message")

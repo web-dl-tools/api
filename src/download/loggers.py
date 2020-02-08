@@ -12,6 +12,7 @@ class BaseLogger(logging.Logger):
     """
     A base logger object which intercepts Logger calls.
     """
+
     request = None
 
     def __init__(self, request: BaseRequest, name, level=logging.NOTSET):
@@ -26,7 +27,19 @@ class BaseLogger(logging.Logger):
 
         super().__init__(name, level)
 
-    def makeRecord(self, name, level, fn, lno, msg, args, exc_info, func=None, extra=None, sinfo=None):
+    def makeRecord(
+        self,
+        name,
+        level,
+        fn,
+        lno,
+        msg,
+        args,
+        exc_info,
+        func=None,
+        extra=None,
+        sinfo=None,
+    ):
         """
         Intercept the Logger's LogRecord creation call and create a Download Log entity.
 
@@ -44,4 +57,6 @@ class BaseLogger(logging.Logger):
         """
         if msg:
             Log.objects.create(request=self.request, level=level, message=msg.strip())
-        return super().makeRecord(name, level, fn, lno, msg, args, exc_info, func, extra, sinfo)
+        return super().makeRecord(
+            name, level, fn, lno, msg, args, exc_info, func, extra, sinfo
+        )

@@ -2,9 +2,9 @@
 Download views.
 
 This file contains a viewset for the BaseRequests.
-Due to the polymorphic nature of the BaseRequests and
-use of the polymorphic serializers all registered handler Requests
-are automatically handled by this viewset.
+Due to the polymorphic nature of the BaseRequests
+and use of the polymorphic serializers all registered
+handler Requests are automatically handled by this viewset.
 """
 from django.db.models import QuerySet
 from rest_framework import viewsets, mixins
@@ -19,11 +19,16 @@ from .tasks import handle_request
 from .utils import list_files
 
 
-class RequestViewSet(mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.ListModelMixin,
-                     viewsets.GenericViewSet):
+class RequestViewSet(
+    mixins.CreateModelMixin,
+    mixins.RetrieveModelMixin,
+    mixins.ListModelMixin,
+    viewsets.GenericViewSet,
+):
     """
     A Polymorphic view set for creating, viewing and retrying Request instances and associated logs.
     """
+
     queryset = BaseRequest.objects.all()
     serializer_class = PolymorphicRequestSerializer
     permission_classes = [IsAuthenticated]
@@ -46,7 +51,7 @@ class RequestViewSet(mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.
         :param kwargs: *
         :return: *
         """
-        request.data['user'] = self.request.user.id
+        request.data["user"] = self.request.user.id
         return super().create(request, *args, **kwargs)
 
     @action(detail=True)
@@ -73,7 +78,7 @@ class RequestViewSet(mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.
         request_object = self.get_object()
         return Response(list_files(request_object.path))
 
-    @action(detail=True, methods=['PUT'])
+    @action(detail=True, methods=["PUT"])
     def retry(self, request, pk=None) -> Response:
         """
         Retry a failed request by resetting the status and planning the asynchronous handle request task (again).

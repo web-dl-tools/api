@@ -11,5 +11,6 @@ class DbAppConfig(AppConfig):
     """
     Db app config.
     """
-    name = 'src.db'
+
+    name = "src.db"
     verbose_name = "DB"

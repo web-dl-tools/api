@@ -9,5 +9,5 @@ from django.urls import path
 from .views import GethandlerStatusesView
 
 urlpatterns = [
-    path('statuses/', GethandlerStatusesView.as_view()),
+    path("statuses/", GethandlerStatusesView.as_view()),
 ]
