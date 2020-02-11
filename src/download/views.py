@@ -18,7 +18,7 @@ from rest_framework.views import APIView
 
 from .models import BaseRequest
 from .serializers import PolymorphicRequestSerializer, LogSerializer
-from .tasks import handle_request
+from .tasks import download_request
 from .utils import list_files, validate_path
 from src.auth_token.authentication import QueryTokenAuthentication
 
@@ -27,6 +27,7 @@ class RequestViewSet(
     mixins.CreateModelMixin,
     mixins.RetrieveModelMixin,
     mixins.ListModelMixin,
+    mixins.DestroyModelMixin,
     viewsets.GenericViewSet,
 ):
     """
@@ -97,7 +98,7 @@ class RequestViewSet(
             return Response(status=400)
         else:
             request_object.set_status(BaseRequest.STATUS_PENDING)
-            handle_request.delay(request_object.id)
+            download_request.delay(request_object.id)
             return Response(serializer.data)
 
 
