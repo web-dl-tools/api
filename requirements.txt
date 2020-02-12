@@ -10,3 +10,5 @@ celery==4.4.0
 redis==3.3.11
 python-magic==0.4.15
 youtube_dl==2020.1.15
+channels==2.4.0
+channels-redis==2.4.1
