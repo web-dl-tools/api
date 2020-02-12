@@ -48,7 +48,12 @@ DJANGO_APPS = [
 ]
 
 # Third party apps that can run after Django app initialization.
-THIRD_PARTY_APPS = ["corsheaders", "rest_framework", "rest_framework.authtoken"]
+THIRD_PARTY_APPS = [
+    "corsheaders",
+    "rest_framework",
+    "rest_framework.authtoken",
+    "channels",
+]
 
 # Locally installed apps.
 LOCAL_APPS = [
@@ -99,8 +104,9 @@ TEMPLATES = [
 ]
 
 
-# WSGI
+# WSGI & ASGI application
 WSGI_APPLICATION = "config.wsgi.application"
+ASGI_APPLICATION = "config.routing.application"
 
 
 # Database
@@ -155,9 +161,8 @@ CORS_ORIGIN_WHITELIST = os.getenv("CORS_ORIGIN_WHITELIST", [])
 BROKER_URL = "redis://redis"
 CHANNEL_LAYERS = {
     "default": {
-        "BACKEND": "redis.RedisChannelLayer",
-        "ROUTING": "config.routing.channel_routing",
-        "CONFIG": {"hosts": [(BROKER_URL, 6379)],},
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {"hosts": [('redis', 6379)]},
     },
 }
 
