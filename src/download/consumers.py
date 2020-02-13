@@ -8,19 +8,26 @@ import json
 
 from channels.generic.websocket import WebsocketConsumer
 from asgiref.sync import async_to_sync
+from rest_framework.authtoken.models import Token
 
 
-class ChatConsumer(WebsocketConsumer):
-    def connect(self):
-        self.accept()
-        async_to_sync(self.channel_layer.group_add)(
-            "unique_group_name", self.channel_name
-        )
-
-    def disconnect(self, close_code):
-        async_to_sync(self.channel_layer.group_discard)(
-            "unique_group_name", self.channel_name
-        )
+class RequestConsumer(WebsocketConsumer):
+    def receive(self, text_data=None, bytes_data=None):
+        dict_data = json.loads(text_data)
+        if dict_data["type"] == "requests.group.join":
+            token = Token.objects.get(key=dict_data["content"])
+            if token:
+                async_to_sync(self.channel_layer.group_add)(
+                    f"requests.group.{token.user.id}", self.channel_name
+                )
+                self.send(
+                    text_data=json.dumps(
+                        {
+                            "type": "requests.group.joined",
+                            "content": f"requests.group.{token.user.id}",
+                        }
+                    )
+                )
 
     def websocket_send(self, event):
         self.send(

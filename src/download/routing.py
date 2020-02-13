@@ -6,8 +6,8 @@ for the Channels consumers.
 """
 from django.urls import re_path
 
-from . import consumers
+from .consumers import RequestConsumer
 
 websocket_urlpatterns = [
-    re_path(r"ws/requests/", consumers.ChatConsumer),
+    re_path(r"ws/requests/", RequestConsumer),
 ]
