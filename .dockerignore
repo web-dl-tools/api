@@ -1,9 +1,14 @@
-Dockerfile*
-docker-compose*
-.dockerignore
+docker-compose.yml
+
 .git
 .gitignore
+
 .idea
+.DS_Store
+
 .env
 .env.dist
+.gitlab-ci.yml
+README.md
 .postgres_data
+files

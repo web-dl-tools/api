@@ -31,11 +31,11 @@ def handle_request_post_save(sender, instance, created, **kwargs) -> None:
             download_request.delay(instance.id)
         else:
             async_to_sync(get_channel_layer().group_send)(
-                "unique_group_name",
+                f"requests.group.{instance.user.id}",
                 {
                     "type": "websocket.send",
                     "data": {
-                        "type": "request.update",
+                        "type": "requests.update",
                         "message": PolymorphicRequestSerializer(instance=instance).data,
                     },
                 },
