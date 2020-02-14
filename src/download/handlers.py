@@ -179,4 +179,6 @@ class BaseHandler(object):
         :return: None
         """
         self.request.set_status(BaseRequest.STATUS_FAILED)
+        self.request.set_progress(0)
+        self.request.set_title("")
         self.request.set_data({})

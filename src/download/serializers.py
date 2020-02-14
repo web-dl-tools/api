@@ -32,13 +32,14 @@ class BaseRequestSerializer(serializers.ModelSerializer):
             "modified_at",
             "user",
             "status",
-            "status_display",
             "url",
             "start_processing_at",
             "completed_at",
+            "progress",
             "title",
             "data",
             "path",
+            "status_display",
         )
         read_only_fields = (
             "id",
@@ -47,6 +48,7 @@ class BaseRequestSerializer(serializers.ModelSerializer):
             "status",
             "start_processing_at",
             "completed_at",
+            "progress",
             "title",
             "data",
             "path",

@@ -12,7 +12,7 @@ from django.utils import timezone
 from django.conf import settings
 
 from src.db.models import IdMixin, CreatedAtMixin, ModifiedAtMixin
-from .exceptions import BaseRequestSetStatusException
+from .exceptions import BaseRequestSetStatusException, BaseRequestSetProgressException
 
 
 class BaseRequest(ModifiedAtMixin, CreatedAtMixin, IdMixin, PolymorphicModel):
@@ -46,6 +46,7 @@ class BaseRequest(ModifiedAtMixin, CreatedAtMixin, IdMixin, PolymorphicModel):
     url = models.URLField(_("url"))
     start_processing_at = models.DateTimeField(_("start processing at"), null=True)
     completed_at = models.DateTimeField(_("completed at"), null=True)
+    progress = models.IntegerField(_("progress"), default=0)
     title = models.CharField(_("title"), max_length=200, blank=True)
     data = JSONField(_("data"), default=dict)
 
@@ -105,6 +106,20 @@ class BaseRequest(ModifiedAtMixin, CreatedAtMixin, IdMixin, PolymorphicModel):
             )
         else:
             raise BaseRequestSetStatusException(f"Status {status} is not supported.")
+
+    def set_progress(self, progress: int) -> None:
+        """
+        Set the progress of the request.
+
+        :param progress: An integer containing the current progress.
+        :return: None
+        """
+        if progress != 0 and self.progress > progress:
+            raise BaseRequestSetProgressException(
+                f"Progress state change to {progress} is lower than current progress state {self.progress}."
+            )
+        self.progress = progress
+        self.save(update_fields=["progress"])
 
     def set_title(self, title: str) -> None:
         """
