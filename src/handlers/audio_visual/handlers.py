@@ -3,6 +3,7 @@ Audio visual handlers.
 
 This file contains the BaseHandler implementation of the audio visual handler.
 """
+import re
 import youtube_dl
 
 from src.download.handlers import BaseHandler, BaseHandlerStatus
@@ -52,7 +53,7 @@ class AudioVisualHandler(BaseHandler):
         with youtube_dl.YoutubeDL({}) as ydl:
             meta = ydl.extract_info(self.request.url, download=False)
             self.request.set_data(meta)
-            self.request.set_title(meta['title'])
+            self.request.set_title(meta["title"])
 
             self.options = {
                 "verbose": True,
@@ -79,9 +80,14 @@ class AudioVisualHandler(BaseHandler):
 
     def progress_hook(self, d: dict) -> None:
         """
-        A progress hook function for youtube-dl which log's the progress to stdout.
+        A progress hook function for youtube-dl which
+        log's the progress to the request.
 
         :param d: dict
         :return: None
         """
-        print(f"PROGRESS: {d}")
+        if "_percent_str" in d:
+            matches = re.findall("\d+\.\d+", d["_percent_str"])
+            progress = int(float(matches[0]))
+            if progress > self.request.progress:
+                self.request.set_progress(progress)

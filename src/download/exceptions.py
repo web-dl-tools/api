@@ -19,3 +19,9 @@ class BaseRequestSetStatusException(BaseRequestModelException):
     """
     An exception related to incorrectly setting the status of the base request model.
     """
+
+
+class BaseRequestSetProgressException(BaseRequestModelException):
+    """
+    An exception related to incorrectly setting the progress of the base request model.
+    """
