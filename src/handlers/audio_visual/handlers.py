@@ -6,6 +6,7 @@ This file contains the BaseHandler implementation of the audio visual handler.
 import re
 import youtube_dl
 
+from src.download.models import BaseRequest
 from src.download.handlers import BaseHandler, BaseHandlerStatus
 
 
@@ -91,3 +92,5 @@ class AudioVisualHandler(BaseHandler):
             progress = int(float(matches[0]))
             if progress > self.request.progress:
                 self.request.set_progress(progress)
+                if progress == 100:
+                    self.request.set_status(BaseRequest.STATUS_POST_PROCESSING)

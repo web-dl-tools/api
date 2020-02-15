@@ -18,7 +18,7 @@ class AudioVisualRequest(BaseRequest):
     A audio visual handler request model which implements the BaseRequest object.
     """
 
-    format_selection = models.CharField(_("format selection"), max_length=15)
+    format_selection = models.CharField(_("format selection"), max_length=50)
     output = models.CharField(_("output"), max_length=100)
 
     class Meta:
