@@ -75,6 +75,7 @@ class AudioVisualHandler(BaseHandler):
 
         :return: None
         """
+        super()._download()
         with youtube_dl.YoutubeDL(self.options) as ydl:
             ydl.download([self.request.url])
 
@@ -87,7 +88,6 @@ class AudioVisualHandler(BaseHandler):
         :return: None
         """
         if "_percent_str" in d:
-            super()._download()
             matches = re.findall("\d+\.\d+", d["_percent_str"])
             progress = int(float(matches[0]))
             if progress > self.request.progress:
