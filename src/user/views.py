@@ -13,7 +13,7 @@ from .models import User
 from .serializers import UserSerializer
 
 
-class UserViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
+class UserViewSet(viewsets.GenericViewSet):
     """
     A view set for authenticating and viewing a user instances.
     """
