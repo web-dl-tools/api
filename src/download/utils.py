@@ -4,8 +4,8 @@ Download utils.
 This file contains functions and action not fit for standard Django files.
 """
 import os
-import magic
-from django.core.files.base import ContentFile
+from wsgiref.util import FileWrapper
+from django.http import FileResponse
 
 from src.user.models import User
 from .models import BaseRequest
@@ -70,3 +70,22 @@ def validate_path(path: str, user: User) -> bool:
         return False
 
     return True
+
+
+def create_file_streaming_response(path: str) -> FileResponse:
+    """
+    Create a streaming file response to serve the file while
+    reducing the memory usage in order to support large file
+    downloads, especially on memory limited hardware.
+
+    :param path: A str containing the file path.
+    :return: A FileResponse containing a streaming file.
+    """
+    filename = os.path.basename(path)
+    chunk_size = 262144  # 256 kilobytes
+    response = FileResponse(
+        FileWrapper(open(path, "rb"), chunk_size), as_attachment=True
+    )
+    response["Content-Length"] = os.path.getsize(path)
+    response["Content-Disposition"] = "attachment; filename=%s" % filename
+    return response
