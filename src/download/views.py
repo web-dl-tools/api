@@ -7,8 +7,8 @@ and use of the polymorphic serializers all registered
 handler Requests are automatically handled by this viewset.
 """
 from urllib.parse import unquote
+
 from django.db.models import QuerySet
-from django.http import FileResponse
 from rest_framework import viewsets, mixins
 from rest_framework.response import Response
 from rest_framework.decorators import action
@@ -19,7 +19,7 @@ from rest_framework.views import APIView
 from .models import BaseRequest
 from .serializers import PolymorphicRequestSerializer, LogSerializer
 from .tasks import download_request
-from .utils import list_files, validate_path
+from .utils import list_files, validate_path, create_file_streaming_response
 from src.auth_token.authentication import QueryTokenAuthentication
 
 
@@ -123,4 +123,4 @@ class GetFileView(APIView):
         if not validate_path(path, self.request.user):
             return Response(status=404, data="Invalid payload.")
 
-        return FileResponse(open(path, "rb"))
+        return create_file_streaming_response(path)
