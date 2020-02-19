@@ -82,7 +82,7 @@ def create_file_streaming_response(path: str) -> FileResponse:
     :return: A FileResponse containing a streaming file.
     """
     filename = os.path.basename(path)
-    chunk_size = 65536  # 64 kilobytes
+    chunk_size = 4096
     response = FileResponse(
         FileWrapper(open(path, "rb"), chunk_size), as_attachment=True
     )
