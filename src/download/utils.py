@@ -4,6 +4,8 @@ Download utils.
 This file contains functions and action not fit for standard Django files.
 """
 import os
+import magic
+
 from wsgiref.util import FileWrapper
 from django.http import FileResponse
 
@@ -82,10 +84,12 @@ def create_file_streaming_response(path: str) -> FileResponse:
     :return: A FileResponse containing a streaming file.
     """
     filename = os.path.basename(path)
-    chunk_size = 4096
-    response = FileResponse(
-        FileWrapper(open(path, "rb"), chunk_size), as_attachment=True
-    )
+    mime = magic.Magic(mime=True)
+
+    response = FileResponse(FileWrapper(open(path, "rb")), as_attachment=False)
+
     response["Content-Length"] = os.path.getsize(path)
-    response["Content-Disposition"] = "attachment; filename=%s" % filename
+    response["Content-Type"] = mime.from_file(path)
+    response["Content-Disposition"] = "inline; filename=%s" % filename
+
     return response

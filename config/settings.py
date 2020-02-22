@@ -24,7 +24,7 @@ SECRET_KEY = os.getenv(
 )
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = bool(os.getenv("DJANGO_DEBUG", False))
+DEBUG = os.getenv("DJANGO_DEBUG", 'True') in ('True', 'true', '1')
 
 # See https://docs.djangoproject.com/en/3.0/ref/settings/#allowed-hosts
 ALLOWED_HOSTS = ["*"]
