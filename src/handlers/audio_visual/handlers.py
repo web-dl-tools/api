@@ -6,6 +6,7 @@ This file contains the BaseHandler implementation of the audio visual handler.
 import re
 import youtube_dl
 
+from .loggers import AudioVisualLogger
 from src.download.models import BaseRequest
 from src.download.handlers import BaseHandler, BaseHandlerStatus
 
@@ -16,6 +17,19 @@ class AudioVisualHandler(BaseHandler):
     """
 
     options = None
+
+    def __init__(self, request: BaseRequest) -> None:
+        """
+        Initialize the handler object with an associated request.
+
+        :param request: A BaseRequest containing the request options.
+        :return: None
+        """
+        super().__init__(request)
+        self.logger = AudioVisualLogger(
+            self.request,
+            f"logger.{self.request.get_handler_object().__name__}.{self.request.id}",
+        )
 
     @staticmethod
     def handles(url: str) -> BaseHandlerStatus:
@@ -29,12 +43,12 @@ class AudioVisualHandler(BaseHandler):
 
         status = BaseHandlerStatus(AudioVisualRequest.__name__)
         status.set_description("A handler for downloading audio and visual resources.")
-        status.set_supported(True)
 
         try:
             with youtube_dl.YoutubeDL({}) as ydl:
                 meta = ydl.extract_info(url, download=False)
                 formats = meta.get("formats", [meta])
+                status.set_supported(True)
                 status.set_options(formats)
         except Exception:
             status.set_supported(False)
