@@ -12,6 +12,8 @@ from .models import BaseRequest, Log
 
 from src.handlers.audio_visual.models import AudioVisualRequest
 from src.handlers.audio_visual.serializers import AudioVisualRequestSerializer
+from src.handlers.direct.models import DirectRequest
+from src.handlers.direct.serializers import DirectRequestSerializer
 
 
 class BaseRequestSerializer(serializers.ModelSerializer):
@@ -68,6 +70,7 @@ class PolymorphicRequestSerializer(PolymorphicSerializer):
     model_serializer_mapping = {
         BaseRequest: BaseRequestSerializer,
         AudioVisualRequest: AudioVisualRequestSerializer,
+        DirectRequest: DirectRequestSerializer,
     }
 
 

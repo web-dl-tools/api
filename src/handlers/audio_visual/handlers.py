@@ -13,7 +13,7 @@ from src.download.handlers import BaseHandler, BaseHandlerStatus
 
 class AudioVisualHandler(BaseHandler):
     """
-    A audio visual handler which implements the BaseHandler object.
+    An audio visual handler which implements the BaseHandler object.
     """
 
     options = None

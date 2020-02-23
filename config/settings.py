@@ -63,6 +63,7 @@ LOCAL_APPS = [
     "src.download",
     "src.handlers",
     "src.handlers.audio_visual",
+    "src.handlers.direct"
 ]
 
 # Application definition
