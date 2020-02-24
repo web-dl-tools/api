@@ -24,7 +24,7 @@ SECRET_KEY = os.getenv(
 )
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv("DJANGO_DEBUG", 'True') in ('True', 'true', '1')
+DEBUG = os.getenv("DJANGO_DEBUG", "True") in ("True", "true", "1")
 
 # See https://docs.djangoproject.com/en/3.0/ref/settings/#allowed-hosts
 ALLOWED_HOSTS = ["*"]
@@ -63,7 +63,7 @@ LOCAL_APPS = [
     "src.download",
     "src.handlers",
     "src.handlers.audio_visual",
-    "src.handlers.direct"
+    "src.handlers.direct",
 ]
 
 # Application definition
@@ -73,6 +73,7 @@ INSTALLED_APPS = PRE_DJANGO_APPS + DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 # See https://docs.djangoproject.com/en/3.0/ref/middleware/
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -141,14 +142,24 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
-
 STATIC_URL = "/static/"
 
 
 # Cross-Origin Resource Sharing (CORS)
 # https://github.com/adamchainz/django-cors-headers
 CORS_ORIGIN_ALLOW_ALL = True
-CORS_ORIGIN_WHITELIST = os.getenv("CORS_ORIGIN_WHITELIST", [])
+
+
+# Sentry configuration
+# https://docs.sentry.io/platforms/python/django/
+SENTRY_DSN = os.getenv("SENTRY_DSN", None)
+if not DEBUG and SENTRY_DSN:
+    import sentry_sdk
+    from sentry_sdk.integrations.django import DjangoIntegration
+
+    sentry_sdk.init(
+        dsn=SENTRY_DSN, integrations=[DjangoIntegration()], send_default_pii=True
+    )
 
 
 # Redis configuration
@@ -156,7 +167,7 @@ BROKER_URL = "redis://redis"
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
-        "CONFIG": {"hosts": [('redis', 6379)]},
+        "CONFIG": {"hosts": [("redis", 6379)]},
     },
 }
 
