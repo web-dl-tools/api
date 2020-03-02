@@ -43,6 +43,12 @@ class DirectHandler(BaseHandler):
         return status
 
     def _pre_process(self) -> None:
+        """
+        An extension of the _pre_process method which
+        prepares the filepath and retrieves file props.
+
+        :return: None
+        """
         super()._pre_process()
 
         r = requests.head(self.request.url, allow_redirects=True)
