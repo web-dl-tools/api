@@ -60,9 +60,11 @@ services:
     environment:
       - PUID=${USER_ID}
       - TZ=Europe/Amsterdam
+      - WEBUI_PORT=8001
     volumes:
       - ${FILES_PATH}:/files
     ports:
       - 6881:6881
       - 6881:6881/udp
+      - 8001:8001
     restart: always

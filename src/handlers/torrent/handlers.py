@@ -49,7 +49,7 @@ class TorrentHandler(BaseHandler):
         """
         super()._pre_process()
 
-        self.qb = Client("http://qbittorrent:8080/")
+        self.qb = Client("http://qbittorrent:8001/")
         self.qb.login("admin", "adminadmin")
 
     def _download(self) -> None:
@@ -77,8 +77,8 @@ class TorrentHandler(BaseHandler):
                 self.request.set_progress(progress)
 
             if torrent["state"] == "error":
-                active = False
-                raise Exception("An error occured in qBitTorrent.")
+                self.qb.delete(self.hash)
+                raise Exception("An error occurred in qBittorrent.")
             elif torrent["state"] not in (
                     "metaDL",
                     "queuedDL",
