@@ -15,7 +15,8 @@ from .models import BaseRequest
 
 def list_files(path: str) -> list:
     """
-    List all files of the given directory and recursively traverses down all folders to do the same.
+    List all files of the given directory and recursively
+    traverses down all folders to do the same.
 
     :param path: A str of the path to list the files of.
     :return: A list containing the files belonging to root path.
@@ -50,8 +51,8 @@ def list_files(path: str) -> list:
 
 def validate_path(path: str, user: User) -> bool:
     """
-    Validate a request file path to ensure only the authorized user for
-    the request may retrieve file access.
+    Validate a request file path to ensure only the authorized user
+    for the request may retrieve file access.
 
     :param path: A str containing the relative file path.
     :param user: The currently authenticated user.
@@ -80,21 +81,23 @@ def create_file_streaming_response(path: str) -> FileResponse:
     reducing the memory usage in order to support large file
     downloads, especially on memory limited hardware.
     The file will always be force downloaded as attachment if
-    the filesize exceeds a given limit, else it is up to the
+    the file size exceeds a given limit, else it is up to the
     client to decide how to process and view the file.
 
     :param path: A str containing the file path.
     :return: A FileResponse containing a streaming file.
     """
     filename = os.path.basename(path)
-    filesize = os.path.getsize(path)
+    file_size = os.path.getsize(path)
     mime = magic.Magic(mime=True)
-    attachment = filesize > 5000000  # 5 MB
+    attachment = file_size > 5000000  # 5 MB
 
     response = FileResponse(FileWrapper(open(path, "rb")), as_attachment=attachment)
 
     response["Content-Length"] = os.path.getsize(path)
     response["Content-Type"] = mime.from_file(path)
-    response["Content-Disposition"] = f"{'attachment' if attachment else 'inline'}; filename={filename}"
+    response[
+        "Content-Disposition"
+    ] = f"{'attachment' if attachment else 'inline'}; filename={filename.replace(',', '').replace(';', '-')}"
 
     return response

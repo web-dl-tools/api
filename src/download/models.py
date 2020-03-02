@@ -43,7 +43,7 @@ class BaseRequest(ModifiedAtMixin, CreatedAtMixin, IdMixin, PolymorphicModel):
     status = models.CharField(
         _("status"), max_length=15, choices=STATUSES, default=STATUS_PENDING
     )
-    url = models.URLField(_("url"))
+    url = models.TextField(_("url"))
     start_processing_at = models.DateTimeField(_("start processing at"), null=True)
     completed_at = models.DateTimeField(_("completed at"), null=True)
     progress = models.IntegerField(_("progress"), default=0)

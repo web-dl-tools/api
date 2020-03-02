@@ -53,3 +53,16 @@ services:
       - redis
       - postgres
     ports: []
+
+  qbittorrent:
+    image: linuxserver/qbittorrent:4.3.0202003011834-6876-b519eceubuntu18.04.1-ls16
+    container_name: qbittorrent
+    environment:
+      - PUID=${USER_ID}
+      - TZ=Europe/Amsterdam
+    volumes:
+      - ${FILES_PATH}:/files
+    ports:
+      - 6881:6881
+      - 6881:6881/udp
+    restart: always

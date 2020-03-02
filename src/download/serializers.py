@@ -14,6 +14,8 @@ from src.handlers.audio_visual.models import AudioVisualRequest
 from src.handlers.audio_visual.serializers import AudioVisualRequestSerializer
 from src.handlers.direct.models import DirectRequest
 from src.handlers.direct.serializers import DirectRequestSerializer
+from src.handlers.torrent.models import TorrentRequest
+from src.handlers.torrent.serializers import TorrentRequestSerializer
 
 
 class BaseRequestSerializer(serializers.ModelSerializer):
@@ -71,6 +73,7 @@ class PolymorphicRequestSerializer(PolymorphicSerializer):
         BaseRequest: BaseRequestSerializer,
         AudioVisualRequest: AudioVisualRequestSerializer,
         DirectRequest: DirectRequestSerializer,
+        TorrentRequest: TorrentRequestSerializer
     }
 
 

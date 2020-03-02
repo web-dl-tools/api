@@ -6,7 +6,7 @@ Due to the polymorphic nature of the BaseRequests
 and use of the polymorphic serializers all registered
 handler Requests are automatically handled by this viewset.
 """
-from urllib.parse import unquote
+from base64 import b64decode
 
 from django.db.models import QuerySet
 from rest_framework import viewsets, mixins
@@ -118,7 +118,7 @@ class GetFileView(APIView):
         :param kwargs: *
         :return: Response|FileResponse
         """
-        path = unquote(self.request.query_params.get("path"))
+        path = b64decode(self.request.query_params.get("path")).decode("utf-8")
 
         if not validate_path(path, self.request.user):
             return Response(status=404, data="Invalid payload.")

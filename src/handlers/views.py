@@ -3,6 +3,8 @@ User views.
 """
 import re
 
+from base64 import b64decode
+
 from rest_framework.views import APIView
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
@@ -27,12 +29,17 @@ class GethandlerStatusesView(APIView):
         :param kwargs: *
         :return: Response
         """
-        url = self.request.query_params.get("url")
-        regexp = re.compile(
+        url = b64decode(self.request.query_params.get("url")).decode("utf-8")
+
+        url_regex = re.compile(
             r"[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)"
         )
+        magnet_regex = re.compile(
+            r"magnet:\?xt=urn:btih:[a-zA-Z0-9]*"
+        )
+
         return (
             Response(status=200, data=get_handlers(url))
-            if url and regexp.search(url)
+            if url and (url_regex.search(url) or magnet_regex.search(url))
             else Response(status=400)
         )

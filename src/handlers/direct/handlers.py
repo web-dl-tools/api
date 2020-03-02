@@ -29,12 +29,16 @@ class DirectHandler(BaseHandler):
         """
         from .models import DirectRequest
 
-        r = requests.head(url, allow_redirects=True)
 
         status = BaseHandlerStatus(DirectRequest.__name__)
         status.set_description("A handler for directly downloading the url resource.")
-        status.set_supported(r.status_code == 200)
         status.set_options({})
+
+        try:
+            r = requests.head(url, allow_redirects=True)
+            status.set_supported(r.status_code == 200)
+        except requests.exceptions.InvalidSchema:
+            status.set_supported(False)
 
         return status
 
