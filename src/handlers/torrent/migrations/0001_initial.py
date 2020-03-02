@@ -14,14 +14,12 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='AudioVisualRequest',
+            name='TorrentRequest',
             fields=[
                 ('baserequest_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='download.BaseRequest')),
-                ('format_selection', models.CharField(max_length=50, verbose_name='format selection')),
-                ('output', models.CharField(max_length=100, verbose_name='output')),
             ],
             options={
-                'db_table': 'audio_visual_request',
+                'db_table': 'torrent_request',
             },
             bases=('download.baserequest',),
         ),
