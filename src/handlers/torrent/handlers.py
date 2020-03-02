@@ -76,7 +76,10 @@ class TorrentHandler(BaseHandler):
             if progress > self.request.progress:
                 self.request.set_progress(progress)
 
-            if torrent["state"] not in (
+            if torrent["state"] == "error":
+                active = False
+                raise Exception("An error occured in qBitTorrent.")
+            elif torrent["state"] not in (
                     "metaDL",
                     "queuedDL",
                     "checkingDL",
