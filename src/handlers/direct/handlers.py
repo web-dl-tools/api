@@ -29,7 +29,6 @@ class DirectHandler(BaseHandler):
         """
         from .models import DirectRequest
 
-
         status = BaseHandlerStatus(DirectRequest.__name__)
         status.set_description("A handler for directly downloading the url resource.")
         status.set_options({})
@@ -54,6 +53,7 @@ class DirectHandler(BaseHandler):
         r = requests.head(self.request.url, allow_redirects=True)
         headers = r.headers
         self.request.set_data(dict(headers))
+        self.logger.debug("Retrieved header information.")
 
         content_type = headers["content-type"].split(";")[0]
         self.extension = mimetypes.guess_extension(content_type)
@@ -63,11 +63,15 @@ class DirectHandler(BaseHandler):
             else self.request.url.split("/")[-1]
         )
         if self.filename.endswith(self.extension):
-            self.filename = self.filename[:-len(self.extension)]
+            self.filename = self.filename[: -len(self.extension)]
         self.request.set_title(self.filename)
+        self.logger.debug(
+            f"Extracted extension {self.extension} and created filename {self.filename}."
+        )
 
         if not os.path.exists(self.request.path):
             os.makedirs(self.request.path)
+            self.logger.debug(f"Created folder for resource.")
 
     def _download(self) -> None:
         """
