@@ -29,9 +29,7 @@ class TorrentHandler(BaseHandler):
         """
         from .models import TorrentRequest
 
-        magnet_regex = re.compile(
-            r"magnet:\?xt=urn:btih:[a-zA-Z0-9]*"
-        )
+        magnet_regex = re.compile(r"magnet:\?xt=urn:btih:[a-zA-Z0-9]*")
 
         status = BaseHandlerStatus(TorrentRequest.__name__)
         status.set_description("A handler for downloading a torrent resource.")
@@ -51,6 +49,7 @@ class TorrentHandler(BaseHandler):
 
         self.qb = Client("http://qbittorrent:8001/")
         self.qb.login("admin", "adminadmin")
+        self.logger.debug("Connected with qBittorrent.")
 
     def _download(self) -> None:
         """
@@ -62,11 +61,16 @@ class TorrentHandler(BaseHandler):
         super()._download()
 
         self.qb.download_from_link(self.request.url, savepath=f"/{self.request.path}")
+        self.logger.debug(f"Added {self.request.url} to the download list.")
+
+        self.logger.debug(f"Waiting for qBittorrent pre-processing to complete.")
+        while len(self.qb.torrents()) == 0:
+            time.sleep(5)
+        self.logger.debug(f"qBittorrent pre-processing has completed.")
 
         torrent = self.qb.torrents()[0]
-        self.request.set_data(torrent)
-        self.request.set_title(torrent['name'])
         self.hash = torrent["hash"]
+        self.logger.debug(f"Torrent hash {self.hash} retrieved. Starting download.")
 
         active = True
         while active:
@@ -91,6 +95,10 @@ class TorrentHandler(BaseHandler):
             else:
                 time.sleep(5)
 
+        self.logger.info("Torrent has completed download.")
+        self.request.set_data(torrent)
+        self.request.set_title(torrent["name"])
+
     def _post_process(self) -> None:
         """
         An extension of the _post_process method which
@@ -101,3 +109,4 @@ class TorrentHandler(BaseHandler):
         super()._post_process()
 
         self.qb.delete(self.hash)
+        self.logger.debug(f"Torrent has been removed from qBittorrent.")
