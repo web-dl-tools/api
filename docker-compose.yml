@@ -32,8 +32,8 @@ services:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DB=${POSTGRES_DB}
-    mem_limit: 200M
-    mem_reservation: 100M
+    mem_limit: 250M
+    mem_reservation: 150M
     ports:
       - 8000:8000
     restart: always
@@ -58,8 +58,6 @@ services:
     depends_on:
       - redis
       - postgres
-    mem_limit: 200M
-    mem_reservation: 100M
     ports: []
 
   qbittorrent:
