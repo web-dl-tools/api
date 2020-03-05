@@ -48,8 +48,8 @@ services:
 
   redis:
     image: redis:5.0.7-alpine
-    mem_limit: 20M
-    mem_reservation: 10M
+    mem_limit: 50M
+    mem_reservation: 20M
     restart: always
 
   celery:
