@@ -48,7 +48,7 @@ services:
 
   redis:
     image: redis:5.0.7-alpine
-    mem_limit: 50M
+    mem_limit: 100M
     mem_reservation: 20M
     restart: always
 
