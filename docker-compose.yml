@@ -1,4 +1,4 @@
-version: '3.7'
+version: '2.2'
 
 services:
   postgres:
@@ -7,6 +7,8 @@ services:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DB=${POSTGRES_DB}
+    mem_limit: 50M
+    mem_reservation: 20M
     ports:
       - 5432:5432
     restart: always
@@ -30,6 +32,8 @@ services:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DB=${POSTGRES_DB}
+    mem_limit: 200M
+    mem_reservation: 100M
     ports:
       - 8000:8000
     restart: always
@@ -44,6 +48,8 @@ services:
 
   redis:
     image: redis:5.0.7-alpine
+    mem_limit: 20M
+    mem_reservation: 10M
     restart: always
 
   celery:
@@ -52,11 +58,15 @@ services:
     depends_on:
       - redis
       - postgres
+    mem_limit: 200M
+    mem_reservation: 100M
     ports: []
 
   qbittorrent:
     image: linuxserver/qbittorrent:4.3.0202003011834-6876-b519eceubuntu18.04.1-ls16
     container_name: qbittorrent
+    mem_limit: 100M
+    mem_reservation: 50M
     environment:
       - PUID=${USER_ID}
       - TZ=Europe/Amsterdam
