@@ -5,7 +5,9 @@ This file contains the BaseHandler implementation of the torrent handler.
 """
 import time
 import re
+import errno
 
+from socket import error as SocketError
 from qbittorrent import Client
 
 from src.download.handlers import BaseHandler, BaseHandlerStatus
@@ -47,9 +49,7 @@ class TorrentHandler(BaseHandler):
         """
         super()._pre_process()
 
-        self.qb = Client("http://qbittorrent:8001/")
-        self.qb.login("admin", "adminadmin")
-        self.logger.debug("Connected with qBittorrent.")
+        self.connect()
 
     def _download(self) -> None:
         """
@@ -74,26 +74,36 @@ class TorrentHandler(BaseHandler):
 
         active = True
         while active:
-            torrent = self.qb.torrents()[0]
+            try:
+                torrent = self.qb.torrents()[0]
 
-            progress = int(torrent["progress"] * 100)
-            if progress > self.request.progress:
-                self.request.set_progress(progress)
+                progress = int(torrent["progress"] * 100)
+                if progress > self.request.progress:
+                    self.request.set_progress(progress)
 
-            if torrent["state"] == "error":
-                self.qb.delete(self.hash)
-                raise Exception("An error occurred in qBittorrent.")
-            elif torrent["state"] not in (
-                    "metaDL",
-                    "queuedDL",
-                    "checkingDL",
-                    "stalledDL",
-                    "downloading",
-                    "pausedDL",
-            ):
-                active = False
-            else:
-                time.sleep(5)
+                if torrent["state"] == "error":
+                    self.qb.delete(self.hash)
+                    raise Exception("An error occurred in qBittorrent.")
+                elif torrent["state"] not in (
+                        "metaDL",
+                        "queuedDL",
+                        "checkingDL",
+                        "stalledDL",
+                        "downloading",
+                        "pausedDL",
+                ):
+                    active = False
+                else:
+                    time.sleep(5)
+            except SocketError as e:
+                """
+                Required due to qBittorrent API bug 
+                intermittently resetting the connection.
+                """
+                if e.errno != errno.ECONNRESET:
+                    self.connect()
+                else:
+                    pass
 
         self.logger.info("Torrent has completed download.")
         self.request.set_data(torrent)
@@ -110,3 +120,13 @@ class TorrentHandler(BaseHandler):
 
         self.qb.delete(self.hash)
         self.logger.debug(f"Torrent has been removed from qBittorrent.")
+
+    def connect(self) -> None:
+        """
+        Create an connection with the qBittorrent API.
+
+        :return: None
+        """
+        self.qb = Client("http://qbittorrent:8001/")
+        self.qb.login("admin", "adminadmin")
+        self.logger.debug("Connected with qBittorrent.")
