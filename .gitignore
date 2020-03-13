@@ -1,7 +1,15 @@
-.idea
-*.pyc
+# File system files
 .DS_Store
 
+# Python cache files
+*.pyc
+
+# local env files
 .env
+
+# container directories and files
 .postgres_data
 files
+
+# Editor directories and files
+.idea
