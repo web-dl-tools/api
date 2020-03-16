@@ -101,6 +101,7 @@ class TorrentHandler(BaseHandler):
                 intermittently resetting the connection.
                 """
                 if e.errno != errno.ECONNRESET:
+                    self.logger.error("Connection with qBittorrent was closed. Reconnecting...")
                     self.connect()
                 else:
                     pass
