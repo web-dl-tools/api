@@ -101,7 +101,9 @@ class TorrentHandler(BaseHandler):
                 intermittently resetting the connection.
                 """
                 if e.errno != errno.ECONNRESET:
-                    self.logger.error("Connection with qBittorrent was closed. Reconnecting...")
+                    self.logger.error(
+                        "Connection with qBittorrent was closed. Reconnecting..."
+                    )
                     self.connect()
                 else:
                     pass
@@ -128,6 +130,7 @@ class TorrentHandler(BaseHandler):
 
         :return: None
         """
+        time.sleep(5)
         self.qb = Client("http://qbittorrent:8001/")
         self.qb.login("admin", "adminadmin")
         self.logger.debug("Connected with qBittorrent.")
