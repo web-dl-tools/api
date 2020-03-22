@@ -6,7 +6,7 @@ Custom handlers must at a minimum implement the BaseHandler.
 """
 from .models import BaseRequest
 from .loggers import BaseLogger
-
+from .tasks import delete_request_files
 
 class BaseHandlerStatus(object):
     """
@@ -182,3 +182,5 @@ class BaseHandler(object):
         self.request.set_progress(0)
         self.request.set_title("")
         self.request.set_data({})
+
+        delete_request_files.delay(self.request.path)

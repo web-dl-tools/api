@@ -7,6 +7,7 @@ from typing import Type
 
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
+from django.utils.translation import gettext_lazy as _
 
 from .handlers import ResourceHandler
 from src.download.models import BaseRequest
@@ -18,6 +19,7 @@ class ResourceRequest(BaseRequest):
     A resource handler request model which implements the BaseRequest object.
     """
     extensions = ArrayField(models.CharField(max_length=20), verbose_name="extensions")
+    min_bytes = models.IntegerField(_("min bytes"), default=0)
 
     class Meta:
         """

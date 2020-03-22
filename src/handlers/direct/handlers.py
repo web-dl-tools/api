@@ -84,14 +84,15 @@ class DirectHandler(BaseHandler):
 
         r = requests.get(self.request.url, stream=True)
         total = r.headers.get("content-length")
+        chunk_size = 1024
         dl = 0
 
         with open(f"{self.request.path}/{self.filename}{self.extension}", "wb+") as f:
-            for chunk in r.iter_content(1024):
+            for chunk in r.iter_content(chunk_size):
                 f.write(chunk)
 
                 if total is not None:
                     progress = int((dl / int(total)) * 100)
                     if progress > self.request.progress:
                         self.request.set_progress(progress)
-                    dl += 1024
+                    dl += chunk_size
