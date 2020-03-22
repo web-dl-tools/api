@@ -65,6 +65,7 @@ LOCAL_APPS = [
     "src.handlers.audio_visual",
     "src.handlers.direct",
     "src.handlers.torrent",
+    "src.handlers.resource",
 ]
 
 # Application definition

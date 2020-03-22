@@ -1,0 +1,3 @@
+"""
+Resource handler package root.
+"""

@@ -1,19 +1,23 @@
 """
-Direct handler models.
+Resource handler models.
 
-This file contains the BaseRequest implementation for the direct handler.
+This file contains the BaseRequest implementation for the resource handler.
 """
 from typing import Type
 
-from .handlers import DirectHandler
+from django.db import models
+from django.contrib.postgres.fields import ArrayField
+
+from .handlers import ResourceHandler
 from src.download.models import BaseRequest
 from src.download.handlers import BaseHandler
 
 
-class DirectRequest(BaseRequest):
+class ResourceRequest(BaseRequest):
     """
-    A direct handler request model which implements the BaseRequest object.
+    A resource handler request model which implements the BaseRequest object.
     """
+    extensions = ArrayField(models.CharField(max_length=20), verbose_name="extensions")
 
     class Meta:
         """
@@ -21,7 +25,7 @@ class DirectRequest(BaseRequest):
         See https://docs.djangoproject.com/en/3.0/ref/models/options/
         """
 
-        db_table = "direct_request"
+        db_table = "resource_request"
 
     @staticmethod
     def get_handler_object() -> Type[BaseHandler]:
@@ -31,4 +35,4 @@ class DirectRequest(BaseRequest):
 
         :return: a Type[BaseHandler] of the BaseHandler object.
         """
-        return DirectHandler
+        return ResourceHandler

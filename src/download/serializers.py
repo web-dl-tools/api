@@ -16,7 +16,8 @@ from src.handlers.direct.models import DirectRequest
 from src.handlers.direct.serializers import DirectRequestSerializer
 from src.handlers.torrent.models import TorrentRequest
 from src.handlers.torrent.serializers import TorrentRequestSerializer
-
+from src.handlers.resource.models import ResourceRequest
+from src.handlers.resource.serializers import ResourceRequestSerializer
 
 class BaseRequestSerializer(serializers.ModelSerializer):
     """
@@ -73,7 +74,8 @@ class PolymorphicRequestSerializer(PolymorphicSerializer):
         BaseRequest: BaseRequestSerializer,
         AudioVisualRequest: AudioVisualRequestSerializer,
         DirectRequest: DirectRequestSerializer,
-        TorrentRequest: TorrentRequestSerializer
+        TorrentRequest: TorrentRequestSerializer,
+        ResourceRequest: ResourceRequestSerializer
     }
 
 
