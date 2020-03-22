@@ -35,7 +35,7 @@ class DirectHandler(BaseHandler):
 
         try:
             r = requests.head(url, allow_redirects=True)
-            status.set_supported(r.status_code == 200)
+            status.set_supported(r.status_code == requests.codes.ok)
         except requests.exceptions.InvalidSchema:
             status.set_supported(False)
 

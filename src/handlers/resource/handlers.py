@@ -27,12 +27,17 @@ class ResourceHandler(BaseHandler):
         from .models import ResourceRequest
 
         status = BaseHandlerStatus(ResourceRequest.__name__)
-        status.set_description("A handler for downloading resources from the url resource.")
+        status.set_description(
+            "A handler for downloading resources from the url resource."
+        )
         status.set_options({})
 
         try:
             r = requests.head(url, allow_redirects=True)
-            status.set_supported(r.status_code == 200)
+            status.set_supported(
+                r.headers["content-type"].startswith("text/html")
+                and r.status_code == requests.codes.ok
+            )
         except requests.exceptions.InvalidSchema:
             status.set_supported(False)
 
@@ -46,8 +51,8 @@ class ResourceHandler(BaseHandler):
         :return: None
         """
         super()._pre_process()
-        raise Exception('for development purposes.')
-
+        print("a")
+        raise Exception("for development purposes.")
 
     def _download(self) -> None:
         """
@@ -57,4 +62,3 @@ class ResourceHandler(BaseHandler):
         :return: None
         """
         super()._download()
-
