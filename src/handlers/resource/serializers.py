@@ -33,7 +33,8 @@ class ResourceRequestSerializer(serializers.ModelSerializer):
             "data",
             "path",
             "status_display",
-            "extensions"
+            "extensions",
+            "min_bytes"
         )
         read_only_fields = (
             "id",

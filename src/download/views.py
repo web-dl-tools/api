@@ -96,7 +96,7 @@ class RequestViewSet(
             return Response(status=400)
         else:
             request_object.set_status(BaseRequest.STATUS_PENDING)
-            download_request(request_object.id)
+            download_request.delay(request_object.id)
             return Response(serializer.data)
 
 
