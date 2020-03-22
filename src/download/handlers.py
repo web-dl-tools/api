@@ -8,6 +8,7 @@ from .models import BaseRequest
 from .loggers import BaseLogger
 from .tasks import delete_request_files
 
+
 class BaseHandlerStatus(object):
     """
     A base handler status object which is used to enforce a fixed status response
