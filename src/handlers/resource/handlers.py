@@ -121,7 +121,9 @@ class ResourceHandler(BaseHandler):
         r = requests.get(url, stream=True)
         size = r.headers.get("content-length")
 
-        if int(size) < self.request.min_bytes:
+        if size is None:
+            self.logger.warn(f"Resource has no given file size. Downloading anyway.")
+        elif int(size) < self.request.min_bytes:
             self.logger.warn(f"Resource file is too small ({size} bytes). Skipping.")
             return
 
