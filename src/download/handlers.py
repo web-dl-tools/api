@@ -21,7 +21,7 @@ class BaseHandlerStatus(object):
     options = {}
 
     def __init__(
-        self, request: str, description=str, supported=False, options=dict
+            self, request: str, description=str, supported=False, options=dict
     ) -> None:
         """
         Initialize the handler status object.
@@ -134,48 +134,79 @@ class BaseHandler(object):
     def _pre_process(self) -> None:
         """
         Pre process the request by setting the request status to PRE_PROCESSING.
-        Handler objects extending this method must call super()._pre_process()
-        before continuing with custom handler commands.
+        Do not overwrite or extend this method. Instead implement the pre_process() method to add additional steps.
 
         :return: None
         """
         self.request.set_status(BaseRequest.STATUS_PRE_PROCESSING)
+        self.pre_process()
+
+    def pre_process(self) -> None:
+        """
+        (Optionally) perform additional pre processing steps before continuing.
+
+        :return: None
+        """
+        pass
 
     def _download(self) -> None:
         """
         Download the request by setting the request status to DOWNLOADING.
-        Handler objects extending this method must call super()._download()
-        before continuing with custom handler commands.
+        Do not overwrite or extend this method. Instead implement the download() method to add additional steps.
 
         :return: None
         """
         self.request.set_status(BaseRequest.STATUS_DOWNLOADING)
+        self.download()
+
+    def download(self) -> None:
+        """
+        (Optionally) perform additional download steps before continuing.
+
+        :return: None
+        """
+        pass
 
     def _post_process(self) -> None:
         """
         Post process the request by setting the request status to POST_PROCESSING.
-        Handler objects extending this method must call super()._post_processing()
-        before continuing with custom handler commands.
+        Do not overwrite or extend this method. Instead implement the post_process() method to add additional steps.
 
         :return: None
         """
         self.request.set_status(BaseRequest.STATUS_POST_PROCESSING)
+        self.post_process()
+
+    def post_process(self) -> None:
+        """
+        (Optionally) perform additional post processing steps before continuing.
+
+        :return: None
+        """
+        pass
 
     def _complete(self) -> None:
         """
         Complete the request by setting the request status to COMPLETED.
-        Handler objects extending this method must call super()._complete()
-        before continuing with custom handler commands.
+        Do not overwrite or extend this method. Instead implement the complete() method to add additional steps.
 
         :return: None
         """
         self.request.set_status(BaseRequest.STATUS_COMPLETED)
+        self.complete()
+
+    def complete(self) -> None:
+        """
+        (Optionally) perform additional complete steps before continuing.
+
+        :return: None
+        """
+        pass
 
     def _reset(self) -> None:
         """
-        Reset the handler and clears all previously generated files.
-        Handler objects extending this method must call super()._reset()
-        before continuing with custom handler commands.
+        Reset the handler, sets the request status to FAILED and clears all previously generated files.
+        Do not overwrite or extend this method. Instead implement the reset() method to add additional steps.
 
         :return: None
         """
@@ -184,4 +215,14 @@ class BaseHandler(object):
         self.request.set_title("")
         self.request.set_data({})
 
+        self.reset()
+
         delete_request_files.delay(self.request.path)
+
+    def reset(self) -> None:
+        """
+        (Optionally) perform additional reset steps before continuing.
+
+        :return: None
+        """
+        pass

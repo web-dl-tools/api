@@ -42,7 +42,9 @@ class AudioVisualHandler(BaseHandler):
         from .models import AudioVisualRequest
 
         status = BaseHandlerStatus(AudioVisualRequest.__name__)
-        status.set_description("A handler for downloading an audio and/or visual resource.")
+        status.set_description(
+            "A handler for downloading an audio and/or visual resource."
+        )
 
         try:
             with youtube_dl.YoutubeDL({}) as ydl:
@@ -56,15 +58,13 @@ class AudioVisualHandler(BaseHandler):
 
         return status
 
-    def _pre_process(self) -> None:
+    def pre_process(self) -> None:
         """
-        An extension of the _pre_process method which configures the options
+        Additional pre-processing steps which configures the options
         for use when downloading the request.
 
         :return: None
         """
-        super()._pre_process()
-
         with youtube_dl.YoutubeDL({}) as ydl:
             meta = ydl.extract_info(self.request.url, download=False)
             self.request.set_data(meta)
@@ -82,14 +82,13 @@ class AudioVisualHandler(BaseHandler):
                 "progress_hooks": [self.progress_hook],
             }
 
-    def _download(self) -> None:
+    def download(self) -> None:
         """
-        An extension of the _download method which
+        Additional download steps which
         download the audio visual request using youtube-dl.
 
         :return: None
         """
-        super()._download()
         with youtube_dl.YoutubeDL(self.options) as ydl:
             ydl.download([self.request.url])
 

@@ -41,15 +41,13 @@ class DirectHandler(BaseHandler):
 
         return status
 
-    def _pre_process(self) -> None:
+    def pre_process(self) -> None:
         """
-        An extension of the _pre_process method which
+        Additional pre-processing steps which
         prepares the filepath and retrieves file props.
 
         :return: None
         """
-        super()._pre_process()
-
         r = requests.head(self.request.url, allow_redirects=True)
         headers = r.headers
         self.request.set_data(dict(headers))
@@ -73,15 +71,13 @@ class DirectHandler(BaseHandler):
             os.makedirs(self.request.path)
             self.logger.debug(f"Created folder for resource.")
 
-    def _download(self) -> None:
+    def download(self) -> None:
         """
-        An extension of the _download method which
+        Additional download steps which
         download the direct request using requests.
 
         :return: None
         """
-        super()._download()
-
         r = requests.get(self.request.url, stream=True)
         total = r.headers.get("content-length")
         chunk_size = 1024
