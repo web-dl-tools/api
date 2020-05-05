@@ -18,5 +18,5 @@ markdown==3.1.1
 celery==4.4.0
 redis==3.3.11
 
-youtube_dl==2020.3.24
+youtube_dl==2020.5.3
 python-qbittorrent==0.4.2
