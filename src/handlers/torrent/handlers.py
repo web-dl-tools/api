@@ -40,26 +40,22 @@ class TorrentHandler(BaseHandler):
 
         return status
 
-    def _pre_process(self) -> None:
+    def pre_process(self) -> None:
         """
-        An extension of the _pre_process method which
+        Additional pre-processing steps which
         creates an connection with the qbittorrent API.
 
         :return: None
         """
-        super()._pre_process()
-
         self.connect()
 
-    def _download(self) -> None:
+    def download(self) -> None:
         """
-        An extension of the _download method which
+        Additional download steps which
         download the torrent request using qbittorrent.
 
         :return: None
         """
-        super()._download()
-
         self.qb.download_from_link(self.request.url, savepath=f"/{self.request.path}")
         self.logger.debug(f"Added {self.request.url} to the download list.")
 
@@ -112,15 +108,13 @@ class TorrentHandler(BaseHandler):
         self.request.set_data(torrent)
         self.request.set_title(torrent["name"])
 
-    def _post_process(self) -> None:
+    def post_process(self) -> None:
         """
-        An extension of the _post_process method which
+        Additional post-processing steps which
         removes the completed torrent to prevent seeding.
 
         :return: None
         """
-        super()._post_process()
-
         self.qb.delete(self.hash)
         self.logger.debug(f"Torrent has been removed from qBittorrent.")
 
@@ -131,6 +125,7 @@ class TorrentHandler(BaseHandler):
         :return: None
         """
         time.sleep(5)
+
         self.qb = Client("http://qbittorrent:8001/")
         self.qb.login("admin", "adminadmin")
         self.logger.debug("Connected with qBittorrent.")

@@ -48,16 +48,14 @@ class ResourceHandler(BaseHandler):
 
         return status
 
-    def _pre_process(self) -> None:
+    def pre_process(self) -> None:
         """
-        An extension of the _pre_process method which
+        Additional pre-processing steps which
         extracts the html and title from the requests
         and prepares the filepath.
 
         :return: None
         """
-        super()._pre_process()
-
         self.html = requests.get(self.request.url).text
         self.request.set_title(
             BeautifulSoup(self.html, "html.parser").find("title").string
@@ -68,17 +66,15 @@ class ResourceHandler(BaseHandler):
             os.makedirs(self.request.path)
             self.logger.debug(f"Created folder for resource.")
 
-    def _download(self) -> None:
+    def download(self) -> None:
         """
-        An extension of the _download method which
+        Additional download steps which
         extracts all paths from the resource and
         filterers them according to the given
         extensions and removes duplicates.
 
         :return: None
         """
-        super()._download()
-
         paths = []
 
         # Extract all absolute paths.
