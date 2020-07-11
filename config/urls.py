@@ -27,12 +27,12 @@ from src.download.views import RequestViewSet
 
 router = DefaultRouter()
 
-router.register("user", UserViewSet)
+router.register("users", UserViewSet)
 router.register("requests", RequestViewSet)
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("api/user/", include(user_urls)),
+    path("api/users/", include(user_urls)),
     path("api/handlers/", include(handler_urls)),
     path("api/download/", include(download_urls)),
     path("api/", include(router.urls)),
