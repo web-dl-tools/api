@@ -40,3 +40,8 @@ update: ## Update repository to latest version and rebuild container stack
 	then \
 		make start; \
 	fi
+
+update_force: ## Update repository to latest version and rebuild container stack without user input
+	@echo "Updating repository to latest version..."
+	@echo "Warning: This will shutdown all containers."
+	make stop && git fetch && git pull && make build
