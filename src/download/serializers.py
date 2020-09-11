@@ -10,19 +10,21 @@ from rest_polymorphic.serializers import PolymorphicSerializer
 
 from .models import BaseRequest, Log
 
-from src.handlers.audio_visual.models import AudioVisualRequest
-from src.handlers.audio_visual.serializers import AudioVisualRequestSerializer
-from src.handlers.direct.models import DirectRequest
-from src.handlers.direct.serializers import DirectRequestSerializer
-from src.handlers.torrent.models import TorrentRequest
-from src.handlers.torrent.serializers import TorrentRequestSerializer
-from src.handlers.resource.models import ResourceRequest
-from src.handlers.resource.serializers import ResourceRequestSerializer
 
 class BaseRequestSerializer(serializers.ModelSerializer):
     """
     A base request serializer for the BaseRequest model object.
     """
+    excluded_fields = (
+        "data",
+        "modified_at",
+        "path",
+        "user",
+        "start_processing_at",
+        "completed_at",
+        "start_processing_at",
+        "path",
+    )
 
     class Meta:
         """
@@ -60,6 +62,15 @@ class BaseRequestSerializer(serializers.ModelSerializer):
         )
         extra_kwargs = {"user": {"write_only": True}}
 
+    @property
+    def _readable_fields(self):
+        for key, field in self.fields.items():
+            if self.context["action"] == "list" and key in self.excluded_fields:
+                continue
+
+            if not field.write_only:
+                yield field
+
 
 class PolymorphicRequestSerializer(PolymorphicSerializer):
     """
@@ -68,6 +79,14 @@ class PolymorphicRequestSerializer(PolymorphicSerializer):
     This serializer object also acts as a registration definition
     of custom handler Requests models and Serializers objects and their bindings.
     """
+    from src.handlers.audio_visual.models import AudioVisualRequest
+    from src.handlers.direct.models import DirectRequest
+    from src.handlers.torrent.models import TorrentRequest
+    from src.handlers.resource.models import ResourceRequest
+    from src.handlers.audio_visual.serializers import AudioVisualRequestSerializer
+    from src.handlers.direct.serializers import DirectRequestSerializer
+    from src.handlers.torrent.serializers import TorrentRequestSerializer
+    from src.handlers.resource.serializers import ResourceRequestSerializer
 
     resource_type_field_name = "request_type"
     model_serializer_mapping = {

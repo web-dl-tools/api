@@ -7,8 +7,10 @@ from rest_framework import serializers
 
 from .models import DirectRequest
 
+from src.download.serializers import BaseRequestSerializer
 
-class DirectRequestSerializer(serializers.ModelSerializer):
+
+class DirectRequestSerializer(BaseRequestSerializer):
     """
     Direct request serializer.
     """
@@ -19,31 +21,6 @@ class DirectRequestSerializer(serializers.ModelSerializer):
         """
 
         model = DirectRequest
-        fields = (
-            "id",
-            "created_at",
-            "modified_at",
-            "user",
-            "status",
-            "url",
-            "start_processing_at",
-            "completed_at",
-            "progress",
-            "title",
-            "data",
-            "path",
-            "status_display",
-        )
-        read_only_fields = (
-            "id",
-            "created_at",
-            "modified_at",
-            "status",
-            "start_processing_at",
-            "completed_at",
-            "progress",
-            "title",
-            "data",
-            "path",
-        )
+        fields = BaseRequestSerializer.Meta.fields
+        read_only_fields = BaseRequestSerializer.Meta.read_only_fields
         extra_kwargs = {"user": {"write_only": True}}

@@ -45,6 +45,13 @@ class RequestViewSet(
         """
         return super().get_queryset().filter(user=self.request.user)
 
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        if "action" not in context:
+            context["action"] = self.action
+
+        return context
+
     def create(self, request, *args, **kwargs):
         """
         Create a Request and add the user from the request to the payload to prevent overwriting the user.

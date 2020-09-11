@@ -3,15 +3,18 @@ Resource handler serializers.
 
 This file contains the serializer definition for the ResourceRequest model object.
 """
-from rest_framework import serializers
-
 from .models import ResourceRequest
 
+from src.download.serializers import BaseRequestSerializer
 
-class ResourceRequestSerializer(serializers.ModelSerializer):
+
+CUSTOM_FIELDS = ("extensions", "min_bytes")
+
+class ResourceRequestSerializer(BaseRequestSerializer):
     """
     Resource request serializer.
     """
+    excluded_fields = BaseRequestSerializer.excluded_fields + CUSTOM_FIELDS
 
     class Meta:
         """
@@ -19,33 +22,6 @@ class ResourceRequestSerializer(serializers.ModelSerializer):
         """
 
         model = ResourceRequest
-        fields = (
-            "id",
-            "created_at",
-            "modified_at",
-            "user",
-            "status",
-            "url",
-            "start_processing_at",
-            "completed_at",
-            "progress",
-            "title",
-            "data",
-            "path",
-            "status_display",
-            "extensions",
-            "min_bytes"
-        )
-        read_only_fields = (
-            "id",
-            "created_at",
-            "modified_at",
-            "status",
-            "start_processing_at",
-            "completed_at",
-            "progress",
-            "title",
-            "data",
-            "path",
-        )
+        fields = BaseRequestSerializer.Meta.fields + CUSTOM_FIELDS
+        read_only_fields = BaseRequestSerializer.Meta.read_only_fields
         extra_kwargs = {"user": {"write_only": True}}

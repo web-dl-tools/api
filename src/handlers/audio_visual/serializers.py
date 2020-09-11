@@ -3,15 +3,17 @@ Audio visual handler serializers.
 
 This file contains the serializer definition for the AudioVisualRequest model object.
 """
-from rest_framework import serializers
-
 from .models import AudioVisualRequest
 
+from src.download.serializers import BaseRequestSerializer
 
-class AudioVisualRequestSerializer(serializers.ModelSerializer):
+CUSTOM_FIELDS = ("format_selection", "output")
+
+class AudioVisualRequestSerializer(BaseRequestSerializer):
     """
     Audio visual request serializer.
     """
+    excluded_fields = BaseRequestSerializer.excluded_fields + CUSTOM_FIELDS
 
     class Meta:
         """
@@ -19,33 +21,6 @@ class AudioVisualRequestSerializer(serializers.ModelSerializer):
         """
 
         model = AudioVisualRequest
-        fields = (
-            "id",
-            "created_at",
-            "modified_at",
-            "user",
-            "status",
-            "url",
-            "start_processing_at",
-            "completed_at",
-            "progress",
-            "title",
-            "data",
-            "path",
-            "status_display",
-            "format_selection",
-            "output",
-        )
-        read_only_fields = (
-            "id",
-            "created_at",
-            "modified_at",
-            "status",
-            "start_processing_at",
-            "completed_at",
-            "progress",
-            "title",
-            "data",
-            "path",
-        )
+        fields = BaseRequestSerializer.Meta.fields + CUSTOM_FIELDS
+        read_only_fields = BaseRequestSerializer.Meta.read_only_fields
         extra_kwargs = {"user": {"write_only": True}}
