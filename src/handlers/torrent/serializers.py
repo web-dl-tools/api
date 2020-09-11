@@ -3,12 +3,12 @@ Torrent handler serializers.
 
 This file contains the serializer definition for the TorrentRequest model object.
 """
-from rest_framework import serializers
-
 from .models import TorrentRequest
 
+from src.download.serializers import BaseRequestSerializer
 
-class TorrentRequestSerializer(serializers.ModelSerializer):
+
+class TorrentRequestSerializer(BaseRequestSerializer):
     """
     Torrent request serializer.
     """
@@ -19,31 +19,6 @@ class TorrentRequestSerializer(serializers.ModelSerializer):
         """
 
         model = TorrentRequest
-        fields = (
-            "id",
-            "created_at",
-            "modified_at",
-            "user",
-            "status",
-            "url",
-            "start_processing_at",
-            "completed_at",
-            "progress",
-            "title",
-            "data",
-            "path",
-            "status_display",
-        )
-        read_only_fields = (
-            "id",
-            "created_at",
-            "modified_at",
-            "status",
-            "start_processing_at",
-            "completed_at",
-            "progress",
-            "title",
-            "data",
-            "path",
-        )
+        fields = BaseRequestSerializer.Meta.fields
+        read_only_fields = BaseRequestSerializer.Meta.read_only_fields
         extra_kwargs = {"user": {"write_only": True}}
