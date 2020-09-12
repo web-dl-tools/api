@@ -65,7 +65,7 @@ class BaseRequestSerializer(serializers.ModelSerializer):
     @property
     def _readable_fields(self):
         for key, field in self.fields.items():
-            if self.context["action"] == "list" and key in self.excluded_fields:
+            if "action" in self.context and self.context["action"] == "list" and key in self.excluded_fields:
                 continue
 
             if not field.write_only:
