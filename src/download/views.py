@@ -46,6 +46,11 @@ class RequestViewSet(
         return super().get_queryset().filter(user=self.request.user)
 
     def get_serializer_context(self):
+        """
+        Enrich the serializer context with the request action.
+
+        :return: a dict containing request context data.
+        """
         context = super().get_serializer_context()
         if "action" not in context:
             context["action"] = self.action
