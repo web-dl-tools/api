@@ -64,6 +64,9 @@ class BaseRequestSerializer(serializers.ModelSerializer):
 
     @property
     def _readable_fields(self):
+        """
+        A generator for readable fields extended to add exclude field(s) functionality.
+        """
         for key, field in self.fields.items():
             if "action" in self.context and self.context["action"] == "list" and key in self.excluded_fields:
                 continue
