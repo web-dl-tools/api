@@ -1,7 +1,7 @@
-image: docker:18.09.2
-
 include:
   - template: Dependency-Scanning.gitlab-ci.yml
+
+image: docker:18.09.2
 
 services:
   - docker:dind
