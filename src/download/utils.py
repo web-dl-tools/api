@@ -4,6 +4,7 @@ Download utils.
 This file contains functions and action not fit for standard Django files.
 """
 import os
+import io
 import magic
 
 from wsgiref.util import FileWrapper
@@ -92,7 +93,7 @@ def create_file_streaming_response(path: str) -> FileResponse:
     mime = magic.Magic(mime=True)
     attachment = file_size > 5000000  # 5 MB
 
-    response = FileResponse(FileWrapper(open(path, "rb"), blksize=16384), as_attachment=attachment)
+    response = FileResponse(FileWrapper(open(path, "rb", buffering=16384), blksize=16384), as_attachment=attachment)
 
     response["Content-Length"] = os.path.getsize(path)
     response["Content-Type"] = mime.from_file(path)
