@@ -6,7 +6,6 @@ This file contains the model object definitions for the polymorphic BaseRequest 
 from typing import Type
 from polymorphic.models import PolymorphicModel
 from django.db import models
-from django.contrib.postgres.fields import JSONField
 from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
 from django.conf import settings
@@ -48,7 +47,7 @@ class BaseRequest(ModifiedAtMixin, CreatedAtMixin, IdMixin, PolymorphicModel):
     completed_at = models.DateTimeField(_("completed at"), null=True)
     progress = models.IntegerField(_("progress"), default=0)
     title = models.CharField(_("title"), max_length=200, blank=True)
-    data = JSONField(_("data"), default=dict)
+    data = models.JSONField(_("data"), default=dict)
 
     class Meta:
         """

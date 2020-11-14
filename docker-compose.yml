@@ -52,7 +52,7 @@ services:
 
   celery:
     <<: *base
-    command: celery worker -A config.celery --concurrency=1
+    command: celery -A config.celery worker --concurrency=1
     depends_on:
       - redis
       - postgres
