@@ -25,7 +25,7 @@ from src.download import urls as download_urls
 from src.user.views import UserViewSet
 from src.download.views import RequestViewSet
 
-router = DefaultRouter()
+router = DefaultRouter(trailing_slash=False)
 
 router.register("users", UserViewSet)
 router.register("requests", RequestViewSet)

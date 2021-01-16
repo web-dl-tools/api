@@ -90,6 +90,10 @@ MIDDLEWARE = [
 ROOT_URLCONF = "config.urls"
 
 
+# Append slash
+APPEND_SLASH = False
+
+
 # Templates
 TEMPLATES = [
     {

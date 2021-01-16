@@ -9,5 +9,5 @@ from django.urls import path
 from .views import GetFileView
 
 urlpatterns = [
-    path("file/", GetFileView.as_view()),
+    path("file", GetFileView.as_view()),
 ]
