@@ -13,7 +13,7 @@ On lower versions of Mac OS, Windows, or on Linux, the [Docker Toolbox](https://
 
 ### Runtime environment
 - Docker 18.09.2+
-- Docker-compose 1.23.2+
+- Docker Compose 1.23.2+
 
 ### Startup guide
 
@@ -47,7 +47,7 @@ $ make stop && make clean
 
 ### Runtime environment
 - Docker 18.09.2+
-- Docker-compose 1.23.2+
+- Docker Compose 1.23.2+
 
 ### Create image
 
