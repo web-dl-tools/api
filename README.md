@@ -34,7 +34,7 @@ $ make stop && make clean
 $ make update
 ```
 
-### shutdown guide
+### Shutdown guide
 
  - Open a terminal window in the project folder.
  - Run the following code to stop and remove the running containers.
