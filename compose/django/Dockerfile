@@ -11,8 +11,7 @@ ARG POSTGRES_DB
 
 RUN apt-get update
 RUN curl https://sh.rustup.rs -sSf | sh -s -- -y
-RUN apt-get install ffmpeg postgresql-client -y
-RUN apt-get install ffmpeg postgresql-client gcc musl-dev python3-dev libffi-dev openssl-dev cargo -y
+RUN apt-get install ffmpeg postgresql-client gcc musl-dev python3-dev libffi-dev openssl-dev cargo --fix-missing -y
 
 RUN mkdir /code
 
