@@ -12,7 +12,7 @@ ARG POSTGRES_DB
 RUN apt-get update
 RUN apt-get install ffmpeg postgresql-client -y
 RUN curl https://sh.rustup.rs -sSf | sh -s -- -y
-RUN su $HOME/.cargo/env
+RUN $HOME/.cargo/env
 RUN rustc --version --verbose
 
 RUN mkdir /code
