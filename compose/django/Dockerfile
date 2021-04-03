@@ -1,6 +1,6 @@
 FROM python:3.8.1-buster
 
-LABEL version = "0.1"
+LABEL version = "1.0"
 LABEL description = "Django docker container"
 LABEL maintainer = "rinesh.ramadhin@gmail.com"
 
