@@ -14,7 +14,6 @@ RUN apt-get install ffmpeg postgresql-client -y
 
 RUN curl https://sh.rustup.rs -sSf | sh -s -- -y
 ENV PATH="/root/.cargo/bin:${PATH}"
-RUN rustc --version --verbose
 
 RUN mkdir /code
 
