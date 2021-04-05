@@ -1,0 +1,16 @@
+"""
+Application app config.
+
+This file defines the db app configuration. For more information see
+https://docs.djangoproject.com/en/3.0/ref/applications/#configuring-applications
+"""
+from django.apps import AppConfig
+
+
+class DbAppConfig(AppConfig):
+    """
+    Db app config.
+    """
+
+    name = "src.application"
+    verbose_name = "Application"

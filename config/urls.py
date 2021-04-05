@@ -18,6 +18,7 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 
+from src.application import urls as application_urls
 from src.user import urls as user_urls
 from src.handlers import urls as handler_urls
 from src.download import urls as download_urls
@@ -32,6 +33,7 @@ router.register("requests", RequestViewSet)
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path("api/application/", include(application_urls)),
     path("api/users/", include(user_urls)),
     path("api/handlers/", include(handler_urls)),
     path("api/download/", include(download_urls)),
