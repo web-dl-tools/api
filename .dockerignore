@@ -1,3 +1,4 @@
+Dockerfile
 docker-compose.yml
 
 .idea
@@ -7,5 +8,6 @@ docker-compose.yml
 .env.dist
 .gitlab-ci.yml
 README.md
+
 .postgres_data
 files
