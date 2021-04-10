@@ -16,8 +16,8 @@ RUN apt-get remove --auto-remove python -y
 RUN apt-get purge python -y
 
 # Install Python
-RUN apt-get install build-essential zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libsqlite3-dev libreadline-dev libffi-dev curl libbz2-dev -y
 WORKDIR /install
+RUN apt-get install build-essential zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libsqlite3-dev libreadline-dev libffi-dev curl libbz2-dev -y
 RUN curl -O https://www.python.org/ftp/python/3.8.1/Python-3.8.1.tar.xz
 RUN tar -xf Python-3.8.1.tar.xz
 
@@ -26,9 +26,9 @@ WORKDIR /install/Python-3.8.1
 RUN ./configure --enable-optimizations
 
 # Install Python packages
-RUN apt-get install python3-pip ffmpeg postgresql-client -y
 WORKDIR /code
 COPY requirements.txt .
+RUN apt-get install python3-pip ffmpeg postgresql-client -y
 RUN pip3 install --upgrade pip
 RUN pip3 install -r requirements.txt
 
