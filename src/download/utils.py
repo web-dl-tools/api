@@ -4,8 +4,9 @@ Download utils.
 This file contains functions and action not fit for standard Django files.
 """
 import os
-import io
 import magic
+
+from datetime import datetime
 
 from wsgiref.util import FileWrapper
 from django.http import FileResponse
@@ -43,6 +44,7 @@ def list_files(path: str) -> list:
                     "filename": filename,
                     "extension": extension,
                     "size": os.path.getsize(f"{root}/{file}"),
+                    "created_at": datetime.fromtimestamp(os.path.getmtime(f"{root}/{file}")),
                 }
             )
         break
