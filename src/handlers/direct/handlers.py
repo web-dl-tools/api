@@ -30,7 +30,6 @@ class DirectHandler(BaseHandler):
         from .models import DirectRequest
 
         status = BaseHandlerStatus(DirectRequest.__name__)
-        status.set_description("A handler for directly downloading the url resource.")
         status.set_options({})
 
         try:

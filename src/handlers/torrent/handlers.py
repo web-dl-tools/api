@@ -34,7 +34,6 @@ class TorrentHandler(BaseHandler):
         magnet_regex = re.compile(r"magnet:\?xt=urn:btih:[a-zA-Z0-9]*")
 
         status = BaseHandlerStatus(TorrentRequest.__name__)
-        status.set_description("A handler for downloading a torrent resource.")
         status.set_options({})
         status.set_supported(bool(magnet_regex.search(url)))
 

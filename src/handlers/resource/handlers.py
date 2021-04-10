@@ -32,9 +32,6 @@ class ResourceHandler(BaseHandler):
         from .models import ResourceRequest
 
         status = BaseHandlerStatus(ResourceRequest.__name__)
-        status.set_description(
-            "A handler for downloading resources from the url resource."
-        )
         status.set_options({})
 
         try:

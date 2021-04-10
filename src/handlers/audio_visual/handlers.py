@@ -42,9 +42,6 @@ class AudioVisualHandler(BaseHandler):
         from .models import AudioVisualRequest
 
         status = BaseHandlerStatus(AudioVisualRequest.__name__)
-        status.set_description(
-            "A handler for downloading an audio and/or visual resource."
-        )
 
         try:
             with youtube_dl.YoutubeDL({}) as ydl:
