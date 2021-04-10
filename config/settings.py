@@ -57,10 +57,10 @@ THIRD_PARTY_APPS = [
 
 # Locally installed apps.
 LOCAL_APPS = [
-    "src.application",
-    "src.auth_token",
     "src.db",
     "src.user",
+    "src.application",
+    "src.auth_token",
     "src.download",
     "src.handlers",
     "src.handlers.audio_visual",

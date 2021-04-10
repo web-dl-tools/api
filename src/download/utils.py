@@ -67,7 +67,7 @@ def validate_path(path: str, user: User) -> bool:
     if path_parts[0] != "files":
         return False
 
-    if int(path_parts[1]) != user.id:
+    if path_parts[1] != str(user.id):
         return False
 
     if not BaseRequest.objects.filter(id=path_parts[2], user=user).exists():
