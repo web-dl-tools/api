@@ -16,36 +16,22 @@ class BaseHandlerStatus(object):
     """
 
     request = None
-    description = ""
     supported = False
     options = {}
 
-    def __init__(
-            self, request: str, description=str, supported=False, options=dict
-    ) -> None:
+    def __init__(self, request: str, supported=False, options=dict) -> None:
         """
         Initialize the handler status object.
 
         :param request: A BaseRequest object to notify the BaseRequest the status belongs to.
-        :param description: A str to describe the handler.
         :param supported: An optional bool for the handler supported status.
         :param options: An optional dict containing custom options the handler may support/require.
         """
         self.request = request
-        self.description = description
         self.supported = supported
         self.options = options
 
         super().__init__()
-
-    def set_description(self, description: str) -> None:
-        """
-        Set the description.
-
-        :param description: A str to describe the handler.
-        :return: None
-        """
-        self.description = description
 
     def set_supported(self, supported: bool) -> None:
         """
@@ -73,7 +59,6 @@ class BaseHandlerStatus(object):
         """
         return {
             "request": self.request,
-            "description": self.description,
             "supported": self.supported,
             "options": self.options,
         }

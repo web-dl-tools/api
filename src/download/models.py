@@ -149,15 +149,6 @@ class BaseRequest(ModifiedAtMixin, CreatedAtMixin, IdMixin, PolymorphicModel):
         """
         return f"files/{self.user.id}/{self.id}"
 
-    @property
-    def status_display(self) -> str:
-        """
-        Get the status display value.
-
-        :return: A str containing the status display value.
-        """
-        return self.get_status_display()
-
     def get_handler(self) -> "src.download.handlers.BaseHandler":
         """
         Initialize the associated handler with the current request and return it.
