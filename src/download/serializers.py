@@ -46,7 +46,6 @@ class BaseRequestSerializer(serializers.ModelSerializer):
             "title",
             "data",
             "path",
-            "status_display",
         )
         read_only_fields = (
             "id",
