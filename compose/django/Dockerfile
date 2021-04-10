@@ -1,29 +1,39 @@
-FROM python:3.8.1-buster
+FROM rust:1.51.0-buster
 
-LABEL version = "1.0"
+# Setup labels
+LABEL version = "2.0"
 LABEL description = "Django docker container"
 LABEL maintainer = "rinesh.ramadhin@gmail.com"
 
+# Setup environment arguments
 ENV PYTHONUNBUFFERED 1
-
 ARG POSTGRES_USER
 ARG POSTGRES_DB
 
+# Uninstall outdated python
 RUN apt-get update
-RUN apt-get install ffmpeg postgresql-client -y
+RUN apt-get remove --auto-remove python -y
+RUN apt-get purge python -y
 
-RUN curl https://sh.rustup.rs -sSf | sh -s -- -y
-ENV PATH="/root/.cargo/bin:${PATH}"
+# Install Python
+RUN apt-get install build-essential zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libsqlite3-dev libreadline-dev libffi-dev curl libbz2-dev -y
+WORKDIR /install
+RUN curl -O https://www.python.org/ftp/python/3.8.1/Python-3.8.1.tar.xz
+RUN tar -xf Python-3.8.1.tar.xz
 
-RUN mkdir /code
+# Configure Python
+WORKDIR /install/Python-3.8.1
+RUN ./configure --enable-optimizations
 
+# Install Python packages
+RUN apt-get install python3-pip ffmpeg postgresql-client -y
 WORKDIR /code
-
 COPY requirements.txt .
+RUN pip3 install --upgrade pip
+RUN pip3 install -r requirements.txt
 
-RUN pip install --upgrade pip
-RUN pip install -r requirements.txt
-
+# Copy application source
 COPY . .
 
+# Set starting configuration
 ENTRYPOINT ["./compose/services-check.sh"]
