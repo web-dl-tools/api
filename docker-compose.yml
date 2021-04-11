@@ -1,14 +1,18 @@
-version: '2.2'
+version: '3.8'
 
 services:
   postgres:
     image: postgres:12.1
+    deploy:
+      resources:
+        limits:
+          memory: 50M
+        reservations:
+          memory: 20M
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DB=${POSTGRES_DB}
-    mem_limit: 50M
-    mem_reservation: 20M
     ports:
       - 5432:5432
     restart: always
@@ -26,14 +30,18 @@ services:
     depends_on:
       - postgres
       - celery
+    deploy:
+      resources:
+        limits:
+          memory: 1000M
+        reservations:
+          memory: 500M
     environment:
       - DJANGO_DEBUG=${DJANGO_DEBUG}
       - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DB=${POSTGRES_DB}
-    mem_limit: 400M
-    mem_reservation: 200M
     ports:
       - 8000:8000
     restart: always
@@ -49,6 +57,12 @@ services:
   redis:
     image: redis:5.0.7-alpine
     restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 250M
+        reservations:
+          memory: 100M
 
   celery:
     <<: *base
@@ -56,15 +70,23 @@ services:
     depends_on:
       - redis
       - postgres
-    mem_limit: 250M
-    mem_reservation: 150M
+    deploy:
+      resources:
+        limits:
+          memory: 250M
+        reservations:
+          memory: 100M
     ports: []
 
   qbittorrent:
     image: linuxserver/qbittorrent:4.3.0202003011834-6876-b519eceubuntu18.04.1-ls16
     container_name: qbittorrent
-    mem_limit: 100M
-    mem_reservation: 50M
+    deploy:
+      resources:
+        limits:
+          memory: 50M
+        reservations:
+          memory: 20M
     environment:
       - PUID=${USER_ID}
       - TZ=Europe/Amsterdam
