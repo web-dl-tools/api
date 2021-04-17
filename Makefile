@@ -8,11 +8,11 @@ stop: ## Stop the container stack
 
 build: ## Build the container stack
 	@echo "Building containers..."
-	docker-compose build
+	sudo docker-compose build
 
 start: ## Start the container stack
 	@echo "Starting up containers..."
-	make build && docker-compose up
+	make build && sudo docker-compose up
 
 clean: ## Clean out unused docker(-compose) files
 	@echo "Removing unused docker files..."
