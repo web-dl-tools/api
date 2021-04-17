@@ -32,7 +32,7 @@ router.register("users", UserViewSet)
 router.register("requests", RequestViewSet)
 
 urlpatterns = [
-    path("admin/", admin.site.urls),
+    path("admin", admin.site.urls),
     path("api/application/", include(application_urls)),
     path("api/users/", include(user_urls)),
     path("api/handlers/", include(handler_urls)),
