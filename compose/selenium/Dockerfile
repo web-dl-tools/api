@@ -15,8 +15,8 @@ RUN apt-get install unzip xvfb libxi6 libgconf-2-4 default-jdk -y
 
 # Install Chrome driver
 WORKDIR /install
-RUN wget https://github.com/electron/electron/releases/download/v12.0.5/chromedriver-v12.0.5-linux-arm64.zip
-RUN unzip chromedriver-v12.0.5-linux-arm64.zip
+RUN wget https://github.com/electron/electron/releases/download/v12.0.5/chromedriver-v12.0.5-linux-armv7l.zip
+RUN unzip chromedriver-v12.0.5-linux-armv7l.zip
 RUN mv chromedriver /usr/bin/chromedriver
 RUN chown root:root /usr/bin/chromedriver
 RUN chmod +x /usr/bin/chromedriver
