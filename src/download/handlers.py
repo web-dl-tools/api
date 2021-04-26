@@ -4,6 +4,8 @@ Download handlers.
 This file contains custom objects for the BaseHandler and BaseHandlerStatus.
 Custom handlers must at a minimum implement the BaseHandler.
 """
+from sentry_sdk import capture_exception
+
 from .models import BaseRequest
 from .loggers import BaseLogger
 from .tasks import delete_request_files
@@ -113,8 +115,9 @@ class BaseHandler(object):
             self._post_process()
             self._complete()
         except Exception as e:
-            self._reset()
             self.logger.error(str(e))
+            capture_exception(e)
+            self._reset()
 
     def _pre_process(self) -> None:
         """
