@@ -7,9 +7,10 @@ import os
 import re
 import requests
 import mimetypes
+import time
 
-from bs4 import BeautifulSoup
 from urllib.parse import urljoin
+from selenium import webdriver
 
 from src.download.handlers import BaseHandler, BaseHandlerStatus
 
@@ -19,6 +20,7 @@ class ResourceHandler(BaseHandler):
     A resource handler which implements the BaseHandler object.
     """
 
+    driver = None
     html = None
 
     @staticmethod
@@ -48,21 +50,46 @@ class ResourceHandler(BaseHandler):
     def pre_process(self) -> None:
         """
         Additional pre-processing steps which
-        extracts the html and title from the requests
-        and prepares the filepath.
+        loads the external url in a Chromium instance
+        connected and managed by Selenium Server in order to
+        extracts the html and title from the request raw data
+        and prepares the filepath(s).
 
         :return: None
         """
-        self.html = requests.get(self.request.url).text
-        title = BeautifulSoup(self.html, "html.parser").find("title").string
+        chrome_options = webdriver.ChromeOptions()
+        chrome_options.add_argument('--headless')
+        chrome_options.add_argument('--no-sandbox')
+        chrome_options.add_argument('--window-size=1920,1080')
+
+        self.driver = webdriver.Remote(
+            command_executor="http://selenium:4444/wd/hub",
+            options=chrome_options,
+        )
+        self.driver.set_page_load_timeout(30)
+        self.logger.debug("Setup Selenium Server webdriver connection instance.")
+
+        self.driver.get(self.request.url)
+        self.logger.debug(f"Loaded {self.request.title} in Selenium Server instance. Sleeping 10 seconds to allow scripts to complete.")
+        time.sleep(10)
+
+        self.html = self.driver.page_source
+        title = self.driver.title
         self.request.set_title(
             title if title else "Page has no title"
         )
-        self.logger.debug(f"Extracted title {self.request.title}.")
+        self.logger.info(f"Extracted html and title '{self.request.title}'.")
 
         if not os.path.exists(self.request.path):
             os.makedirs(self.request.path)
-            self.logger.debug(f"Created folder for resource.")
+            self.logger.info(f"Created folder for resource.")
+
+        with open(f"{self.request.path}/{self.request.id}.png", "wb+") as f:
+            f.write(self.driver.get_screenshot_as_png())
+            self.logger.info("Created and saved screenshot.")
+
+        self.driver.quit()
+        self.logger.debug("Destroyed Selenium Server webdriver connection instance.")
 
     def download(self) -> None:
         """

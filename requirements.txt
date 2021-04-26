@@ -12,7 +12,6 @@ whitenoise==5.2.0
 channels==3.0.3
 channels-redis==3.2.0
 requests==2.25.1
-beautifulsoup4==4.9.3
 python-magic==0.4.22
 markdown==3.3.4
 celery==5.0.5
@@ -20,3 +19,4 @@ redis==3.5.3
 
 youtube_dl==2021.4.7
 python-qbittorrent==0.4.2
+selenium==3.141.0

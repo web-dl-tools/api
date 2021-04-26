@@ -56,13 +56,13 @@ services:
 
   redis:
     image: redis:5.0.7-alpine
-    restart: always
     deploy:
       resources:
         limits:
           memory: 250M
         reservations:
           memory: 100M
+    restart: always
 
   celery:
     <<: *base
@@ -81,6 +81,8 @@ services:
   qbittorrent:
     image: linuxserver/qbittorrent:4.3.0202003011834-6876-b519eceubuntu18.04.1-ls16
     container_name: qbittorrent
+    depends_on:
+      - django
     deploy:
       resources:
         limits:
@@ -97,4 +99,23 @@ services:
       - 6881:6881
       - 6881:6881/udp
       - 8001:8001
+    restart: always
+
+  selenium:
+    build:
+      context: .
+      dockerfile: ./compose/selenium/Dockerfile
+    command: java -jar selenium-server-standalone-3.141.59.jar
+    depends_on:
+      - django
+    deploy:
+      resources:
+        limits:
+          memory: 400M
+        reservations:
+          memory: 100M
+    environment:
+      - CHROMEDRIVER_WHITELISTED_IPS=''
+    ports:
+      - 4444:4444
     restart: always
