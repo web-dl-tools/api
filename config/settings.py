@@ -32,6 +32,20 @@ ALLOWED_HOSTS = ["*"]
 # See https://docs.djangoproject.com/en/3.0/ref/settings/#auth-user-model
 AUTH_USER_MODEL = "user.User"
 
+# Sentry configuration
+# https://docs.sentry.io/platforms/python/django/
+SENTRY_DSN = os.getenv("SENTRY_DSN", None)
+if SENTRY_DSN:
+    import sentry_sdk
+    from sentry_sdk.integrations.django import DjangoIntegration
+
+    sentry_sdk.init(
+        dsn=SENTRY_DSN,
+        integrations=[DjangoIntegration()],
+        traces_sample_rate=1.0,
+        send_default_pii=True
+    )
+
 
 # Third party apps that must initialize before Django apps.
 PRE_DJANGO_APPS = []
@@ -155,18 +169,6 @@ STATIC_URL = "/static/"
 # Cross-Origin Resource Sharing (CORS)
 # https://github.com/adamchainz/django-cors-headers
 CORS_ORIGIN_ALLOW_ALL = True
-
-
-# Sentry configuration
-# https://docs.sentry.io/platforms/python/django/
-SENTRY_DSN = os.getenv("SENTRY_DSN", None)
-if not DEBUG and SENTRY_DSN:
-    import sentry_sdk
-    from sentry_sdk.integrations.django import DjangoIntegration
-
-    sentry_sdk.init(
-        dsn=SENTRY_DSN, integrations=[DjangoIntegration()], send_default_pii=True
-    )
 
 
 # Redis configuration
