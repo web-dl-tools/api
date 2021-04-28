@@ -168,12 +168,15 @@ SENTRY_DSN = os.getenv("SENTRY_DSN", None)
 if not DEBUG and SENTRY_DSN:
     import sentry_sdk
     from sentry_sdk.integrations.django import DjangoIntegration
+    from sentry_sdk.integrations.redis import RedisIntegration
 
     sentry_sdk.init(
         dsn=SENTRY_DSN,
-        integrations=[DjangoIntegration()],
+        integrations=[DjangoIntegration(), RedisIntegration()],
         traces_sample_rate=1.0,
-        send_default_pii=True
+        attach_stacktrace=True,
+        send_default_pii=True,
+        request_bodies='always'
     )
 
 
