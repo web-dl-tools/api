@@ -117,6 +117,4 @@ services:
           memory: 100M
     environment:
       - CHROMEDRIVER_WHITELISTED_IPS=''
-    ports:
-      - 4444:4444
     restart: always
