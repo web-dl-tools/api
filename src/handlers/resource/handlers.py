@@ -42,7 +42,7 @@ class ResourceHandler(BaseHandler):
                 r.headers["content-type"].startswith("text/html")
                 and r.status_code == requests.codes.ok
             )
-        except requests.exceptions.InvalidSchema:
+        except (requests.exceptions.ConnectionError, requests.exceptions.InvalidSchema):
             status.set_supported(False)
 
         return status
