@@ -82,7 +82,7 @@ def create_file_streaming_response(path: str) -> FileResponse:
     """
     Create a streaming file response to serve the file while
     reducing the memory usage in order to support large file
-    downloads, especially on memory limited hardware.
+    downloads, particularly on memory limited hardware.
     The file will always be force downloaded as attachment if
     the file size exceeds a given limit, else it is up to the
     client to decide how to process and view the file.
@@ -91,16 +91,21 @@ def create_file_streaming_response(path: str) -> FileResponse:
     :return: A FileResponse containing a streaming file.
     """
     filename = os.path.basename(path)
+    filename = filename.replace(',', '').replace(';', '-')
     file_size = os.path.getsize(path)
     mime = magic.Magic(mime=True)
     attachment = file_size > 5000000  # 5 MB
+    chunk_size = 32000    # 32 KB
 
-    response = FileResponse(FileWrapper(open(path, "rb", buffering=16384), blksize=16384), as_attachment=attachment)
+    response = FileResponse(
+        FileWrapper(open(path, "rb", buffering=chunk_size), blksize=chunk_size),
+        as_attachment=attachment
+    )
 
     response["Content-Length"] = os.path.getsize(path)
     response["Content-Type"] = mime.from_file(path)
     response[
         "Content-Disposition"
-    ] = f"{'attachment' if attachment else 'inline'}; filename={filename.replace(',', '').replace(';', '-')}"
+    ] = f"{'attachment' if attachment else 'inline'}; filename={filename}"
 
     return response
