@@ -80,10 +80,11 @@ class AudioVisualHandler(BaseHandler):
                 "progress_hooks": [self.progress_hook],
             }
 
-            self.options['postprocessors'] = [{
-                'key': 'FFmpegExtractAudio',
-                'preferredcodec': self.request.audio_format,
-            }]
+            if self.request.audio_format:
+                self.options['postprocessors'] = [{
+                    'key': 'FFmpegExtractAudio',
+                    'preferredcodec': self.request.audio_format,
+                }]
 
     def download(self) -> None:
         """
