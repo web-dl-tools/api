@@ -7,7 +7,7 @@ from .models import AudioVisualRequest
 
 from src.download.serializers import BaseRequestSerializer
 
-CUSTOM_FIELDS = ("format_selection", "output")
+CUSTOM_FIELDS = ("format_selection", "output", "audio_format")
 
 class AudioVisualRequestSerializer(BaseRequestSerializer):
     """
