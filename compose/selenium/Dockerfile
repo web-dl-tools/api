@@ -8,7 +8,8 @@ LABEL maintainer = "rinesh.ramadhin@gmail.com"
 RUN apt-get update
 
 # Install Chrome
-RUN apt-get install chromium -y
+#RUN apt-get install chromium -y    # Enable for development on x64
+RUN apt-get install chromium=89.0.4389.114-1~deb10u1 -y
 
 # Install Selenium dependencies
 RUN apt-get install unzip xvfb libxi6 libgconf-2-4 default-jdk -y
