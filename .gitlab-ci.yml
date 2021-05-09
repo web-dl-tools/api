@@ -1,12 +1,23 @@
-include:
-  - template: Dependency-Scanning.gitlab-ci.yml
-
 image: docker:20.10.6
 
 services:
   - docker:dind
 
-compose services:
+stages:
+  - docker
+
+before_script:
+  - apk update
+
+cache:
+  paths:
+    - ~/.cache
+
+build containers:
+  stage: docker
+  before_script:
+    - apk add --no-cache py-pip python3-dev libffi-dev openssl-dev gcc libc-dev make rust cargo
+    - pip install docker-compose
   script:
     - docker-compose up -d
     - docker ps
