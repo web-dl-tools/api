@@ -64,7 +64,7 @@ class ResourceHandler(BaseHandler):
         self.driver.set_page_load_timeout(30)
         self.logger.debug("Setup Selenium webdriver connection instance.")
 
-        self.logger.debug(f"Loaded {self.request.title} in Selenium Server instance...")
+        self.logger.debug(f"Loading {self.request.url} in Selenium Server instance...")
         self.driver.get(self.request.url)
         self.logger.info(f"Finished loading in Selenium Server instance. Sleeping 10 seconds to allow scripts to complete...")
         time.sleep(10)
