@@ -3,12 +3,10 @@ Direct handlers.
 
 This file contains the BaseHandler implementation of the direct handler.
 """
-import os
-import re
 import requests
-import mimetypes
 
 from src.download.handlers import BaseHandler, BaseHandlerStatus
+from ..utils import create_resource_folder, extract_file_extension, extract_filename, download_request
 
 
 class DirectHandler(BaseHandler):
@@ -48,27 +46,18 @@ class DirectHandler(BaseHandler):
         :return: None
         """
         r = requests.head(self.request.url, allow_redirects=True)
-        headers = r.headers
-        self.request.set_data(dict(headers))
+        self.request.set_data(dict(r.headers))
         self.logger.debug("Retrieved header information.")
 
-        content_type = headers["content-type"].split(";")[0]
-        self.extension = mimetypes.guess_extension(content_type)
-        self.filename = (
-            re.findall("filename=(.+)", headers["Content-Disposition"])[0]
-            if "Content-Disposition" in headers.keys()
-            else self.request.url.split("/")[-1]
-        )
-        if self.filename.endswith(self.extension):
-            self.filename = self.filename[: -len(self.extension)]
+        self.extension = extract_file_extension(dict(r.headers))
+        self.filename = extract_filename(self.request.url, dict(r.headers), self.extension)
         self.request.set_title(self.filename)
         self.logger.debug(
-            f"Extracted extension {self.extension} and created filename {self.filename}."
+            f"Extracted extension {self.extension} and filename/title {self.filename}."
         )
 
-        if not os.path.exists(self.request.path):
-            os.makedirs(self.request.path)
-            self.logger.debug(f"Created folder for resource.")
+        create_resource_folder(self.request.path)
+        self.logger.debug(f"Created folder for resource.")
 
     def download(self) -> None:
         """
@@ -77,17 +66,10 @@ class DirectHandler(BaseHandler):
 
         :return: None
         """
-        r = requests.get(self.request.url, stream=True)
-        total = r.headers.get("content-length")
-        chunk_size = 1024
-        dl = 0
+        def progress_cb(progress: int) -> None:
+            if progress > self.request.progress:
+                self.request.set_progress(progress)
 
-        with open(f"{self.request.path}/{self.filename}{self.extension}", "wb+") as f:
-            for chunk in r.iter_content(chunk_size):
-                f.write(chunk)
-
-                if total is not None:
-                    progress = int((dl / int(total)) * 100)
-                    if progress > self.request.progress:
-                        self.request.set_progress(progress)
-                    dl += chunk_size
+        self.logger.debug(f"Started download for {self.request.url}.")
+        result = download_request(self.request.url, self.request.path, self.filename, self.extension, progress_cb)
+        self.logger.info(f"Finished download with {', '.join('{} {}'.format(k,v) for k,v in result.items())}.")

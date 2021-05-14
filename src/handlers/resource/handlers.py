@@ -3,16 +3,15 @@ Resource handlers.
 
 This file contains the BaseHandler implementation of the resource handler.
 """
-import os
 import re
 import requests
-import mimetypes
 import time
 
 from urllib.parse import urljoin
 from selenium import webdriver
 
 from src.download.handlers import BaseHandler, BaseHandlerStatus
+from ..utils import create_resource_folder, extract_file_extension, extract_filename, download_request
 
 
 class ResourceHandler(BaseHandler):
@@ -22,6 +21,7 @@ class ResourceHandler(BaseHandler):
 
     driver = None
     html = None
+    paths = None
 
     @staticmethod
     def handles(url: str) -> BaseHandlerStatus:
@@ -57,6 +57,55 @@ class ResourceHandler(BaseHandler):
 
         :return: None
         """
+        self.driver = webdriver.Remote(
+            command_executor="http://selenium:4444/wd/hub",
+            options=self.configure_chrome_options(),
+        )
+        self.driver.set_page_load_timeout(30)
+        self.logger.debug("Setup Selenium webdriver connection instance.")
+
+        self.logger.debug(f"Loaded {self.request.title} in Selenium Server instance...")
+        self.driver.get(self.request.url)
+        self.logger.info(f"Finished loading in Selenium Server instance. Sleeping 10 seconds to allow scripts to complete...")
+        time.sleep(10)
+
+        self.html = self.driver.page_source
+        title = self.driver.title
+        self.request.set_title(
+            title if title else "Page has no title"
+        )
+        self.logger.info(f"Extracted browser rendered html and title '{self.request.title}'.")
+
+        self.extract_paths()
+
+        create_resource_folder(self.request.path)
+        self.logger.debug(f"Created folder for resource.")
+
+        self.save_screenshot()
+        self.logger.info("Created and saved screenshot.")
+
+        self.driver.quit()
+        self.logger.debug("Quit the Selenium Server instance and closes all associated windows.")
+
+    def download(self) -> None:
+        """
+        Additional download steps which extracts
+        all paths from the resource, trims and
+        filterers them according to the given
+        extensions and additionally removes duplicates.
+
+        :return: None
+        """
+        for i, path in enumerate(self.paths):
+            self.download_file(path)
+            self.request.set_progress(int(((i + 1) / len(self.paths)) * 100))
+
+    def configure_chrome_options(self) -> webdriver.ChromeOptions:
+        """
+        Configure chrome options for Selenium Server.
+
+        :return: a ChromeOptions object.
+        """
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument('--headless')
         chrome_options.add_argument('--no-sandbox')
@@ -65,40 +114,20 @@ class ResourceHandler(BaseHandler):
         chrome_options.add_argument("--disable-features=NetworkService")
         chrome_options.add_argument("--disable-features=VizDisplayCompositor")
         chrome_options.add_argument('--window-size=1920,1080')
+        self.logger.debug("Setup Selenium Server configuration.")
 
-        self.driver = webdriver.Remote(
-            command_executor="http://selenium:4444/wd/hub",
-            options=chrome_options,
-        )
-        self.driver.set_page_load_timeout(30)
-        self.logger.debug("Setup Selenium Server webdriver connection instance.")
+        return chrome_options
 
-        self.driver.get(self.request.url)
-        self.logger.debug(f"Loaded {self.request.title} in Selenium Server instance. Sleeping 10 seconds to allow scripts to complete.")
-        time.sleep(10)
-
-        self.html = self.driver.page_source
-        title = self.driver.title
-        self.request.set_title(
-            title if title else "Page has no title"
-        )
-        self.logger.info(f"Extracted html and title '{self.request.title}'.")
-
-        if not os.path.exists(self.request.path):
-            os.makedirs(self.request.path)
-            self.logger.info(f"Created folder for resource.")
-
+    def save_screenshot(self):
+        """
+        Save a screenshot of the current Selenium Server instance.
+        """
         with open(f"{self.request.path}/{self.request.id}.png", "wb+") as f:
             f.write(self.driver.get_screenshot_as_png())
-            self.logger.info("Created and saved screenshot.")
 
-        self.driver.quit()
-        self.logger.debug("Quit the Selenium Server driver and closes every associated window.")
-
-    def download(self) -> None:
+    def extract_paths(self) -> None:
         """
-        Additional download steps which extracts
-        all paths from the resource, trims and
+        Extracts all paths from the resource, trims and
         filterers them according to the given
         extensions and additionally removes duplicates.
 
@@ -140,9 +169,7 @@ class ResourceHandler(BaseHandler):
         self.logger.debug(f"Filtered down to {len(filtered_paths)} paths.")
         self.request.set_data({"paths": paths, "filtered_paths": filtered_paths})
 
-        for i, path in enumerate(filtered_paths):
-            self.download_file(path)
-            self.request.set_progress(int(((i + 1) / len(filtered_paths)) * 100))
+        self.paths = filtered_paths
 
     def download_file(self, url: str) -> None:
         """
@@ -163,22 +190,12 @@ class ResourceHandler(BaseHandler):
             self.logger.warn(f"Resource file is too small ({size} bytes). Skipping.")
             return
 
-        content_type = r.headers["content-type"].split(";")[0]
-        extension = mimetypes.guess_extension(content_type)
-        filename = (
-            re.findall("filename=(.+)", r.headers["Content-Disposition"])[0]
-            if "Content-Disposition" in r.headers.keys()
-            else url.split("/")[-1]
-        )
-        if filename.endswith(extension):
-            filename = filename[: -len(extension)]
-
+        extension = extract_file_extension(dict(r.headers))
+        filename = extract_filename(url, dict(r.headers), extension)
         self.logger.debug(
-            f"Extracted extension {extension} and created filename {filename}."
+            f"Extracted extension {extension} and filename {filename}."
         )
 
-        with open(f"{self.request.path}/{filename}{extension}", "wb+") as f:
-            for chunk in r.iter_content(1024):
-                f.write(chunk)
-
-        self.logger.info(f"Finished with url {url}.")
+        self.logger.debug(f"Started download.")
+        result = download_request(url, self.request.path, filename, extension)
+        self.logger.info(f"Finished download with {', '.join('{} {}'.format(k,v) for k,v in result.items())}.")
