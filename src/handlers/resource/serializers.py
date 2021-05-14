@@ -8,7 +8,7 @@ from .models import ResourceRequest
 from src.download.serializers import BaseRequestSerializer
 
 
-CUSTOM_FIELDS = ("extensions", "min_bytes")
+CUSTOM_FIELDS = ("extensions", "min_bytes", "delay")
 
 class ResourceRequestSerializer(BaseRequestSerializer):
     """

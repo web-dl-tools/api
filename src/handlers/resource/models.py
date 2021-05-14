@@ -20,6 +20,7 @@ class ResourceRequest(BaseRequest):
     """
     extensions = ArrayField(models.CharField(max_length=20), verbose_name="extensions")
     min_bytes = models.IntegerField(_("min bytes"), default=0)
+    delay = models.IntegerField(_("delay"), default=0)
 
     class Meta:
         """

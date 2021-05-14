@@ -72,4 +72,8 @@ class DirectHandler(BaseHandler):
 
         self.logger.debug(f"Started download for {self.request.url}.")
         result = download_request(self.request.url, self.request.path, self.filename, self.extension, progress_cb)
-        self.logger.info(f"Finished download with {', '.join('{} {}'.format(k,v) for k,v in result.items())}.")
+
+        if result.get("success"):
+            self.logger.info(f"Finished download with {', '.join('{} {}'.format(k,v) for k,v in result.items())}.")
+        else:
+            self.logger.error(f"Failed download with {', '.join('{} {}'.format(k,v) for k,v in result.items())}.")

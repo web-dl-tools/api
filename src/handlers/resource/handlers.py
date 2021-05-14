@@ -4,6 +4,7 @@ Resource handlers.
 This file contains the BaseHandler implementation of the resource handler.
 """
 import re
+
 import requests
 import time
 
@@ -99,6 +100,7 @@ class ResourceHandler(BaseHandler):
         for i, path in enumerate(self.paths):
             self.download_file(path)
             self.request.set_progress(int(((i + 1) / len(self.paths)) * 100))
+            time.sleep(self.request.delay / 1000.0)
 
     def configure_chrome_options(self) -> webdriver.ChromeOptions:
         """
@@ -161,11 +163,15 @@ class ResourceHandler(BaseHandler):
 
         # filter
         filtered_paths = [
-            path for path in paths if path.endswith(tuple(self.request.extensions))
+            path for path in paths if (
+                    ("." not in path.split("/")[-1]) or
+                    ("." in path.split("/")[-1] and path.endswith(tuple(self.request.extensions)))
+            )
         ]
 
         # Remove duplicates
         filtered_paths = list(dict.fromkeys(filtered_paths))
+
         self.logger.debug(f"Filtered down to {len(filtered_paths)} paths.")
         self.request.set_data({"paths": paths, "filtered_paths": filtered_paths})
 
@@ -181,9 +187,9 @@ class ResourceHandler(BaseHandler):
         """
         self.logger.debug(f"Processing url {url}.")
 
-        r = requests.get(url, stream=True)
-        size = r.headers.get("content-length")
+        r = requests.head(url, allow_redirects=True)
 
+        size = r.headers.get("content-length")
         if size is None:
             self.logger.warn(f"Resource has no given file size. Downloading anyway.")
         elif int(size) < self.request.min_bytes:
@@ -191,6 +197,14 @@ class ResourceHandler(BaseHandler):
             return
 
         extension = extract_file_extension(dict(r.headers))
+        if extension is None:
+            self.logger.warn(f"Resource has no given content type. Downloading anyway.")
+        elif extension.replace(".", "") not in self.request.extensions:
+            self.logger.warn(f"Content type extension ({extension}) doesn't match chosen extensions. Skipping.")
+            return
+
+        r = requests.get(url, stream=True)
+
         filename = extract_filename(url, dict(r.headers), extension)
         self.logger.debug(
             f"Extracted extension {extension} and filename {filename}."
@@ -198,4 +212,8 @@ class ResourceHandler(BaseHandler):
 
         self.logger.debug(f"Started download.")
         result = download_request(url, self.request.path, filename, extension)
-        self.logger.info(f"Finished download with {', '.join('{} {}'.format(k,v) for k,v in result.items())}.")
+
+        if result.get("success"):
+            self.logger.info(f"Finished download with {', '.join('{} {}'.format(k,v) for k,v in result.items())}.")
+        else:
+            self.logger.error(f"Failed download with {', '.join('{} {}'.format(k,v) for k,v in result.items())}.")
