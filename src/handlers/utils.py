@@ -46,7 +46,7 @@ def extract_file_extension(headers: dict) -> str:
     :param headers: a request headers dictionary.
     :return: a str containing the file extension.
     """
-    content_type = headers.get("Content-Type").split(";")[0]
+    content_type = headers.get("Content-Type").split(";")[0] if "Content-Type" in headers else ""
     file_extension = mimetypes.guess_extension(content_type)
 
     if file_extension == ".htm":
