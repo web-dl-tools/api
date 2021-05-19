@@ -78,6 +78,35 @@ def validate_path(path: str, user: User) -> bool:
     return True
 
 
+def validate_archive(path: str, user: User) -> bool:
+    """
+    Validate a request archive to ensure only the authorized user
+    for the request may retrieve archive access.
+
+    :param path: A str containing the relative archive path.
+    :param user: The currently authenticated user.
+    :return: A bool containing the access result.
+    """
+    path_parts = path.split("/")
+
+    if len(path_parts) != 3:
+        return False
+
+    if path_parts[0] != "files":
+        return False
+
+    if path_parts[1] != str(user.id):
+        return False
+
+    if not BaseRequest.objects.filter(id=path_parts[2].replace('.zip', ''), user=user).exists():
+        return False
+
+    if not os.path.isfile(path):
+        return False
+
+    return True
+
+
 def create_file_streaming_response(path: str) -> FileResponse:
     """
     Create a streaming file response to serve the file while
