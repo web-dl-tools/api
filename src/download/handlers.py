@@ -8,7 +8,8 @@ from sentry_sdk import capture_exception
 
 from .models import BaseRequest
 from .loggers import BaseLogger
-from .tasks import zip_request, delete_request_files
+from .tasks import delete_request_files
+from .utils import compress_folder
 
 
 class BaseHandlerStatus(object):
@@ -180,11 +181,13 @@ class BaseHandler(object):
 
         :return: None
         """
-        self.request.set_status(BaseRequest.STATUS_COMPLETED)
-
         self.complete()
 
-        zip_request.delay(self.request.path)
+        self.logger.debug("Creating archive from request...")
+        compress_folder(self.request.path)
+        self.logger.debug("Created archive.")
+
+        self.request.set_status(BaseRequest.STATUS_COMPLETED)
 
     def complete(self) -> None:
         """
