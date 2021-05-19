@@ -17,7 +17,7 @@ from rest_framework.views import APIView
 from .models import BaseRequest
 from .serializers import PolymorphicRequestSerializer, LogSerializer
 from .tasks import download_request
-from .utils import list_files, validate_path, create_file_streaming_response
+from .utils import list_files, validate_path, validate_archive, create_file_streaming_response
 from src.auth_token.authentication import QueryTokenAuthentication
 
 
@@ -130,7 +130,7 @@ class GetFileView(APIView):
         """
         path = self.request.query_params.get("path")
 
-        if not validate_path(path, self.request.user):
-            return Response(status=404, data="Invalid payload.")
+        if validate_path(path, self.request.user) or validate_archive(path, self.request.user):
+            return create_file_streaming_response(path)
 
-        return create_file_streaming_response(path)
+        return Response(status=404, data="Invalid payload.")

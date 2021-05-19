@@ -8,7 +8,7 @@ from sentry_sdk import capture_exception
 
 from .models import BaseRequest
 from .loggers import BaseLogger
-from .tasks import delete_request_files
+from .tasks import zip_request, delete_request_files
 
 
 class BaseHandlerStatus(object):
@@ -181,7 +181,10 @@ class BaseHandler(object):
         :return: None
         """
         self.request.set_status(BaseRequest.STATUS_COMPLETED)
+
         self.complete()
+
+        zip_request.delay(self.request.path)
 
     def complete(self) -> None:
         """

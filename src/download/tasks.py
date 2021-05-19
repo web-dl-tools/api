@@ -3,6 +3,7 @@ Download tasks.
 
 This file contains commonly used tasks and Celery tasks for asynchronous task handling.
 """
+import os
 import uuid
 import shutil
 
@@ -25,6 +26,17 @@ def download_request(request_id: uuid) -> None:
 
 
 @app.task
+def zip_request(path: str) -> None:
+    """
+    Compress the request folder.
+
+    :param path: A str of the path to compress.
+    :return: None.
+    """
+    shutil.make_archive(path, 'zip', path)
+
+
+@app.task
 def delete_request_files(path: str) -> None:
     """
     Removed the associated files (if any) from an already deleted request.
@@ -33,3 +45,5 @@ def delete_request_files(path: str) -> None:
     :return: None
     """
     shutil.rmtree(path, ignore_errors=True)
+    if os.path.isfile(f'{path}.zip'):
+        os.remove(f'{path}.zip')
