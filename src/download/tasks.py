@@ -12,6 +12,26 @@ from .models import BaseRequest
 
 
 @app.task
+def compress_request(request_id: uuid) -> None:
+    """
+    Compress request file contents.
+
+    :param request_id: a UUID4 containing the id of a valid BaseRequest.
+    :return: None.
+    """
+    request = BaseRequest.objects.get(id=request_id)
+
+    if not os.path.exists(request.path):
+        request.set_start_compressing_at(True)
+        return
+
+    request.set_start_compressing_at()
+    if not os.path.isfile(f'{request.path}.zip'):
+        shutil.make_archive(request.path, 'zip', request.path)
+    request.set_compressed_at()
+
+
+@app.task
 def download_request(request_id: uuid) -> None:
     """
     Handle a given BaseRequest in a asynchronous task queue.

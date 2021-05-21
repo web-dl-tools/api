@@ -4,7 +4,7 @@ services:
   - docker:dind
 
 stages:
-  - docker
+  - test
 
 before_script:
   - apk update
@@ -13,8 +13,8 @@ cache:
   paths:
     - ~/.cache
 
-build containers:
-  stage: docker
+smoke test docker containers:
+  stage: test
   before_script:
     - apk add py-pip python3-dev libffi-dev openssl-dev gcc libc-dev make rust cargo
     - pip install docker-compose

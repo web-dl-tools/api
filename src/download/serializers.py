@@ -22,7 +22,8 @@ class BaseRequestSerializer(serializers.ModelSerializer):
         "user",
         "start_processing_at",
         "completed_at",
-        "start_processing_at",
+        "start_compressing_at",
+        "compressed_at",
         "path",
     )
 
@@ -42,6 +43,8 @@ class BaseRequestSerializer(serializers.ModelSerializer):
             "url",
             "start_processing_at",
             "completed_at",
+            "start_compressing_at",
+            "compressed_at",
             "progress",
             "title",
             "data",
@@ -54,6 +57,8 @@ class BaseRequestSerializer(serializers.ModelSerializer):
             "status",
             "start_processing_at",
             "completed_at",
+            "start_compressing_at",
+            "compressed_at",
             "progress",
             "title",
             "data",

@@ -45,6 +45,8 @@ class BaseRequest(ModifiedAtMixin, CreatedAtMixin, IdMixin, PolymorphicModel):
     url = models.TextField(_("url"))
     start_processing_at = models.DateTimeField(_("start processing at"), null=True)
     completed_at = models.DateTimeField(_("completed at"), null=True)
+    start_compressing_at = models.DateTimeField(_("start compressing at"), null=True)
+    compressed_at = models.DateTimeField(_("compressed at"), null=True)
     progress = models.IntegerField(_("progress"), default=0)
     title = models.CharField(_("title"), max_length=200, blank=True)
     data = models.JSONField(_("data"), default=dict)
@@ -119,6 +121,25 @@ class BaseRequest(ModifiedAtMixin, CreatedAtMixin, IdMixin, PolymorphicModel):
             )
         self.progress = progress
         self.save(update_fields=["progress"])
+
+    def set_start_compressing_at(self, clear = False) -> None:
+        """
+        Set the start_compressing_at on the current date.
+
+        :param clear: An boolean on whether to clear the field.
+        :return: None
+        """
+        self.start_compressing_at = None if clear else timezone.now()
+        self.save(update_fields=["start_compressing_at"])
+
+    def set_compressed_at(self) -> None:
+        """
+        Set the compressed_at on the current date.
+
+        :return: None
+        """
+        self.compressed_at = timezone.now()
+        self.save(update_fields=["compressed_at"])
 
     def set_title(self, title: str) -> None:
         """
