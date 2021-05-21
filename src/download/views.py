@@ -16,7 +16,7 @@ from rest_framework.views import APIView
 
 from .models import BaseRequest
 from .serializers import PolymorphicRequestSerializer, LogSerializer
-from .tasks import download_request
+from .tasks import download_request, compress_request
 from .utils import list_files, validate_path, validate_archive, create_file_streaming_response
 from src.auth_token.authentication import QueryTokenAuthentication
 
@@ -104,11 +104,31 @@ class RequestViewSet(
         """
         request_object = self.get_object()
         serializer = self.get_serializer(request_object)
+
         if request_object.status != BaseRequest.STATUS_FAILED:
             return Response(status=400)
         else:
             request_object.set_status(BaseRequest.STATUS_PENDING)
             download_request.delay(request_object.id)
+            return Response(serializer.data)
+
+    @action(detail=True, methods=["PUT"])
+    def compress(self, request, pk=None) -> Response:
+        """
+        Compress the request file contents in an asynchronous compress request task.
+
+        :param request: *
+        :param pk: str
+        :return: Response
+        """
+        request_object = self.get_object()
+        serializer = self.get_serializer(request_object)
+
+        if request_object.start_compressing_at is not None:
+            return Response(status=400)
+        else:
+            request_object.set_start_compressing_at()
+            compress_request.delay(request_object.id)
             return Response(serializer.data)
 
 

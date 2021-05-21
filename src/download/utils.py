@@ -4,7 +4,6 @@ Download utils.
 This file contains functions and action not fit for standard Django files.
 """
 import os
-import shutil
 import magic
 
 from datetime import datetime
@@ -14,17 +13,6 @@ from django.http import FileResponse
 
 from src.user.models import User
 from .models import BaseRequest
-
-
-def compress_folder(path: str) -> None:
-    """
-    Compress a folder.
-
-    :param path: A str of the path to compress.
-    :return: None.
-    """
-    if not os.path.isfile(f'{path}.zip'):
-        shutil.make_archive(path, 'zip', path)
 
 
 def list_files(path: str) -> list:
