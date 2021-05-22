@@ -15,7 +15,7 @@ from .serializers import PolymorphicRequestSerializer
 
 
 @receiver(pre_save)
-def my_callback(sender, instance, *args, **kwargs):
+def handle_request_pre_save(sender, instance, *args, **kwargs):
     """
     Automatically update the modified at field to the current datetime whenever
     the request entity is modified.
@@ -23,7 +23,8 @@ def my_callback(sender, instance, *args, **kwargs):
     :param sender: models.Model object which triggered the save action.
     :param instance: a BaseRequest instance.
     """
-    instance.modified_at = timezone.now()
+    if isinstance(instance, BaseRequest):
+        instance.modified_at = timezone.now()
 
 
 @receiver(post_save)
