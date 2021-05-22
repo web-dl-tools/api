@@ -4,7 +4,6 @@ Resource handlers.
 This file contains the BaseHandler implementation of the resource handler.
 """
 import re
-
 import requests
 import time
 
