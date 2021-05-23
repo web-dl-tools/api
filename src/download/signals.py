@@ -4,27 +4,13 @@ Download signals.
 This file contains handler functions for DB signals send by Django when performing ORM actions.
 """
 from django.dispatch import receiver
-from django.db.models.signals import pre_save, post_save, pre_delete
+from django.db.models.signals import post_save, pre_delete
 from channels.layers import get_channel_layer
-from django.utils import timezone
 from asgiref.sync import async_to_sync
 
 from .models import BaseRequest
 from .tasks import download_request, delete_request_files
 from .serializers import PolymorphicRequestSerializer
-
-
-@receiver(pre_save)
-def handle_request_pre_save(sender, instance, *args, **kwargs):
-    """
-    Automatically update the modified at field to the current datetime whenever
-    the request entity is modified.
-
-    :param sender: models.Model object which triggered the save action.
-    :param instance: a BaseRequest instance.
-    """
-    if isinstance(instance, BaseRequest):
-        instance.modified_at = timezone.now()
 
 
 @receiver(post_save)
