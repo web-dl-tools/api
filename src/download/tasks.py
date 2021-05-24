@@ -8,6 +8,8 @@ import uuid
 import shutil
 
 from config.celery import app
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
 
 from .models import BaseRequest
 
@@ -30,6 +32,20 @@ def compress_request(request_id: uuid) -> None:
     if not os.path.isfile(f'{request.path}.zip'):
         shutil.make_archive(request.path, 'zip', request.path)
     request.set_compressed_at()
+
+    async_to_sync(get_channel_layer().group_send)(
+        f"requests.group.{request.user.id}",
+        {
+            "type": "websocket.send",
+            "data": {
+                "type": "requests.task.finished",
+                "message": {
+                    "id": str(request_id),
+                    "task": 'compress_request'
+                },
+            },
+        },
+    )
 
 
 @app.task
