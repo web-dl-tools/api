@@ -9,6 +9,8 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
 from django.conf import settings
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
 
 from src.db.models import IdMixin, CreatedAtMixin, ModifiedAtMixin
 from .exceptions import BaseRequestSetStatusException, BaseRequestSetProgressException
@@ -100,6 +102,21 @@ class BaseRequest(ModifiedAtMixin, CreatedAtMixin, IdMixin, PolymorphicModel):
                 update_fields.append("completed_at")
 
             self.status = status
+
+            async_to_sync(get_channel_layer().group_send)(
+                f"requests.group.{self.user.id}",
+                {
+                    "type": "websocket.send",
+                    "data": {
+                        "type": "requests.status.update",
+                        "message": {
+                            "id": str(self.id),
+                            "status": self.status
+                        },
+                    },
+                },
+            )
+
             self.save(update_fields=update_fields)
         elif status in (s[0] for s in self.STATUSES):
             raise BaseRequestSetStatusException(
