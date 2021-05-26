@@ -13,7 +13,7 @@ from .models import User
 from .serializers import UserSerializer
 
 
-class UserViewSet(viewsets.GenericViewSet):
+class UserViewSet(mixins.CreateModelMixin, mixins.UpdateModelMixin, viewsets.GenericViewSet):
     """
     A view set for authenticating and viewing a user instances.
     """
@@ -49,3 +49,19 @@ class UserViewSet(viewsets.GenericViewSet):
         :return: Response
         """
         return Response(status=200, data=UserSerializer(self.request.user).data)
+
+    def update(self, request, *args, **kwargs):
+        """
+        Check if the authentication user is editing itself.
+
+        :param request: *
+        :param args: *
+        :param kwargs: *
+        :return: Response
+        """
+        if self.request.user != self.get_object():
+            return Response(status=401, data="Unauthorized request")
+
+        return super().update(request, *args, **kwargs)
+
+
