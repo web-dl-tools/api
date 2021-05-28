@@ -87,9 +87,9 @@ services:
     deploy:
       resources:
         limits:
-          memory: 50M
+          memory: 100M
         reservations:
-          memory: 20M
+          memory: 50M
     environment:
       - PUID=${USER_ID}
       - TZ=Europe/Amsterdam
