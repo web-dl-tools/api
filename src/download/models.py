@@ -13,7 +13,7 @@ from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 
 from src.db.models import IdMixin, CreatedAtMixin, ModifiedAtMixin
-from .exceptions import BaseRequestSetStatusException, BaseRequestSetProgressException
+from .exceptions import BaseRequestSetProgressException
 
 
 class BaseRequest(ModifiedAtMixin, CreatedAtMixin, IdMixin, PolymorphicModel):
@@ -61,69 +61,54 @@ class BaseRequest(ModifiedAtMixin, CreatedAtMixin, IdMixin, PolymorphicModel):
 
         db_table = "base_request"
 
+    def get_state(self) -> "src.download.state.BaseRequestState":
+        """
+        Get the state object for the current request state.
+
+        :return: BaseRequestState
+        """
+        from .state import PendingRequestState, PreProcessingRequestState, DownloadingRequestState, \
+            PostProcessingRequestState, CompletedRequestState, FailedRequestState
+
+        if self.status == self.STATUS_PENDING: return PendingRequestState(self)
+        elif self.status == self.STATUS_PRE_PROCESSING: return PreProcessingRequestState(self)
+        elif self.status == self.STATUS_DOWNLOADING: return DownloadingRequestState(self)
+        elif self.status == self.STATUS_POST_PROCESSING: return PostProcessingRequestState(self)
+        elif self.status == self.STATUS_COMPLETED: return CompletedRequestState(self)
+        return FailedRequestState(self)
+
     def set_status(self, status: str) -> None:
         """
-        Set the status of the request after validating the given status and status change from the current status.
+        Set the status of the request. Use the state model to verify and enforce state changes.
 
         :param status: A str containing a (hopefully) valid status.
         :return: None
         """
-        if status == self.status:
-            return
-        elif self.status == self.STATUS_COMPLETED:
-            raise BaseRequestSetStatusException(f"Request has already completed.")
-        elif (
-            (status == self.STATUS_FAILED)
-            or (self.status == self.STATUS_FAILED and status == self.STATUS_PENDING)
-            or (
-                self.status == self.STATUS_PENDING
-                and status == self.STATUS_PRE_PROCESSING
-            )
-            or (
-                self.status == self.STATUS_PRE_PROCESSING
-                and status == self.STATUS_DOWNLOADING
-            )
-            or (
-                self.status == self.STATUS_DOWNLOADING
-                and status == self.STATUS_POST_PROCESSING
-            )
-            or (
-                self.status == self.STATUS_POST_PROCESSING
-                and status == self.STATUS_COMPLETED
-            )
-        ):
-            update_fields = ["status"]
+        self.status = status
+        update_fields = ["status"]
 
-            if status == self.STATUS_PRE_PROCESSING:
-                self.start_processing_at = timezone.now()
-                update_fields.append("start_processing_at")
-            elif status == self.STATUS_COMPLETED:
-                self.completed_at = timezone.now()
-                update_fields.append("completed_at")
+        if status == self.STATUS_PRE_PROCESSING:
+            self.start_processing_at = timezone.now()
+            update_fields.append("start_processing_at")
+        elif status == self.STATUS_COMPLETED:
+            self.completed_at = timezone.now()
+            update_fields.append("completed_at")
 
-            self.status = status
-
-            async_to_sync(get_channel_layer().group_send)(
-                f"requests.group.{self.user.id}",
-                {
-                    "type": "websocket.send",
-                    "data": {
-                        "type": "requests.status.update",
-                        "message": {
-                            "id": str(self.id),
-                            "status": self.status
-                        },
+        async_to_sync(get_channel_layer().group_send)(
+            f"requests.group.{self.user.id}",
+            {
+                "type": "websocket.send",
+                "data": {
+                    "type": "requests.status.update",
+                    "message": {
+                        "id": str(self.id),
+                        "status": self.status
                     },
                 },
-            )
+            },
+        )
 
-            self.save(update_fields=update_fields)
-        elif status in (s[0] for s in self.STATUSES):
-            raise BaseRequestSetStatusException(
-                f"Status state change to {status} is nog possible from current status state {self.state}."
-            )
-        else:
-            raise BaseRequestSetStatusException(f"Status {status} is not supported.")
+        self.save(update_fields=update_fields)
 
     def set_progress(self, progress: int) -> None:
         """

@@ -108,7 +108,7 @@ class RequestViewSet(
         if request_object.status != BaseRequest.STATUS_FAILED:
             return Response(status=400)
         else:
-            request_object.set_status(BaseRequest.STATUS_PENDING)
+            request_object.get_state().pending()
             download_request.delay(request_object.id)
             return Response(serializer.data)
 

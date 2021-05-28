@@ -126,7 +126,7 @@ class BaseHandler(object):
 
         :return: None
         """
-        self.request.set_status(BaseRequest.STATUS_PRE_PROCESSING)
+        self.request.get_state().pre_processing()
         self.pre_process()
 
     def pre_process(self) -> None:
@@ -144,7 +144,7 @@ class BaseHandler(object):
 
         :return: None
         """
-        self.request.set_status(BaseRequest.STATUS_DOWNLOADING)
+        self.request.get_state().downloading()
         self.download()
 
     def download(self) -> None:
@@ -162,7 +162,7 @@ class BaseHandler(object):
 
         :return: None
         """
-        self.request.set_status(BaseRequest.STATUS_POST_PROCESSING)
+        self.request.get_state().post_processing()
         self.post_process()
 
     def post_process(self) -> None:
@@ -181,7 +181,7 @@ class BaseHandler(object):
         :return: None
         """
         self.complete()
-        self.request.set_status(BaseRequest.STATUS_COMPLETED)
+        self.request.get_state().completed()
 
     def complete(self) -> None:
         """
@@ -198,7 +198,7 @@ class BaseHandler(object):
 
         :return: None
         """
-        self.request.set_status(BaseRequest.STATUS_FAILED)
+        self.request.get_state().failed()
         self.request.set_progress(0)
         self.request.set_title("")
         self.request.set_data({})
