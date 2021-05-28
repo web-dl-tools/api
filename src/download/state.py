@@ -24,7 +24,6 @@ class BaseRequestState(object):
         :param request: A BaseRequest object to notify the BaseRequest the status on status changes.
         """
         self.request = request
-        print(self.__class__)
 
         super().__init__()
 
