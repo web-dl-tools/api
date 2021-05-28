@@ -3,8 +3,6 @@ Direct handler serializers.
 
 This file contains the serializer definition for the DirectRequest model object.
 """
-from rest_framework import serializers
-
 from .models import DirectRequest
 
 from src.download.serializers import BaseRequestSerializer

@@ -110,4 +110,4 @@ class AudioVisualHandler(BaseHandler):
             if progress > self.request.progress:
                 self.request.set_progress(progress)
                 if progress == 100:
-                    self.request.set_status(BaseRequest.STATUS_POST_PROCESSING)
+                    self.request.get_state().post_processing()
