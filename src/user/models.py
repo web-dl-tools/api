@@ -21,4 +21,4 @@ class User(ModifiedAtMixin, IdMixin, AbstractUser):
         """
         :return: a str containing the user's full name.
         """
-        return f"{self.first_name} {self.last_name}" if self.first_name else self.username
+        return f"{self.first_name} {self.last_name}".strip() if self.first_name else self.username
