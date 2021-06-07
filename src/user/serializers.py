@@ -5,7 +5,7 @@ This file contains a serializer for the custom User model object.
 """
 from rest_framework import serializers
 
-from .models import User
+from .models import User, Log
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -54,3 +54,17 @@ class UserSerializer(serializers.ModelSerializer):
         """
         user = User.objects.create_user(**validated_data)
         return user
+
+class LogSerializer(serializers.ModelSerializer):
+    """
+    A log serializer for the user Log model object.
+    """
+
+    class Meta:
+        """
+        Serializer metadata.
+        See https://www.django-rest-framework.org/api-guide/serializers/
+        """
+
+        model = Log
+        fields = ("id", "created_at", "method", "url", "data")

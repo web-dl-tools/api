@@ -107,7 +107,7 @@ class PolymorphicRequestSerializer(PolymorphicSerializer):
 
 class LogSerializer(serializers.ModelSerializer):
     """
-    A log serializer for the Log model object.
+    A log serializer for the request Log model object.
     """
 
     class Meta:

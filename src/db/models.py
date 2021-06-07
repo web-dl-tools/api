@@ -43,7 +43,7 @@ class CreatedAtMixin(models.Model):
 class ModifiedAtMixin(models.Model):
     """
     a Modified at mixin that adds a modified_at datetime field
-    which automatically get's updated with the current datetime at each object save.
+    which automatically gets updated with the current datetime at each object save.
     """
     modified_at = models.DateTimeField(_("modified at"), auto_now=True)
 
@@ -56,7 +56,7 @@ class ModifiedAtMixin(models.Model):
 
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
         """
-        Overwrite .save() to automatically add update the modified_at property.
+        Overwrite .save() to automatically update the modified_at property.
         """
         self.modified_at = timezone.now()
         if update_fields:

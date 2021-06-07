@@ -9,8 +9,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.response import Response
 
-from .models import User
-from .serializers import UserSerializer
+from .models import User, Log
+from .serializers import UserSerializer, LogSerializer
 
 
 class UserViewSet(mixins.CreateModelMixin, mixins.UpdateModelMixin, viewsets.GenericViewSet):
@@ -49,6 +49,20 @@ class UserViewSet(mixins.CreateModelMixin, mixins.UpdateModelMixin, viewsets.Gen
         :return: Response
         """
         return Response(status=200, data=UserSerializer(self.request.user).data)
+
+    @action(detail=False)
+    def logs(self, request, *args, **kwargs):
+        """
+        Get the currently authenticated user's logs.
+
+        :param request: *
+        :param args: *
+        :param kwargs: *
+        :return: Response
+        """
+        return Response(status=200, data=LogSerializer(
+            Log.objects.filter(user=request.user).order_by('-created_at')[:500], many=True
+        ).data)
 
     def update(self, request, *args, **kwargs):
         """
