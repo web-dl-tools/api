@@ -28,8 +28,8 @@ class RequestConsumer(WebsocketConsumer):
         """
         dict_data = json.loads(text_data)
         if dict_data["type"] == "requests.group.join":
-            token = Token.objects.get(key=dict_data["content"])
-            if token:
+            try:
+                token = Token.objects.get(key=dict_data["content"])
                 async_to_sync(self.channel_layer.group_add)(
                     f"requests.group.{token.user.id}", self.channel_name
                 )
@@ -41,6 +41,8 @@ class RequestConsumer(WebsocketConsumer):
                         }
                     )
                 )
+            except Token.DoesNotExist:
+                pass
 
     def websocket_send(self, event):
         """

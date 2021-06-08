@@ -3,6 +3,7 @@ User views.
 
 This file contains a viewset for the custom User model object and associated Serializer.
 """
+from django.utils import timezone
 from rest_framework import viewsets, mixins
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
@@ -60,8 +61,11 @@ class UserViewSet(mixins.CreateModelMixin, mixins.UpdateModelMixin, viewsets.Gen
         :param kwargs: *
         :return: Response
         """
+        dt = timezone.now()
+        start = dt.replace(hour=0, minute=0, second=0, microsecond=0)
+
         return Response(status=200, data=LogSerializer(
-            Log.objects.filter(user=request.user).order_by('-created_at')[:500], many=True
+            Log.objects.filter(user=request.user, created_at__gte=start).order_by('-created_at'), many=True
         ).data)
 
     def update(self, request, *args, **kwargs):

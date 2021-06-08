@@ -31,13 +31,15 @@ class UserMiddleware(object):
         :return: AsgiRequest
         """
         if 'Authorization' in request.headers:
-            user = Token.objects.get(key=request.headers['Authorization'].replace("Token ", "")).user
-            if user is not None:
+            try:
+                user = Token.objects.get(key=request.headers['Authorization'].replace("Token ", "")).user
                 Log.objects.create(
                     user=user,
                     url=request.get_full_path(),
                     method=request.method,
                     data=request.body.decode("utf-8") if request.body else None
                 )
+            except Token.DoesNotExist:
+                pass
 
         return self.get_response(request)
