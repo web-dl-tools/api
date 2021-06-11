@@ -26,12 +26,12 @@ def list_files(path: str) -> list:
     content = []
 
     for root, dirs, files in os.walk(path):
-        for dir in dirs:
+        for _dir in dirs:
             content.append(
                 {
-                    "dir": f"{root}/{dir}",
-                    "name": dir,
-                    "children": list_files(f"{root}/{dir}"),
+                    "dir": f"{root}/{_dir}",
+                    "name": _dir,
+                    "children": list_files(f"{root}/{_dir}"),
                 }
             )
 

@@ -8,6 +8,7 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 from src.db.models import CreatedAtMixin, ModifiedAtMixin, IdMixin
+from .utils import get_storage_bytes
 
 
 class User(ModifiedAtMixin, IdMixin, AbstractUser):
@@ -24,6 +25,13 @@ class User(ModifiedAtMixin, IdMixin, AbstractUser):
         :return: a str containing the user's full name.
         """
         return f"{self.first_name} {self.last_name}".strip() if self.first_name else self.username
+
+    @property
+    def storage(self) -> int:
+        """
+        :return: a str containing the user's full name.
+        """
+        return get_storage_bytes(f"files/{self.id}")
 
 
 class Log(CreatedAtMixin, IdMixin):

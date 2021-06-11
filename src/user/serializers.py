@@ -32,6 +32,7 @@ class UserSerializer(serializers.ModelSerializer):
             "last_login",
             "date_joined",
             "full_name",
+            "storage"
         )
         read_only_fields = (
             "id",
@@ -42,6 +43,7 @@ class UserSerializer(serializers.ModelSerializer):
             "date_joined",
             "modified_at",
             "full_name",
+            "storage"
         )
         extra_kwargs = {"password": {"write_only": True}}
 
