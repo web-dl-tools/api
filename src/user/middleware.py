@@ -31,8 +31,13 @@ class UserMiddleware(object):
         :return: AsgiRequest
         """
         if 'Authorization' in request.headers:
+            auth_token = request.headers['Authorization'].replace("Token ", "")
+        else:
+            auth_token = request.GET.get('auth_token')
+
+        if auth_token:
             try:
-                user = Token.objects.get(key=request.headers['Authorization'].replace("Token ", "")).user
+                user = Token.objects.get(key=auth_token).user
                 Log.objects.create(
                     user=user,
                     url=request.get_full_path(),

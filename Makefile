@@ -12,6 +12,10 @@ build: ## Build the container stack
 
 start: ## Start the container stack
 	@echo "Starting up containers..."
+	make build && sudo docker-compose up -d
+
+start_debug: ## Start the container stack
+	@echo "Starting up containers..."
 	make build && sudo docker-compose up
 
 clean: ## Clean out unused docker(-compose) files
@@ -19,29 +23,6 @@ clean: ## Clean out unused docker(-compose) files
 	docker system prune -af
 
 update: ## Update repository to latest version and rebuild container stack
-	@echo "Updating repository to latest version..."
-	@echo "Warning: This will (temporarily) shutdown all containers."
-	@read -p "Do you want to continue? [y/N]" -n 1 -r; \
-	if [[ $$REPLY =~ ^[Yy] ]]; \
-	then \
-		make stop && git fetch && git pull; \
-	else \
-		exit; \
-	fi
-	@echo "Some docker files and container are no longer in use."
-	@read -p "Do you want to clean up unused docker files? [y/N]" -n 1 -r; \
-	if [[ $$REPLY =~ ^[Yy] ]]; \
-	then \
-		make clean; \
-	fi
-	make build
-	@read -p "Do you want to start the containers back up again? [y/N]" -n 1 -r; \
-	if [[ $$REPLY =~ ^[Yy] ]]; \
-	then \
-		make start; \
-	fi
-
-update_force: ## Update repository to latest version and rebuild container stack without user input
 	@echo "Updating repository to latest version..."
 	@echo "Warning: This will shutdown all containers."
 	make stop && git fetch && git pull && make build
