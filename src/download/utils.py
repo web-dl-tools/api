@@ -15,6 +15,26 @@ from src.user.models import User
 from .models import BaseRequest
 
 
+def calculate_storage(path: str) -> int:
+    """
+    Calculate the storage for a folder.
+
+    :param path: The path to calculate
+    :return: The storage in bytes.
+    """
+    size = 0
+
+    for root, dirs, files in os.walk(path):
+        for _dir in dirs:
+            size += calculate_storage(f"{root}/{_dir}")
+
+        for file in files:
+            size += os.path.getsize(f"{root}/{file}")
+        break
+
+    return size
+
+
 def list_files(path: str) -> list:
     """
     List all files of the given directory and recursively

@@ -3,24 +3,25 @@ User utils.
 
 This file contains functions and action not fit for standard Django files.
 """
-import os
+from src.download.models import BaseRequest
 
 
-def get_storage_bytes(path: str) -> int:
+def parse_requests_storage(user: str) -> list:
     """
-    Get the storage bytes total for the user directory.
+    Parse the user requests storage.
 
-    :param path: The user directory
-    :return: The storage bytes
+    :param user: The user to parse requests for
+    :return: A list containing each request and storage data
     """
-    storage_bytes = 0
+    storage = []
 
-    for root, dirs, files in os.walk(path):
-        for _dir in dirs:
-            storage_bytes += get_storage_bytes(f"{root}/{_dir}")
+    requests = BaseRequest.objects.filter(user=user)
+    for request in requests:
+        storage.append({
+            'id': str(request.id),
+            'title': request.title,
+            'type': str(request.polymorphic_ctype.model),
+            'size': request.get_storage()
+        })
 
-        for file in files:
-            storage_bytes += os.path.getsize(f"{root}/{file}")
-        break
-
-    return storage_bytes
+    return storage

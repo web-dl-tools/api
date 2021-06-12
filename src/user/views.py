@@ -3,6 +3,9 @@ User views.
 
 This file contains a viewset for the custom User model object and associated Serializer.
 """
+import json
+
+from django.http import JsonResponse
 from django.utils import timezone
 from rest_framework import viewsets, mixins
 from rest_framework.decorators import action
@@ -12,6 +15,7 @@ from rest_framework.response import Response
 
 from .models import User, Log
 from .serializers import UserSerializer, LogSerializer
+from .utils import parse_requests_storage
 
 
 class UserViewSet(mixins.CreateModelMixin, mixins.UpdateModelMixin, viewsets.GenericViewSet):
@@ -67,6 +71,18 @@ class UserViewSet(mixins.CreateModelMixin, mixins.UpdateModelMixin, viewsets.Gen
         return Response(status=200, data=LogSerializer(
             Log.objects.filter(user=request.user, created_at__gte=start).order_by('-created_at'), many=True
         ).data)
+
+    @action(detail=False)
+    def storage(self, request, *args, **kwargs):
+        """
+        Get the currently authenticated user's logs.
+
+        :param request: *
+        :param args: *
+        :param kwargs: *
+        :return: Response
+        """
+        return JsonResponse(parse_requests_storage(request.user), safe=False)
 
     def update(self, request, *args, **kwargs):
         """

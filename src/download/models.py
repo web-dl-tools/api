@@ -180,6 +180,15 @@ class BaseRequest(ModifiedAtMixin, CreatedAtMixin, IdMixin, PolymorphicModel):
         """
         return self.get_handler_object()(self)
 
+    def get_storage(self) -> int:
+        """
+        Calculate the total request storage size.
+
+        :return: The total storage size.
+        """
+        from .utils import calculate_storage
+        return calculate_storage(self.path)
+
     @staticmethod
     def get_handler_object() -> "Type[src.download.handlers.BaseHandler]":
         """
