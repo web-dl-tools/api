@@ -33,7 +33,7 @@ class UserMiddleware(object):
         if 'Authorization' in request.headers:
             auth_token = request.headers['Authorization'].replace("Token ", "")
         else:
-            auth_token = request.GET.get('auth_token')
+            auth_token = request.COOKIES.get('auth_token')
 
         if auth_token:
             try:

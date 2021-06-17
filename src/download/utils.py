@@ -155,6 +155,6 @@ def create_file_streaming_response(path: str) -> FileResponse:
     response["Content-Type"] = mime.from_file(path)
     response[
         "Content-Disposition"
-    ] = f"{'attachment' if attachment else 'inline'}; filename={filename}"
+    ] = f"{'attachment' if attachment else 'inline'}; filename=\"{filename}\""
 
     return response

@@ -6,6 +6,9 @@ Due to the polymorphic nature of the BaseRequests
 and use of the polymorphic serializers all registered
 handler Requests are automatically handled by this viewset.
 """
+from base64 import b64decode
+from urllib.parse import unquote
+
 from django.db.models import QuerySet
 from rest_framework import viewsets, mixins
 from rest_framework.response import Response
@@ -18,7 +21,7 @@ from .models import BaseRequest
 from .serializers import PolymorphicRequestSerializer, LogSerializer
 from .tasks import download_request, compress_request
 from .utils import list_files, validate_path, validate_archive, create_file_streaming_response
-from src.auth_token.authentication import QueryTokenAuthentication
+from src.auth_token.authentication import CookieTokenAuthentication
 
 
 class RequestViewSet(
@@ -137,10 +140,10 @@ class GetFileView(APIView):
     An APIView for retrieving a file.
     """
 
-    authentication_classes = [QueryTokenAuthentication]
+    authentication_classes = [CookieTokenAuthentication]
     permission_classes = [IsAuthenticated]
 
-    def get(self, *args, **kwargs):
+    def get(self, request, path, *args, **kwargs):
         """
         Retrieve a single file from a download request.
 
@@ -148,7 +151,7 @@ class GetFileView(APIView):
         :param kwargs: *
         :return: Response|FileResponse
         """
-        path = self.request.query_params.get("path")
+        path = unquote(b64decode(path).decode('utf-8'))
 
         if validate_path(path, self.request.user) or validate_archive(path, self.request.user):
             return create_file_streaming_response(path)
