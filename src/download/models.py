@@ -180,7 +180,8 @@ class BaseRequest(ModifiedAtMixin, CreatedAtMixin, IdMixin, PolymorphicModel):
         """
         return self.get_handler_object()(self)
 
-    def get_storage(self) -> int:
+    @property
+    def storage_size(self) -> int:
         """
         Calculate the total request storage size.
 

@@ -25,6 +25,7 @@ class BaseRequestSerializer(serializers.ModelSerializer):
         "start_compressing_at",
         "compressed_at",
         "path",
+        "storage_size",
     )
 
     class Meta:
@@ -49,6 +50,7 @@ class BaseRequestSerializer(serializers.ModelSerializer):
             "title",
             "data",
             "path",
+            "storage_size",
         )
         read_only_fields = (
             "id",
@@ -63,6 +65,7 @@ class BaseRequestSerializer(serializers.ModelSerializer):
             "title",
             "data",
             "path",
+            "storage_size",
         )
         extra_kwargs = {"user": {"write_only": True}}
 

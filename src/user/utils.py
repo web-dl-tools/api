@@ -21,7 +21,7 @@ def parse_requests_storage(user: str) -> list:
             'id': str(request.id),
             'title': request.title,
             'type': str(request.polymorphic_ctype.model),
-            'size': request.get_storage()
+            'size': request.storage_size
         })
 
     return storage
