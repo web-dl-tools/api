@@ -10,4 +10,5 @@ from .views import GetFileView
 
 urlpatterns = [
     path("file/<str:path>", GetFileView.as_view()),
+    path("file/<str:path>/<str:slug>", GetFileView.as_view()),
 ]

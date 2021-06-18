@@ -73,7 +73,6 @@ class AudioVisualHandler(BaseHandler):
                 "writeannotations": True,
                 "write_all_thumbnails": True,
                 "writesubtitles": True,
-                "writeinfojson": True,
                 "outtmpl": f"{self.request.path}/{self.request.output}",
                 "format": self.request.format_selection,
                 "logger": self.logger,
