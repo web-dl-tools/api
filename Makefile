@@ -16,13 +16,13 @@ start: ## Start the container stack
 
 start_debug: ## Start the container stack
 	@echo "Starting up containers..."
-	make build && sudo docker-compose up
+	docker-compose build --progress=plain && docker-compose up
 
 clean: ## Clean out unused docker(-compose) files
 	@echo "Removing unused docker files..."
 	docker system prune -af
 
-update: ## Update repository to latest version and rebuild container stack
+update: ## Update repository to latest version
 	@echo "Updating repository to latest version..."
 	@echo "Warning: This will shutdown all containers."
-	make stop && git fetch && git pull && make build
+	make stop && git fetch && git pull
