@@ -17,7 +17,8 @@ RUN apt-get purge python -y
 
 # Install Python
 WORKDIR /install
-RUN apt-get install build-essential zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libsqlite3-dev libreadline-dev libffi-dev curl libbz2-dev -y
+RUN apt-get install build-essential zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libsqlite3-dev \
+libreadline-dev libffi-dev curl libbz2-dev -y
 RUN wget https://www.python.org/ftp/python/3.9.4/Python-3.9.4.tar.xz
 RUN tar -xf Python-3.9.4.tar.xz
 

@@ -3,8 +3,6 @@ User views.
 
 This file contains a viewset for the custom User model object and associated Serializer.
 """
-import json
-
 from django.http import JsonResponse
 from django.utils import timezone
 from rest_framework import viewsets, mixins
@@ -65,7 +63,7 @@ class UserViewSet(mixins.CreateModelMixin, mixins.UpdateModelMixin, viewsets.Gen
         :param kwargs: *
         :return: Response
         """
-        dt = timezone.now()
+        dt = timezone.localtime()
         start = dt.replace(hour=0, minute=0, second=0, microsecond=0)
 
         return Response(status=200, data=LogSerializer(
@@ -97,5 +95,3 @@ class UserViewSet(mixins.CreateModelMixin, mixins.UpdateModelMixin, viewsets.Gen
             return Response(status=401, data="Unauthorized request")
 
         return super().update(request, *args, **kwargs)
-
-
