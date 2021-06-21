@@ -39,9 +39,11 @@ class Command(BaseCommand):
 
         dt = timezone.localtime()
         end = dt.replace(hour=0, minute=0, second=0, microsecond=0)
+        count = 0
 
         logs = Log.objects.filter(user=user, created_at__lte=end).order_by('-created_at')
         for log in logs:
+            count += 1
             log.delete()
 
-        self.stdout.write("Finished cleaning outdated logs.")
+        self.stdout.write(f"Finished cleaning {count} outdated logs.")
