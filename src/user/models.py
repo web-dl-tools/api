@@ -14,6 +14,7 @@ class User(ModifiedAtMixin, IdMixin, AbstractUser):
     """
     A user entity which extends the Django admin user in order to implement additional custom fields.
     """
+    technical = models.BooleanField(_('technical'), default=False)
 
     class Meta:
         db_table = "user"
