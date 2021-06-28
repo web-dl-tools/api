@@ -85,7 +85,7 @@ class ResourceHandler(BaseHandler):
         self.logger.info("Created and saved screenshot.")
 
         self.driver.quit()
-        self.logger.debug("Quit the Selenium Server instance and closes all associated windows.")
+        self.logger.debug("Quit the Selenium Server instance and closed all associated windows.")
 
     def download(self) -> None:
         """
