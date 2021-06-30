@@ -41,7 +41,7 @@ class Command(BaseCommand):
         end = dt.replace(hour=0, minute=0, second=0, microsecond=0)
         count = 0
 
-        logs = Log.objects.filter(user=user, created_at__lte=end).order_by('-created_at')
+        logs = Log.objects.filter(user=user, created_at__lte=end)
         for log in logs:
             count += 1
             log.delete()
