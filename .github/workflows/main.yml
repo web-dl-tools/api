@@ -25,7 +25,7 @@ jobs:
       - name: Build the docker-compose stack
         run: docker-compose up -d
         env:
-          FILES_PATH: ${GITHUB_ACTION_PATH}
+          FILES_PATH: .
 
       # Check the containers
       - name: Check running containers
