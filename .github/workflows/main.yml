@@ -21,6 +21,11 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
+      # Set environment variables to allow build to pass
+      - name: Set environment variables
+        env:
+          FILES_PATH: GITHUB_ACTION_PATH
+
       # Build and start the containers
       - name: Build the docker-compose stack
         run: docker-compose up -d
@@ -30,5 +35,5 @@ jobs:
         run: docker ps -a
 
       # Shutdown the containers
-      - name: Run a one-line script
+      - name: shutdown the containers
         run: docker-compose down --remove-orphans
