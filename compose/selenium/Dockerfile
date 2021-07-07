@@ -3,7 +3,7 @@ FROM python:3.9-buster
 # Setup labels
 LABEL version = "1.0"
 LABEL description = "Selenium docker container"
-LABEL maintainer = "rinesh.ramadhin@gmail.com"
+LABEL maintainer = "Rinesh Ramadhin"
 
 RUN apt-get update
 

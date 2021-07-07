@@ -3,7 +3,7 @@ FROM rust:1.51.0-buster
 # Setup labels
 LABEL version = "2.0"
 LABEL description = "Django docker container"
-LABEL maintainer = "rinesh.ramadhin@gmail.com"
+LABEL maintainer = "Rinesh Ramadhin"
 
 # Setup environment arguments
 ENV PYTHONUNBUFFERED 1
