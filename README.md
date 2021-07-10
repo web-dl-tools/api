@@ -22,8 +22,8 @@ repository as _.env.dist_. Please copy and rename this file to _.env_ and fill i
 | Property              | Description                                         | Required | Example                                               |
 |-----------------------|-----------------------------------------------------|----------|-------------------------------------------------------|
 | **USER_ID**           | The user ID of owner the files folder               | Yes      | 1                                                     |
-| **FILES_PATH**        | The files path of the files folder                  | Yes      | ./files                                               |
-| **DJANGO_DEBUG**      | enable/disable Django debug mode                    | Yes      | False                                                 |
+| **FILES_PATH**        | The path of the files folder                        | Yes      | ./files                                               |
+| **DJANGO_DEBUG**      | Enable/disable Django debug mode                    | Yes      | False                                                 |
 | **DJANGO_SECRET_KEY** | Key used by Django to provide cryptographic signing | Yes      | someSecureDjangoSecretkeyFromhttps://djecrety.ir      |
 | **SENTRY_DSN**        | The DSN URL for Sentry error tracking               | No       | https://1234567890abcdef@12345.ingest.sentry.io/67890 |
 | **POSTGRES_USER**     | The PostgreSQL username                             | Yes      | postgres                                              |
