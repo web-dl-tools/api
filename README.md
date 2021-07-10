@@ -3,7 +3,7 @@
 
 ![test workflow](https://github.com/web-dl-tools/api/actions/workflows/test.yml/badge.svg)
 
-**Web DL API** is a Django RESTful api built to form the core of the entire Web DL stack.
+**Web DL API** is a Django RESTful API built to form the core of the entire Web DL stack.
 It's the **sole requirement to run Web DL**.
 
 ### Some features
@@ -14,6 +14,21 @@ It's the **sole requirement to run Web DL**.
 * Runs on less than 2 GB of memory across multiple containers.
 * Authenticated websocket connection support for live status updates.
 * Even more...
+
+## Configuration
+Configuration for the Web DL API is managed by an environment file. A base example is provided in the
+repository as _.env.dist_. Please copy and rename this file to _.env_ and fill in the values.
+
+| Property              | Description                                         | Required | Example                                               |
+|-----------------------|-----------------------------------------------------|----------|-------------------------------------------------------|
+| **USER_ID**           | The user ID of owner the files folder               | Yes      | 1                                                     |
+| **FILES_PATH**        | The files path of the files folder                  | Yes      | ./files                                               |
+| **DJANGO_DEBUG**      | enable/disable Django debug mode                    | Yes      | False                                                 |
+| **DJANGO_SECRET_KEY** | Key used by Django to provide cryptographic signing | Yes      | someSecureDjangoSecretkeyFromhttps://djecrety.ir      |
+| **SENTRY_DSN**        | The DSN URL for Sentry error tracking               | No       | https://1234567890abcdef@12345.ingest.sentry.io/67890 |
+| **POSTGRES_USER**     | The PostgreSQL username                             | Yes      | postgres                                              |
+| **POSTGRES_PASSWORD** | The PostgreSQL user password                        | Yes      | someSecurePW                                          |
+| **POSTGRES_DB**       | The PostgreSQL default database                     | Yes      | postgres                                              |
 
 ## Installation
 The Wel DL API requires the following software and OS to be installed:
