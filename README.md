@@ -4,7 +4,7 @@
 ![test workflow](https://github.com/web-dl-tools/api/actions/workflows/test.yml/badge.svg)
 
 **Web DL API** is a Django RESTful api built to form the core of the entire Web DL stack.
-It's the sole requirement to run Web DL.
+It's the **sole requirement to run Web DL**.
 
 ### Some features
 * Fully authenticated user creation and management.
@@ -13,7 +13,7 @@ It's the sole requirement to run Web DL.
 * Only stores files locally on device.
 * Runs on less than 2 GB of memory across multiple containers.
 * Authenticated websocket connection support for live status updates.
-* Much more features...
+* Even more...
 
 ## Installation
 The Wel DL API requires the following software and OS to be installed:
@@ -23,7 +23,7 @@ The Wel DL API requires the following software and OS to be installed:
 
 On lower versions of macOS, Windows, or on Linux, the
 [Docker Engine](https://hub.docker.com/search?offering=community&operating_system=linux&q=&type=edition)
-can also be installed, although the Web DL API was not originally developed using this tools.
+can also be installed, although the Web DL API was not originally developed using this tool.
 
 ### Runtime environment
 - Docker 18.09.2+
