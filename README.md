@@ -1,6 +1,7 @@
 # Web DL API
 ![Web DL banner](.github/assets/banner.png)
 
+![release](https://badgen.net/github/release/web-dl-tools/api)
 ![test workflow](https://github.com/web-dl-tools/api/actions/workflows/test.yml/badge.svg)
 
 **Web DL API** is a Django RESTful API built to form the core of the entire Web DL stack.
