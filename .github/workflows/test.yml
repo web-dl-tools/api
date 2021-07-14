@@ -10,7 +10,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  smoke test docker containers:
+  smoke_test_docker_containers:
+    name: Smoke test Docker containers
     runs-on: ubuntu-latest
 
     steps:
