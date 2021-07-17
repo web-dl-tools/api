@@ -33,8 +33,6 @@ repository as _.env.dist_. Please copy and rename this file to _.env_ and fill i
 ## Installation
 The Wel DL API requires the following software and OS to be installed:
 
-The WeB DL Website requires the following software and OS to be installed:
-
 - Operating System<sup>[1](#lower_os_versions)</sup>
     - Apple macOS Mojave 10.14 or higher (Intel chip)<sup>[2](#apple_silicon)</sup>
     - Microsoft Windows 10 Home/Pro 2004 (build 19041), Enterprise/Education 1909 (build 18363) or higher (64-bit)
