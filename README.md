@@ -7,7 +7,7 @@
 It's the **sole requirement to run Web DL**.
 
 ### Some features
-* Fully authenticated user creation and management.
+* Fully authenticated with user creation and management.
 * Secure, separate access to resources and files.
 * Dynamic file download endpoint for secure file access management.
 * Only stores files locally on device.
