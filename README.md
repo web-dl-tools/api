@@ -33,12 +33,20 @@ repository as _.env.dist_. Please copy and rename this file to _.env_ and fill i
 ## Installation
 The Wel DL API requires the following software and OS to be installed:
 
-- Apple macOS Yosemite 10.10.3+ or Microsoft Windows 10 Professional/Enterprise 64-bit
+The WeB DL Website requires the following software and OS to be installed:
+
+- Operating System<sup>[1](#lower_os_versions)</sup>
+    - Apple macOS Mojave 10.14 or higher (Intel chip)<sup>[2](#apple_silicon)</sup>
+    - Microsoft Windows 10 Home/Pro 2004 (build 19041), Enterprise/Education 1909 (build 18363) or higher (64-bit)
 - [Docker Desktop](https://www.docker.com/products/docker-desktop)
 
-On lower versions of macOS, Windows, or on Linux, the
+<a name="lower_os_versions">1</a>: On lower versions of macOS, Windows, or on Linux, the
 [Docker Engine](https://hub.docker.com/search?offering=community&operating_system=linux&q=&type=edition)
-can also be installed, although the Web DL API was not originally developed using this tool.
+can also be installed, although the Web DL Website was not originally developed using this tool.
+
+<a name="apple_silicon">2</a>: Docker Desktop for Mac on Apple Silicon is available but requires a
+[manual install of Rosetta 2](https://docs.docker.com/docker-for-mac/apple-silicon/#system-requirements).
+
 
 ### Runtime environment
 - Docker 18.09.2+
