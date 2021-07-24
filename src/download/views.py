@@ -6,9 +6,6 @@ Due to the polymorphic nature of the BaseRequests
 and use of the polymorphic serializers all registered
 handler Requests are automatically handled by this viewset.
 """
-from base64 import b64decode
-from urllib.parse import unquote
-
 from django.db.models import QuerySet
 from rest_framework import viewsets, mixins
 from rest_framework.response import Response
@@ -20,7 +17,7 @@ from rest_framework.views import APIView
 from .models import BaseRequest
 from .serializers import PolymorphicRequestSerializer, LogSerializer
 from .tasks import download_request, compress_request
-from .utils import list_files, validate_path, validate_archive, create_file_streaming_response
+from .utils import list_files, prepare_path, validate_for_request,  validate_for_archive, create_file_streaming_response
 from src.auth_token.authentication import CookieTokenAuthentication
 
 
@@ -147,13 +144,15 @@ class GetFileView(APIView):
         """
         Retrieve a single file from a download request.
 
+        :param path: user provided path
+        :param request: Request
         :param args: *
         :param kwargs: *
         :return: Response|FileResponse
         """
-        path = unquote(b64decode(path).decode('utf-8'))
+        path = prepare_path(path)
 
-        if validate_path(path, self.request.user) or validate_archive(path, self.request.user):
+        if validate_for_request(path, self.request.user) or validate_for_archive(path, self.request.user):
             return create_file_streaming_response(path)
 
-        return Response(status=404, data="Invalid payload.")
+        return Response(status=403, data="You're not authorized to access this resource or the resource doesn't exist.")

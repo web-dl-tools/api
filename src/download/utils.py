@@ -6,6 +6,8 @@ This file contains functions and action not fit for standard Django files.
 import os
 import magic
 
+from base64 import b64decode
+from urllib.parse import unquote
 from datetime import datetime
 
 from wsgiref.util import FileWrapper
@@ -72,10 +74,44 @@ def list_files(path: str) -> list:
     return content
 
 
-def validate_path(path: str, user: User) -> bool:
+def prepare_path(path: str) -> str:
+    """
+    Decode and normalize the path for usage when retrieving a file from the files folder.
+    This step must be performed on all user provided paths in order to prevent uncontrolled data used in path expression.
+
+    :param path: The raw user provided path value.
+    :return: A decoded and normalized path.
+    """
+    path = unquote(b64decode(path).decode('utf-8'))
+    path = os.path.normpath(path)
+
+    return path
+
+
+def validate_user_path(path_parts: list, user: User) -> bool:
     """
     Validate a request file path to ensure only the authorized user
-    for the request may retrieve file access.
+    for the user folder may have file retrieval access.
+
+    :param path_parts: A list of path parts of the relative file path.
+    :param user: The currently authenticated user.
+    :return: A bool containing the access result.
+    """
+    if len(path_parts) < 2:
+        return False
+
+    if path_parts[0] != "files":
+        return False
+
+    if path_parts[1] != str(user.id):
+        return False
+
+    return True
+
+def validate_for_request(path: str, user: User) -> bool:
+    """
+    Validate a request folder file path to ensure only the authorized user
+    for the request may have file retrieval access.
 
     :param path: A str containing the relative file path.
     :param user: The currently authenticated user.
@@ -83,13 +119,10 @@ def validate_path(path: str, user: User) -> bool:
     """
     path_parts = path.split("/")
 
+    if not validate_user_path(path_parts, user):
+        return False
+
     if len(path_parts) < 4:
-        return False
-
-    if path_parts[0] != "files":
-        return False
-
-    if path_parts[1] != str(user.id):
         return False
 
     if not BaseRequest.objects.filter(id=path_parts[2], user=user).exists():
@@ -97,11 +130,10 @@ def validate_path(path: str, user: User) -> bool:
 
     return True
 
-
-def validate_archive(path: str, user: User) -> bool:
+def validate_for_archive(path: str, user: User) -> bool:
     """
-    Validate a request archive to ensure only the authorized user
-    for the request may retrieve archive access.
+    Validate a request archive file path to ensure only the authorized user
+    for the request may have archive retrieval access.
 
     :param path: A str containing the relative archive path.
     :param user: The currently authenticated user.
@@ -109,13 +141,10 @@ def validate_archive(path: str, user: User) -> bool:
     """
     path_parts = path.split("/")
 
+    if not validate_user_path(path_parts, user):
+        return False
+
     if len(path_parts) != 3:
-        return False
-
-    if path_parts[0] != "files":
-        return False
-
-    if path_parts[1] != str(user.id):
         return False
 
     if not BaseRequest.objects.filter(id=path_parts[2].replace('.zip', ''), user=user).exists():
