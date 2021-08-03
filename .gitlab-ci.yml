@@ -1,5 +1,6 @@
 include:
   - template: Security/SAST.gitlab-ci.yml
+  - template: Security/Secret-Detection.gitlab-ci.yml
 
 image: docker:20.10.6
 
