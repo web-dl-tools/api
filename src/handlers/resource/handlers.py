@@ -97,7 +97,11 @@ class ResourceHandler(BaseHandler):
         :return: None
         """
         for i, path in enumerate(self.paths):
-            self.download_file(path)
+            try:
+                self.download_file(path)
+            except Exception:
+                self.logger.error("Failed to process the url", exc_info=1)
+
             self.request.set_progress(int(((i + 1) / len(self.paths)) * 100))
             time.sleep(self.request.delay / 1000.0)
 
