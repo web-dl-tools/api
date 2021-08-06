@@ -69,6 +69,10 @@ class ResourceHandler(BaseHandler):
         self.logger.info(f"Finished loading in Selenium Server instance. Sleeping 10 seconds to allow scripts to complete...")
         time.sleep(10)
 
+        self.driver.execute_script("window.scrollBy(0, document.body.scrollHeight)")
+        self.logger.info(f"Scrolling down to bottom of page. Sleeping 10 seconds to allow scripts to complete...")
+        time.sleep(10)
+
         self.html = self.driver.page_source
         title = self.driver.title
         self.request.set_title(
@@ -81,6 +85,7 @@ class ResourceHandler(BaseHandler):
         create_resource_folder(self.request.path)
         self.logger.debug(f"Created folder for resource.")
 
+        self.driver.execute_script("window.scrollTo(0, 0)")
         self.save_screenshot()
         self.logger.info("Created and saved screenshot.")
 
@@ -99,8 +104,8 @@ class ResourceHandler(BaseHandler):
         for i, path in enumerate(self.paths):
             try:
                 self.download_file(path)
-            except Exception:
-                self.logger.error("Failed to process the url", exc_info=1)
+            except Exception as e:
+                self.logger.error(f'Failed to process url {path} ({str(e)})')
 
             self.request.set_progress(int(((i + 1) / len(self.paths)) * 100))
             time.sleep(self.request.delay / 1000.0)
@@ -167,8 +172,8 @@ class ResourceHandler(BaseHandler):
         # filter
         filtered_paths = [
             path for path in paths if (
-                    ("." not in path.split("/")[-1]) or
-                    ("." in path.split("/")[-1] and path.endswith(tuple(self.request.extensions)))
+                    ("." not in path.split('?')[0].split("/")[-1]) or
+                    ("." in path.split('?')[0].split("/")[-1] and path.split('?')[0].endswith(tuple(self.request.extensions)))
             )
         ]
 
