@@ -3,7 +3,7 @@
 
 ![test workflow](https://github.com/web-dl-tools/api/actions/workflows/test.yml/badge.svg)
 
-**Web DL API** is a Django RESTful API built to form the core of the entire Web DL stack.
+**Web DL API** is a Django RESTful API build to form the core of the entire Web DL stack.
 It's the **sole requirement to run Web DL**.
 
 ### Some features
