@@ -6,8 +6,8 @@ Most other model handling and url config is done through a viewset.
 """
 from django.urls import path
 
-from .views import GethandlerStatusesView
+from .views import GetHandlerStatusesView
 
 urlpatterns = [
-    path("statuses", GethandlerStatusesView.as_view()),
+    path("statuses", GetHandlerStatusesView.as_view()),
 ]

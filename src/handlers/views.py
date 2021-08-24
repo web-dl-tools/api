@@ -13,7 +13,7 @@ from rest_framework.response import Response
 from .tasks import get_handlers
 
 
-class GethandlerStatusesView(APIView):
+class GetHandlerStatusesView(APIView):
     """
     An APIView for retrieving all handler options and support statuses.
     """
