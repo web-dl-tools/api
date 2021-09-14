@@ -108,6 +108,7 @@ def validate_user_path(path_parts: list, user: User) -> bool:
 
     return True
 
+
 def validate_for_request(path: str, user: User) -> bool:
     """
     Validate a request folder file path to ensure only the authorized user
@@ -129,6 +130,7 @@ def validate_for_request(path: str, user: User) -> bool:
         return False
 
     return True
+
 
 def validate_for_archive(path: str, user: User) -> bool:
     """
