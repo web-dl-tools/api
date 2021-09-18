@@ -56,6 +56,18 @@ class UserSerializer(serializers.ModelSerializer):
         user = User.objects.create_user(**validated_data)
         return user
 
+    def update(self, instance, validated_data):
+        """
+        Overwrite the update function to prevent password rewrites without passing existing password first.
+
+        :param instance: *
+        :param validated_data: a dict containing user field data.
+        :return: a User model object
+        """
+        del validated_data['password']
+        return super().update(instance, validated_data)
+
+
 class LogSerializer(serializers.ModelSerializer):
     """
     A log serializer for the user Log model object.

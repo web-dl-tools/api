@@ -15,7 +15,7 @@ def get_handlers(url: str) -> list:
     :return: a list containing all handler status results.
     """
     handlers = []
-    for a in PolymorphicRequestSerializer.model_serializer_mapping:
-        if a is not BaseRequest:
-            handlers.append(a.get_handler_object().handles(url).get_status())
+    for handler in PolymorphicRequestSerializer.model_serializer_mapping:
+        if handler is not BaseRequest:
+            handlers.append(handler.get_handler_object().handles(url).get_status())
     return handlers
