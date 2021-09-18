@@ -64,7 +64,8 @@ class UserSerializer(serializers.ModelSerializer):
         :param validated_data: a dict containing user field data.
         :return: a User model object
         """
-        del validated_data['password']
+        if "password" in validated_data:
+            del validated_data['password']
         return super().update(instance, validated_data)
 
 
