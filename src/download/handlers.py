@@ -4,6 +4,8 @@ Download handlers.
 This file contains custom objects for the BaseHandler and BaseHandlerStatus.
 Custom handlers must at a minimum implement the BaseHandler.
 """
+import abc
+
 from sentry_sdk import capture_exception
 
 from .models import BaseRequest
@@ -79,6 +81,7 @@ class BaseHandler(object):
     logger = None
 
     @staticmethod
+    @abc.abstractmethod
     def handles(url: str) -> BaseHandlerStatus:
         """
         Notify the status of a handler for a given url.
@@ -86,7 +89,7 @@ class BaseHandler(object):
         :param url: a str containing a valid url.
         :return: a BaseHandlerStatus object containing the status for the linked handler.
         """
-        raise NotImplementedError("Child handler must implement handles() function.")
+        pass
 
     def __init__(self, request: BaseRequest) -> None:
         """

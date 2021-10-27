@@ -3,6 +3,7 @@ Handlers utils.
 
 This file contains commonly used utils.
 """
+import abc
 import os
 import re
 import mimetypes
@@ -56,8 +57,9 @@ def extract_file_extension(headers: dict) -> str:
 
     return file_extension
 
+@abc.abstractmethod
 def _progress_cb(self, progress: int) -> None:
-    raise NotImplementedError
+    pass
 
 def download_request(url: str, path: str, filename: str, extension: str, progress_cb: _progress_cb = None) -> dict:
     """

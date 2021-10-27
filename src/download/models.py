@@ -3,6 +3,8 @@ Download models.
 
 This file contains the model object definitions for the polymorphic BaseRequest and custom Log object.
 """
+import abc
+
 from typing import Type
 from polymorphic.models import PolymorphicModel
 from django.db import models
@@ -191,6 +193,7 @@ class BaseRequest(ModifiedAtMixin, CreatedAtMixin, IdMixin, PolymorphicModel):
         return calculate_storage(self.path)
 
     @staticmethod
+    @abc.abstractmethod
     def get_handler_object() -> "Type[src.download.handlers.BaseHandler]":
         """
         Return the type of the associated handler. This method is called when retrieving
@@ -198,9 +201,7 @@ class BaseRequest(ModifiedAtMixin, CreatedAtMixin, IdMixin, PolymorphicModel):
 
         :return: a Type[BaseHandler] of the BaseHandler object.
         """
-        raise NotImplementedError(
-            "Child request must implement get_handler() function."
-        )
+        pass
 
 
 class Log(CreatedAtMixin, IdMixin):
