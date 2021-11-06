@@ -106,7 +106,7 @@ services:
     build:
       context: .
       dockerfile: ./compose/selenium/Dockerfile
-    command: java -jar selenium-server-standalone.jar
+    command: java -jar selenium.jar standalone
     depends_on:
       - django
     deploy:

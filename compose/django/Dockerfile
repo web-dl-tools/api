@@ -1,4 +1,4 @@
-FROM rust:1.51.0-buster
+FROM rust:1.56.1-buster
 
 # Setup labels
 LABEL version = "2.0"
@@ -19,11 +19,11 @@ RUN apt-get purge python -y
 WORKDIR /install
 RUN apt-get install build-essential zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libsqlite3-dev \
 libreadline-dev libffi-dev curl libbz2-dev -y
-RUN wget https://www.python.org/ftp/python/3.9.4/Python-3.9.4.tar.xz
-RUN tar -xf Python-3.9.4.tar.xz
+RUN wget https://www.python.org/ftp/python/3.10.0/Python-3.10.0.tar.xz
+RUN tar -xf Python-3.10.0.tar.xz
 
 # Configure Python
-WORKDIR /install/Python-3.9.4
+WORKDIR /install/Python-3.10.0
 RUN ./configure --enable-optimizations
 
 # Install Python packages

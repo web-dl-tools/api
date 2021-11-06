@@ -1,4 +1,4 @@
-FROM python:3.9-buster
+FROM python:3.10-buster
 
 # Setup labels
 LABEL version = "1.0"
@@ -7,7 +7,7 @@ LABEL maintainer = "Rinesh Ramadhin"
 
 RUN apt-get update
 
-# Install Chrome
+# Install Chromium
 RUN apt-get install chromium -y
 
 # Install Selenium dependencies
@@ -15,12 +15,12 @@ RUN apt-get install unzip xvfb libxi6 libgconf-2-4 default-jdk -y
 
 # Install Chrome driver
 WORKDIR /install
-#RUN wget -O chromedriver.zip https://github.com/electron/electron/releases/download/v12.0.7/chromedriver-v12.0.7-linux-x64.zip # For development on x64.
-RUN wget -O chromedriver.zip https://github.com/electron/electron/releases/download/v12.0.7/chromedriver-v12.0.7-linux-armv7l.zip
+#RUN wget -O chromedriver.zip https://github.com/electron/electron/releases/download/v12.2.2/chromedriver-v12.2.2-linux-x64.zip # For development on x64.
+RUN wget -O chromedriver.zip https://github.com/electron/electron/releases/download/v12.2.2/chromedriver-v12.2.2-linux-armv7l.zip
 RUN unzip chromedriver.zip
 RUN mv chromedriver /usr/bin/chromedriver
 RUN chown root:root /usr/bin/chromedriver
 RUN chmod +x /usr/bin/chromedriver
 
 # Install Selenium
-RUN wget -O selenium-server-standalone.jar https://selenium-release.storage.googleapis.com/3.9/selenium-server-standalone-3.9.1.jar
+RUN wget -O selenium.jar https://github.com/SeleniumHQ/selenium/releases/download/selenium-4.0.0/selenium-server-4.0.0.jar
