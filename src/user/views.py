@@ -53,7 +53,7 @@ class UserViewSet(mixins.CreateModelMixin, mixins.UpdateModelMixin, viewsets.Gen
         """
         return Response(status=200, data=UserSerializer(self.request.user).data)
 
-    @action(detail=False)
+    @action(detail=False, url_path='me/logs')
     def logs(self, request, *args, **kwargs):
         """
         Get the currently authenticated user's logs.
@@ -70,7 +70,7 @@ class UserViewSet(mixins.CreateModelMixin, mixins.UpdateModelMixin, viewsets.Gen
             Log.objects.filter(user=request.user, created_at__gte=start).order_by('-created_at'), many=True
         ).data)
 
-    @action(detail=False)
+    @action(detail=False, url_path='me/storage')
     def storage(self, request, *args, **kwargs):
         """
         Get the currently authenticated user's logs.
