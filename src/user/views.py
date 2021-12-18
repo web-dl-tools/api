@@ -10,10 +10,11 @@ from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.response import Response
+from rest_framework.exceptions import AuthenticationFailed
 
 from .models import User, Log
 from .serializers import UserSerializer, LogSerializer
-from .utils import parse_requests_storage
+from .utils import parse_requests_storage, update_password
 
 
 class UserViewSet(mixins.CreateModelMixin, mixins.UpdateModelMixin, viewsets.GenericViewSet):
@@ -95,3 +96,23 @@ class UserViewSet(mixins.CreateModelMixin, mixins.UpdateModelMixin, viewsets.Gen
             return Response(status=401, data="Unauthorized request")
 
         return super().update(request, *args, **kwargs)
+
+    @action(detail=True, methods=['patch'])
+    def credentials(self, request, *args, **kwargs):
+        """
+        Check if the authenticated user is updating it's own valid credentials.
+
+        :param request: *
+        :param args: *
+        :param kwargs: *
+        :return: Response
+        """
+        if self.request.user != self.get_object():
+            return Response(status=401, data="Unauthorized request")
+
+        try:
+            update_password(self.request.user, self.request.data["current_password"],  self.request.data["new_password"])
+        except AuthenticationFailed:
+            return Response(status=400, data="Unauthorized request")
+
+        return Response(status=200, data=UserSerializer(self.request.user).data)

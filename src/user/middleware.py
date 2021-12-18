@@ -35,6 +35,11 @@ class UserMiddleware(object):
         else:
             auth_token = request.COOKIES.get('auth_token')
 
+        if request.get_full_path().split('/')[-1] == 'credentials':
+            data = 'Filtered out due to containing sensitive information.'
+        else:
+            data = request.body.decode("utf-8") if request.body else None
+
         if auth_token:
             try:
                 user = Token.objects.get(key=auth_token).user
@@ -42,7 +47,7 @@ class UserMiddleware(object):
                     user=user,
                     url=request.get_full_path(),
                     method=request.method,
-                    data=request.body.decode("utf-8") if request.body else None
+                    data=data
                 )
             except Token.DoesNotExist:
                 pass
