@@ -1,6 +1,6 @@
 psycopg2==2.9.1
 
-Django==3.2.9
+Django==3.2.10
 djangorestframework==3.12.4
 django-cors-headers==3.10.0
 django-polymorphic==3.0.0
