@@ -17,6 +17,6 @@ markdown==3.3.4
 celery==5.1.2
 redis==3.5.3
 
-yt-dlp==2021.10.22
+yt-dlp==2021.12.1
 python-qbittorrent==0.4.2
 selenium==4.0.0
