@@ -23,8 +23,9 @@ class Command(BaseCommand):
 
         users = User.objects.all()
         for user in users:
-            self.stdout.write(f"Processing user '{user.username}'...")
+            self.stdout.write(f"Processing user {user.id} ({user.username})...")
             self.__clean_logs(user)
+            self.stdout.write(f"Finished with user {user.id}.")
 
         self.stdout.write(self.style.SUCCESS("Finished cleanup."))
 
@@ -46,4 +47,4 @@ class Command(BaseCommand):
             count += 1
             log.delete()
 
-        self.stdout.write(f"Finished cleaning {count} outdated logs.")
+        self.stdout.write(f"Finished cleaning {count} outdated log(s).")
