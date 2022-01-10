@@ -4,7 +4,7 @@ Audio visual handlers.
 This file contains the BaseHandler implementation of the audio visual handler.
 """
 import re
-import youtube_dl
+import yt_dlp
 
 from .loggers import AudioVisualLogger
 from src.download.models import BaseRequest
@@ -44,7 +44,7 @@ class AudioVisualHandler(BaseHandler):
         status = BaseHandlerStatus(AudioVisualRequest.__name__)
 
         try:
-            with youtube_dl.YoutubeDL({}) as yt_dl:
+            with yt_dlp.YoutubeDL({}) as yt_dl:
                 meta = yt_dl.extract_info(url, download=False)
                 formats = meta.get("formats", [meta])
                 status.set_supported(True)
@@ -62,7 +62,7 @@ class AudioVisualHandler(BaseHandler):
 
         :return: None
         """
-        with youtube_dl.YoutubeDL({}) as yt_dl:
+        with yt_dlp.YoutubeDL({}) as yt_dl:
             meta = yt_dl.extract_info(self.request.url, download=False)
             self.request.set_data(meta)
             self.request.set_title(meta["title"])
@@ -92,7 +92,7 @@ class AudioVisualHandler(BaseHandler):
 
         :return: None
         """
-        with youtube_dl.YoutubeDL(self.options) as yt_dl:
+        with yt_dlp.YoutubeDL(self.options) as yt_dl:
             yt_dl.download([self.request.url])
 
     def progress_hook(self, d: dict) -> None:
@@ -104,7 +104,7 @@ class AudioVisualHandler(BaseHandler):
         :return: None
         """
         if "_percent_str" in d:
-            matches = re.findall("\d+\.\d+", d["_percent_str"])
+            matches = re.findall("\d+\.?\d+", d["_percent_str"])
             progress = int(float(matches[0]))
             if progress > self.request.progress:
                 self.request.set_progress(progress)
