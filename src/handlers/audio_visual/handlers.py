@@ -71,7 +71,7 @@ class AudioVisualHandler(BaseHandler):
                 "verbose": True,
                 "writedescription": True,
                 "writeannotations": True,
-                "write_all_thumbnails": True,
+                "writethumbnail": True,
                 "writesubtitles": True,
                 "outtmpl": f"{self.request.path}/{self.request.output}",
                 "format": self.request.format_selection,
