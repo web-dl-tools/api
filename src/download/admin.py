@@ -21,4 +21,4 @@ class BaseRequestAdmin(admin.ModelAdmin):
         (None, {'fields': ('id', 'user', 'status')}),
         (_('Important dates'), {'fields': ('start_processing_at', 'completed_at', 'start_compressing_at', 'compressed_at')}),
     )
-    readonly_fields=('id', 'user', 'status', 'start_processing_at', 'completed_at', 'start_compressing_at', 'compressed_at')
+    readonly_fields=('id', 'user', 'start_processing_at', 'completed_at', 'start_compressing_at', 'compressed_at')
