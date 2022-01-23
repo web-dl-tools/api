@@ -3,6 +3,7 @@ version: '3.8'
 services:
   postgres:
     image: postgres:12.9
+    container_name: web-dl_postgres
     deploy:
       resources:
         limits:
@@ -27,6 +28,7 @@ services:
         - POSTGRES_USER=${POSTGRES_USER}
         - POSTGRES_DB=${POSTGRES_DB}
     command: compose/django/start.sh
+    container_name: web-dl_django
     depends_on:
       - postgres
       - celery
@@ -57,6 +59,7 @@ services:
 
   redis:
     image: redis:5.0.7-alpine
+    container_name: web-dl_redis
     deploy:
       resources:
         limits:
@@ -68,6 +71,7 @@ services:
   celery:
     <<: *base
     command: celery -A config.celery worker --concurrency=1
+    container_name: web-dl_celery
     depends_on:
       - redis
       - postgres
@@ -81,7 +85,7 @@ services:
 
   qbittorrent:
     image: linuxserver/qbittorrent:4.3.0202003011834-6876-b519eceubuntu18.04.1-ls16
-    container_name: qbittorrent
+    container_name: web-dl_qbittorrent
     depends_on:
       - django
     deploy:
@@ -107,6 +111,7 @@ services:
       context: .
       dockerfile: ./compose/selenium/Dockerfile
     command: java -jar selenium.jar standalone
+    container_name: web-dl_selenium
     depends_on:
       - django
     deploy:
