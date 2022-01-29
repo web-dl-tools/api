@@ -7,6 +7,7 @@ from channels.http import AsgiRequest
 from rest_framework.authtoken.models import Token
 
 from .models import Log
+from .exceptions import SensitiveRequestException
 
 
 class UserMiddleware(object):
@@ -30,16 +31,13 @@ class UserMiddleware(object):
         :param request: AsgiRequest
         :return: AsgiRequest
         """
-        if 'Authorization' in request.headers:
-            auth_token = request.headers['Authorization'].replace("Token ", "")
-        else:
-            auth_token = request.COOKIES.get('auth_token')
+        try:
+            data = self.scrub_sensitive_data(request)
+        except SensitiveRequestException:
+            return self.get_response(request)
 
-        if request.get_full_path().split('/')[-1] == 'credentials':
-            data = 'Filtered out due to containing sensitive information.'
-        else:
-            data = request.body.decode("utf-8") if request.body else None
-
+        auth_token = self.retrieve_auth_token(request)        
+ 
         if auth_token:
             try:
                 user = Token.objects.get(key=auth_token).user
@@ -53,3 +51,29 @@ class UserMiddleware(object):
                 pass
 
         return self.get_response(request)
+
+    def scrub_sensitive_data(self, request: AsgiRequest) -> str:
+        """
+        Scrub sensitive data from the request.
+
+        :param request: AsgiRequest
+        :return: str
+        """
+        request_parts = request.get_full_path().split('/')
+        if 'admin' in request_parts[1]:
+            raise SensitiveRequestException('Request is an admin request.')
+        if request_parts[-1] == 'credentials':
+            data = 'Filtered out due to containing sensitive information.'
+        else:
+            data = request.body.decode("utf-8") if request.body else None
+        
+        return data
+
+    def retrieve_auth_token(self, request: AsgiRequest) -> str:
+        """
+        Retrieve the auth token from the request.
+
+        :param request: AsgiRequest
+        :return: str
+        """
+        return request.headers['Authorization'].replace("Token ", "") if 'Authorization' in request.headers else request.COOKIES.get('auth_token')
