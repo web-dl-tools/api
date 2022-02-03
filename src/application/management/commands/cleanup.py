@@ -25,7 +25,7 @@ class Command(BaseCommand):
         for user in users:
             self.stdout.write(f"Processing user {user.id} ({user.username})...")
             self.__clean_logs(user)
-            self.stdout.write(f"Finished with user {user.id}.")
+            self.stdout.write(f"Finished with user.")
 
         self.stdout.write(self.style.SUCCESS("Finished cleanup."))
 
