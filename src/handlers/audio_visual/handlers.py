@@ -105,8 +105,9 @@ class AudioVisualHandler(BaseHandler):
         """
         if "_percent_str" in d:
             matches = re.findall("\d+\.?\d+", d["_percent_str"])
-            progress = int(float(matches[0]))
-            if progress > self.request.progress:
-                self.request.set_progress(progress)
-                if progress == 100:
-                    self.request.get_state().post_processing()
+            if len(matches):
+                progress = int(float(matches[0]))
+                if progress > self.request.progress:
+                    self.request.set_progress(progress)
+                    if progress == 100:
+                        self.request.get_state().post_processing
