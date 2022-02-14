@@ -72,6 +72,7 @@ class AudioVisualHandler(BaseHandler):
                 "writedescription": True,
                 "writeannotations": True,
                 "writethumbnail": True,
+                "writelink": True,
                 "writesubtitles": True,
                 "outtmpl": f"{self.request.path}/{self.request.output}",
                 "format": self.request.format_selection,
@@ -109,5 +110,6 @@ class AudioVisualHandler(BaseHandler):
                 progress = int(float(matches[0]))
                 if progress > self.request.progress:
                     self.request.set_progress(progress)
-                    if progress == 100:
-                        self.request.get_state().post_processing
+
+        if d['status'] == 'finished':
+            self.request.get_state().post_processing
