@@ -17,7 +17,7 @@ from .serializers import PolymorphicRequestSerializer
 def handle_request_post_save(sender, instance, created, **kwargs) -> None:
     """
     Automatically handle a BaseRequest object, after it has been created, in a asynchronous task queue.
-    Additionally this triggers a websocket send event to a authenticated group in order to notify members
+    Additionally, this triggers a websocket send event to an authenticated group in order to notify members
     of the request data change.
 
     :param sender: models.Model object which triggered the save action.
@@ -45,7 +45,7 @@ def handle_request_post_save(sender, instance, created, **kwargs) -> None:
 @receiver(pre_delete)
 def handle_request_post_delete(sender, instance, using, **kwargs) -> None:
     """
-    Automatically delete request files, before it will be deleted, in a asynchronous task queue.
+    Automatically delete request files, before it will be deleted, in an asynchronous task queue.
 
     :param sender: models.Model object which triggered the save action.
     :param instance: a BaseRequest instance.

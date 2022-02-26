@@ -8,6 +8,7 @@ from django.utils import timezone
 
 from src.user.models import User, Log
 
+
 class Command(BaseCommand):
     help = 'Perform maintenance cleanup'
 
