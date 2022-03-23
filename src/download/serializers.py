@@ -8,7 +8,7 @@ This file also acts as a registration of handler Request models and Serializer o
 from rest_framework import serializers
 from rest_polymorphic.serializers import PolymorphicSerializer
 
-from .models import BaseRequest, Log
+from .models import BaseRequest, RequestLog
 
 
 class BaseRequestSerializer(serializers.ModelSerializer):
@@ -108,9 +108,9 @@ class PolymorphicRequestSerializer(PolymorphicSerializer):
     }
 
 
-class LogSerializer(serializers.ModelSerializer):
+class RequestLogSerializer(serializers.ModelSerializer):
     """
-    A log serializer for the request Log model object.
+    A request log serializer for the request Log model object.
     """
 
     class Meta:
@@ -119,5 +119,5 @@ class LogSerializer(serializers.ModelSerializer):
         See https://www.django-rest-framework.org/api-guide/serializers/
         """
 
-        model = Log
+        model = RequestLog
         fields = ("id", "created_at", "level", "level_display", "message")

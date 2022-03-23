@@ -4,6 +4,7 @@ Download models.
 This file contains the model object definitions for the polymorphic BaseRequest and custom Log object.
 """
 import abc
+import os
 
 from typing import Type
 from polymorphic.models import PolymorphicModel
@@ -204,7 +205,7 @@ class BaseRequest(ModifiedAtMixin, CreatedAtMixin, IdMixin, PolymorphicModel):
         pass
 
 
-class Log(CreatedAtMixin, IdMixin):
+class RequestLog(CreatedAtMixin, IdMixin):
     """
     A request log model object for storing logging data from the associated BaseHandler when handling the request.
     """
@@ -235,6 +236,14 @@ class Log(CreatedAtMixin, IdMixin):
     level = models.IntegerField(_("level"), choices=LEVELS, default=LEVEL_NOTSET)
     message = models.TextField(_("message"), blank=False)
 
+    class Meta:
+        """
+        Model metadata.
+        See https://docs.djangoproject.com/en/3.0/ref/models/options/
+        """
+
+        db_table = "request_log"
+
     @property
     def level_display(self) -> str:
         """
@@ -243,3 +252,31 @@ class Log(CreatedAtMixin, IdMixin):
         :return: A str containing the status display value.
         """
         return self.get_level_display()
+
+
+class FilesLog(CreatedAtMixin, IdMixin):
+    """
+    A files log model object for storing downloading/access data from the associated files of the request.
+    """
+
+    request = models.ForeignKey(
+        BaseRequest, verbose_name=_("request"), on_delete=models.CASCADE
+    )
+    path = models.TextField(_("path"), blank=False)
+
+    class Meta:
+        """
+        Model metadata.
+        See https://docs.djangoproject.com/en/3.0/ref/models/options/
+        """
+
+        db_table = "files_log"
+
+    @property
+    def filename(self) -> str:
+        """
+        Get the filename from the file path.
+
+        :return: A str containing the filename and extension.
+        """
+        return os.path.basename(self.path)

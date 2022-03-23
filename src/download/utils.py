@@ -14,7 +14,7 @@ from wsgiref.util import FileWrapper
 from django.http import FileResponse
 
 from src.user.models import User
-from .models import BaseRequest
+from .models import BaseRequest, FilesLog
 
 
 def calculate_storage(path: str) -> int:
@@ -158,6 +158,23 @@ def validate_for_archive(path: str, user: User) -> bool:
     return True
 
 
+def get_request(path: str) -> BaseRequest:
+    """
+    Get the request entity from a file path. Make sure the filepath is validated before using this method.
+
+    :param path: A str containing the relative file path.
+    :return: A BaseRequest entity containing the linked request.
+    """
+    return BaseRequest.objects.get(id=path.split("/")[2])
+
+
+def log_file_access(path: str) -> None:
+    """
+    :param path: A str containing the relative file path.
+    """
+    FilesLog.objects.create(request=get_request(path), path=path)
+
+
 def create_file_streaming_response(path: str) -> FileResponse:
     """
     Create a streaming file response to serve the file while
@@ -167,7 +184,7 @@ def create_file_streaming_response(path: str) -> FileResponse:
     the file size exceeds a given limit, else it is up to the
     client to decide how to process and view the file.
 
-    :param path: A str containing the file path.
+    :param path: A str containing the relative file path.
     :return: A FileResponse containing a streaming file.
     """
     filename = os.path.basename(path)

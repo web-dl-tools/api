@@ -15,9 +15,10 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.views import APIView
 
 from .models import BaseRequest
-from .serializers import PolymorphicRequestSerializer, LogSerializer
+from .serializers import PolymorphicRequestSerializer, RequestLogSerializer
 from .tasks import download_request, compress_request
-from .utils import list_files, prepare_path, validate_for_request,  validate_for_archive, create_file_streaming_response
+from .utils import list_files, prepare_path, validate_for_request,  validate_for_archive, log_file_access,\
+    create_file_streaming_response
 from src.auth_token.authentication import CookieTokenAuthentication
 
 
@@ -79,7 +80,7 @@ class RequestViewSet(
         :return: Response
         """
         request_object = self.get_object()
-        return Response(LogSerializer(request_object.log_set, many=True).data)
+        return Response(RequestLogSerializer(request_object.requestlog_set, many=True).data)
 
     @action(detail=True)
     def files(self, request, pk=None) -> Response:
@@ -153,6 +154,7 @@ class GetFileView(APIView):
         path = prepare_path(path)
 
         if validate_for_request(path, self.request.user) or validate_for_archive(path, self.request.user):
+            log_file_access(path)
             return create_file_streaming_response(path)
 
         return Response(status=403, data="You're not authorized to access this resource or the resource doesn't exist.")

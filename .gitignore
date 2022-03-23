@@ -13,3 +13,4 @@ files
 
 # Editor directories and files
 .idea
+docker-compose.override.yml

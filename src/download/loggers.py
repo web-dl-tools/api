@@ -5,7 +5,7 @@ This file contains a custom Logger object for use by BaseHandler objects.
 """
 import logging
 
-from .models import BaseRequest, Log
+from .models import BaseRequest, RequestLog
 
 
 class BaseLogger(logging.Logger):
@@ -56,7 +56,7 @@ class BaseLogger(logging.Logger):
         :return: *
         """
         if msg:
-            Log.objects.create(request=self.request, level=level, message=msg.strip())
+            RequestLog.objects.create(request=self.request, level=level, message=msg.strip())
         return super().makeRecord(
             name, level, fn, lno, msg, args, exc_info, func, extra, sinfo
         )
