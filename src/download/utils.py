@@ -58,6 +58,7 @@ def list_files(path: str) -> list:
             )
 
         for file in files:
+            filelog = FilesLog.objects.filter(path=f"{root}/{file}").order_by('created_at').last()
             filename, extension = os.path.splitext(file)
             content.append(
                 {
@@ -67,6 +68,7 @@ def list_files(path: str) -> list:
                     "extension": extension,
                     "size": os.path.getsize(f"{root}/{file}"),
                     "created_at": datetime.fromtimestamp(os.path.getmtime(f"{root}/{file}")),
+                    "last_retrieved_at": filelog.created_at if filelog else None
                 }
             )
         break

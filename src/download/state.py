@@ -3,10 +3,13 @@ Download state.
 
 This file contains the model object definitions for the request state.
 """
+from dataclasses import dataclass
+
 from src.download.exceptions import BaseRequestSetStatusException
 from src.download.models import BaseRequest
 
 
+@dataclass
 class BaseRequestState(object):
     """
     an abstract base request state which describes possible state change options.
@@ -15,17 +18,7 @@ class BaseRequestState(object):
     When implemented state change _function can be extended to allow a state change.
     """
 
-    request = None
-
-    def __init__(self, request: BaseRequest) -> None:
-        """
-        Initialize the request state object.
-
-        :param request: A BaseRequest object to notify the BaseRequest the status on status changes.
-        """
-        self.request = request
-
-        super().__init__()
+    request: BaseRequest
 
     def pending(self) -> None:
         """

@@ -271,6 +271,9 @@ class FilesLog(CreatedAtMixin, IdMixin):
         """
 
         db_table = "files_log"
+        indexes = [
+            models.Index(fields=['path'], name='path_idx'),
+        ]
 
     @property
     def filename(self) -> str:
