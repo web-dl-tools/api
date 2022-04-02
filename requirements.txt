@@ -15,7 +15,7 @@ requests==2.27.1
 python-magic==0.4.25
 markdown==3.3.6
 celery==5.2.3
-redis==4.2.1
+redis==3.5.3
 
 yt-dlp==2022.3.8.2
 python-qbittorrent==0.4.2
