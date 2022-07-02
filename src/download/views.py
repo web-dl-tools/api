@@ -6,6 +6,8 @@ Due to the polymorphic nature of the BaseRequests
 and use of the polymorphic serializers all registered
 handler Requests are automatically handled by this viewset.
 """
+import json
+
 from django.db.models import QuerySet
 from rest_framework import viewsets, mixins
 from rest_framework.response import Response
@@ -13,6 +15,8 @@ from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.views import APIView
+from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
 
 from .models import BaseRequest
 from .serializers import PolymorphicRequestSerializer, RequestLogSerializer
@@ -154,7 +158,17 @@ class GetFileView(APIView):
         path = prepare_path(path)
 
         if validate_for_request(path, self.request.user) or validate_for_archive(path, self.request.user):
-            log_file_access(path)
+            file_log = log_file_access(path)
+            async_to_sync(get_channel_layer().group_send)(
+                f"requests.group.{request.user.id}",
+                {
+                    "type": "websocket.send",
+                    "data": {
+                        "type": "requests.files.retrieved",
+                        "message": json.dumps(list_files(file_log.request.path), default=str),
+                    },
+                },
+            )
             return create_file_streaming_response(path)
 
         return Response(status=403, data="You're not authorized to access this resource or the resource doesn't exist.")

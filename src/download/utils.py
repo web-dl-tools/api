@@ -170,11 +170,11 @@ def get_request(path: str) -> BaseRequest:
     return BaseRequest.objects.get(id=path.split("/")[2])
 
 
-def log_file_access(path: str) -> None:
+def log_file_access(path: str) -> FilesLog:
     """
     :param path: A str containing the relative file path.
     """
-    FilesLog.objects.create(request=get_request(path), path=path)
+    return FilesLog.objects.create(request=get_request(path), path=path)
 
 
 def create_file_streaming_response(path: str) -> FileResponse:
