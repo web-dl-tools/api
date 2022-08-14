@@ -190,8 +190,16 @@ class BaseRequest(ModifiedAtMixin, CreatedAtMixin, IdMixin, PolymorphicModel):
 
         :return: The total storage size.
         """
+        from django.core.cache import cache
         from .utils import calculate_storage
-        return calculate_storage(self.path)
+
+        storage_size = cache.get(f'{self.id}.storage_size')
+
+        if not storage_size:
+            storage_size = calculate_storage(self.path)
+            cache.set(f'{self.id}.storage_size', storage_size, 10)
+
+        return storage_size
 
     @staticmethod
     @abc.abstractmethod

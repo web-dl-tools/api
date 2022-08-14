@@ -6,3 +6,11 @@ services:
     restart: always
     ports:
       - 8002:8080
+
+  redis-commander:
+    environment:
+      - REDIS_HOSTS=local:redis:6379
+    image: ghcr.io/joeferner/redis-commander:latest
+    restart: always
+    ports:
+    - 8003:8081

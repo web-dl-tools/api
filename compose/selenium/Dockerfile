@@ -1,4 +1,4 @@
-FROM python:3.10.4-buster
+FROM python:3.10.6-buster
 
 # Setup labels
 LABEL version = "1.0"

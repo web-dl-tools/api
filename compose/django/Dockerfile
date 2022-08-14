@@ -1,4 +1,4 @@
-FROM rust:1.59.0-buster
+FROM rust:1.63.0-buster
 
 # Setup labels
 LABEL version = "2.0"
@@ -12,19 +12,20 @@ ARG POSTGRES_DB
 
 # Uninstall outdated python
 RUN apt-get update
-RUN apt-get remove --auto-remove python -y
-RUN apt-get purge python -y
+RUN apt-get remove --auto-remove python python3 -y
+RUN apt-get purge python python3 -y
 
 # Install Python
 WORKDIR /install
 RUN apt-get install build-essential zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libsqlite3-dev \
 libreadline-dev libffi-dev curl libbz2-dev -y
-RUN wget https://www.python.org/ftp/python/3.10.4/Python-3.10.4.tar.xz
-RUN tar -xf Python-3.10.4.tar.xz
+RUN wget https://www.python.org/ftp/python/3.10.6/Python-3.10.6.tar.xz
+RUN tar -xf Python-3.10.6.tar.xz
 
 # Configure Python
-WORKDIR /install/Python-3.10.4
+WORKDIR /install/Python-3.10.6
 RUN ./configure --enable-optimizations
+RUN make install
 
 # Install Python packages
 WORKDIR /code

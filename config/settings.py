@@ -15,7 +15,7 @@ from corsheaders.defaults import default_headers
 
 
 # Build information of the Web DL API
-VERSION = '2.23.1'
+VERSION = '2.24.0'
 REPOSITORY = 'https://github.com/web-dl-tools/api.git'
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -185,6 +185,12 @@ if not DEBUG and SENTRY_DSN:
 
 # Redis configuration
 BROKER_URL = "redis://redis"
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+        'LOCATION': f'{BROKER_URL}:6379',
+    }
+}
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",

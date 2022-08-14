@@ -9,6 +9,7 @@ services:
 
 stages:
   - test
+  - build
 
 before_script:
   - apk update
@@ -27,3 +28,19 @@ smoke test docker containers:
     - docker ps
   after_script:
     - docker-compose down --remove-orphans || true
+
+docker-build-latest:
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+      exists:
+      - Dockerfile
+  image: docker:latest
+  stage: build
+  services:
+    - docker:dind
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+  script:
+    - tag=""
+    - docker build --platform linux/arm/v7 --pull -t "$CI_REGISTRY_IMAGE${tag}" .
+    - docker push "$CI_REGISTRY_IMAGE${tag}"
