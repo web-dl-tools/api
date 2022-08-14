@@ -32,8 +32,6 @@ smoke test docker containers:
 docker-build-latest:
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
-      exists:
-      - Dockerfile
   image: docker:latest
   stage: build
   services:
