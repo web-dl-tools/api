@@ -15,10 +15,10 @@ class BaseRequestAdmin(admin.ModelAdmin):
     """
     BaseRequest admin.
     """
-    list_display = ('id', 'status', 'created_at')
-    list_filter = ('user', 'created_at')
+    list_display = ('id', 'user', 'status', 'created_at')
+    list_filter = ('user', 'status', 'created_at')
     fieldsets = (
         (None, {'fields': ('id', 'user', 'status')}),
         (_('Important dates'), {'fields': ('start_processing_at', 'completed_at', 'start_compressing_at', 'compressed_at')}),
     )
-    readonly_fields=('id', 'user', 'start_processing_at', 'completed_at', 'start_compressing_at', 'compressed_at')
+    readonly_fields = ('id', 'user', 'start_processing_at', 'completed_at', 'start_compressing_at', 'compressed_at')

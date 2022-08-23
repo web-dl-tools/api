@@ -27,4 +27,4 @@ class CustomUserAdmin(UserAdmin):
         (_('Personal info'), {'fields': ('first_name', 'last_name')}),
         (_('Important dates'), {'fields': ('last_login', 'date_joined')}),
     )
-    readonly_fields=('last_login', 'date_joined')
+    readonly_fields = ('last_login', 'date_joined')

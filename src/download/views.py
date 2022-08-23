@@ -156,19 +156,22 @@ class GetFileView(APIView):
         :return: Response|FileResponse
         """
         path = prepare_path(path)
+        is_validate_for_request = validate_for_request(path, self.request.user)
+        is_validate_for_archive = validate_for_archive(path, self.request.user)
 
-        if validate_for_request(path, self.request.user) or validate_for_archive(path, self.request.user):
-            file_log = log_file_access(path)
-            async_to_sync(get_channel_layer().group_send)(
-                f"requests.group.{request.user.id}",
-                {
-                    "type": "websocket.send",
-                    "data": {
-                        "type": "requests.files.retrieved",
-                        "message": json.dumps(list_files(file_log.request.path), default=str),
+        if is_validate_for_request or is_validate_for_archive:
+            if is_validate_for_request:
+                file_log = log_file_access(path)
+                async_to_sync(get_channel_layer().group_send)(
+                    f"requests.group.{request.user.id}",
+                    {
+                        "type": "websocket.send",
+                        "data": {
+                            "type": "requests.files.retrieved",
+                            "message": json.dumps(list_files(file_log.request.path), default=str),
+                        },
                     },
-                },
-            )
+                )
             return create_file_streaming_response(path)
 
         return Response(status=403, data="You're not authorized to access this resource or the resource doesn't exist.")
