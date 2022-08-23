@@ -84,7 +84,7 @@ services:
     ports: []
 
   qbittorrent:
-    image: linuxserver/qbittorrent:4.4.3
+    image: linuxserver/qbittorrent:4.4.2
     container_name: web-dl_qbittorrent
     depends_on:
       - django
