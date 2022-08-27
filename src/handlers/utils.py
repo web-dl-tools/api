@@ -19,6 +19,7 @@ def create_resource_folder(path: str) -> None:
     if not os.path.exists(path):
         os.makedirs(path)
 
+
 def extract_filename(url: str, headers: dict, extension: str = None) -> str:
     """
     Extract the filename from a url or request headers.
@@ -54,12 +55,16 @@ def extract_file_extension(headers: dict) -> str:
         file_extension = ".html"
     elif file_extension == ".jpe":
         file_extension = ".jpg"
+    elif ".jpeg" in file_extension:
+        file_extension = ".jpeg"
 
     return file_extension
+
 
 @abc.abstractmethod
 def _progress_cb(self, progress: int) -> None:
     pass
+
 
 def download_request(url: str, path: str, filename: str, extension: str, progress_cb: _progress_cb = None) -> dict:
     """
@@ -73,7 +78,7 @@ def download_request(url: str, path: str, filename: str, extension: str, progres
     try:
         r = requests.get(url, stream=True)
         total = r.headers.get("content-length")
-        chunk_size = 1024   # 1 MB
+        chunk_size = 1024  # 1 MB
         chunks = 1
         dl = 0
 
