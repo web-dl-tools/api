@@ -4,7 +4,7 @@ Download handlers.
 This file contains custom objects for the BaseHandler and BaseHandlerStatus.
 Custom handlers must at a minimum implement the BaseHandler.
 """
-import abc
+from abc import abstractmethod
 
 from sentry_sdk import capture_exception
 
@@ -81,7 +81,7 @@ class BaseHandler(object):
     logger = None
 
     @staticmethod
-    @abc.abstractmethod
+    @abstractmethod
     def handles(url: str) -> BaseHandlerStatus:
         """
         Notify the status of a handler for a given url.

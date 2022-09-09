@@ -3,11 +3,12 @@ Handlers utils.
 
 This file contains commonly used utils.
 """
-import abc
 import os
 import re
 import mimetypes
 import requests
+
+from abc import abstractmethod
 
 
 def create_resource_folder(path: str) -> None:
@@ -48,20 +49,17 @@ def extract_file_extension(headers: dict) -> str:
     :param headers: a request headers dictionary.
     :return: a str containing the file extension.
     """
-    content_type = headers.get("Content-Type").split(";")[0] if "Content-Type" in headers else ""
+    content_type = headers.get("Content-Type", "").split(";")[0]
     file_extension = mimetypes.guess_extension(content_type)
+    file_extension_overwrites = {
+        ".htm": ".html",
+        ".jpe": ".jpg",
+    }
 
-    if file_extension == ".htm":
-        file_extension = ".html"
-    elif file_extension == ".jpe":
-        file_extension = ".jpg"
-    elif ".jpeg" in file_extension:
-        file_extension = ".jpeg"
-
-    return file_extension
+    return file_extension_overwrites.get(file_extension, file_extension)
 
 
-@abc.abstractmethod
+@abstractmethod
 def _progress_cb(self, progress: int) -> None:
     pass
 

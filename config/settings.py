@@ -15,7 +15,7 @@ from corsheaders.defaults import default_headers
 
 
 # Build information of the Web DL API
-VERSION = '2.24.1'
+VERSION = '2.25.0'
 REPOSITORY = 'https://github.com/web-dl-tools/api.git'
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
