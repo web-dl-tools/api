@@ -15,7 +15,7 @@ services:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DB=${POSTGRES_DB}
     ports:
-      - 5432:5432
+      - "5432:5432"
     restart: always
     volumes:
       - .postgres_data:/var/lib/postgresql/data
@@ -46,7 +46,7 @@ services:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DB=${POSTGRES_DB}
     ports:
-      - 8000:8000
+      - "8000:8000"
     restart: always
     user: ${USER_ID}
     volumes:
@@ -58,7 +58,7 @@ services:
       - ${FILES_PATH}:/code/files
 
   redis:
-    image: redis:7.0.4-bullseye
+    image: redis:7.0.5-bullseye
     container_name: web-dl_redis
     deploy:
       resources:
@@ -84,7 +84,7 @@ services:
     ports: []
 
   qbittorrent:
-    image: linuxserver/qbittorrent:4.4.2
+    image: linuxserver/qbittorrent:4.4.5
     container_name: web-dl_qbittorrent
     depends_on:
       - django
@@ -101,9 +101,9 @@ services:
     volumes:
       - ${FILES_PATH}:/files
     ports:
-      - 6881:6881
-      - 6881:6881/udp
-      - 8001:8001
+      - "6881:6881"
+      - "6881:6881/udp"
+      - "8001:8001"
     restart: always
 
   selenium:

@@ -2,10 +2,12 @@ version: '3.8'
 
 services:
   adminer:
-    image: adminer
+    environment:
+      ADMINER_DEFAULT_SERVER: postgres
+    image: adminer:latest
     restart: always
     ports:
-      - 8002:8080
+      - "8002:8080"
 
   redis-commander:
     environment:
@@ -13,4 +15,4 @@ services:
     image: ghcr.io/joeferner/redis-commander:latest
     restart: always
     ports:
-    - 8003:8081
+    - "8003:8081"

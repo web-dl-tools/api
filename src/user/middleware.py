@@ -3,7 +3,7 @@ User middleware.
 
 This file contains custom user middlewares.
 """
-from channels.http import AsgiRequest
+from django.http import HttpRequest
 from rest_framework.authtoken.models import Token
 
 from .models import Log
@@ -23,7 +23,7 @@ class UserMiddleware(object):
         """
         self.get_response = get_response
 
-    def __call__(self, request: AsgiRequest):
+    def __call__(self, request: HttpRequest):
         """
         Log each authenticated request before
         the view (and later middleware(s)) are called.
@@ -52,7 +52,7 @@ class UserMiddleware(object):
 
         return self.get_response(request)
 
-    def scrub_sensitive_data(self, request: AsgiRequest) -> str:
+    def scrub_sensitive_data(self, request: HttpRequest) -> str:
         """
         Scrub sensitive data from the request.
 
@@ -69,7 +69,7 @@ class UserMiddleware(object):
         
         return data
 
-    def retrieve_auth_token(self, request: AsgiRequest) -> str:
+    def retrieve_auth_token(self, request: HttpRequest) -> str:
         """
         Retrieve the auth token from the request.
 

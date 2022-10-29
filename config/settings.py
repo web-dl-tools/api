@@ -15,7 +15,7 @@ from corsheaders.defaults import default_headers
 
 
 # Build information of the Web DL API
-VERSION = '2.25.0'
+VERSION = '2.26.0'
 REPOSITORY = 'https://github.com/web-dl-tools/api.git'
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -38,7 +38,9 @@ AUTH_USER_MODEL = "user.User"
 
 
 # Third party apps that must initialize before Django apps.
-PRE_DJANGO_APPS = []
+PRE_DJANGO_APPS = [
+    "daphne",
+]
 
 # Django apps and third party apps that must initialize in between.
 DJANGO_APPS = [
@@ -52,11 +54,10 @@ DJANGO_APPS = [
 ]
 
 # Third party apps that can run after Django app initialization.
-THIRD_PARTY_APPS = [
+POST_DJANGO_APPS = [
     "corsheaders",
     "rest_framework",
     "rest_framework.authtoken",
-    "channels",
 ]
 
 # Locally installed apps.
@@ -74,7 +75,7 @@ LOCAL_APPS = [
 ]
 
 # Application definition
-INSTALLED_APPS = PRE_DJANGO_APPS + DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
+INSTALLED_APPS = PRE_DJANGO_APPS + DJANGO_APPS + POST_DJANGO_APPS + LOCAL_APPS
 
 # Django middleware
 # See https://docs.djangoproject.com/en/3.0/ref/middleware/
@@ -120,7 +121,7 @@ TEMPLATES = [
 
 # WSGI & ASGI application
 WSGI_APPLICATION = "config.wsgi.application"
-ASGI_APPLICATION = "config.routing.application"
+ASGI_APPLICATION = "config.asgi.application"
 
 
 # Database
