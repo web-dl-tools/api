@@ -21,7 +21,7 @@ WORKDIR /install
 # RUN wget -O chromedriver.zip https://github.com/electron/electron/releases/download/v12.2.3/chromedriver-v12.2.3-linux-arm64.zip
 # Comment below temporarily during development when using an overwrite from above.
 # Uncomment below for runtime on armv7. e.g. Raspberry Pi chipsets and similar.
-RUN wget -O chromedriver.zip https://github.com/electron/electron/releases/download/v12.0.7/chromedriver-v12.0.7-linux-armv7l.zip
+RUN wget -O chromedriver.zip https://github.com/electron/electron/releases/download/v12.2.3/chromedriver-v12.2.3-linux-armv7l.zip
 RUN unzip chromedriver.zip
 RUN mv chromedriver /usr/bin/chromedriver
 RUN chown root:root /usr/bin/chromedriver
