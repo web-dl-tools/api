@@ -28,4 +28,4 @@ RUN chown root:root /usr/bin/chromedriver
 RUN chmod +x /usr/bin/chromedriver
 
 # Install Selenium
-RUN wget -O selenium.jar https://github.com/SeleniumHQ/selenium/releases/download/selenium-4.5.0/selenium-server-4.5.3.jar
+RUN wget -O selenium.jar https://selenium-release.storage.googleapis.com/3.9/selenium-server-standalone-3.9.1.jar
