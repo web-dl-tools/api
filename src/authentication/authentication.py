@@ -8,8 +8,10 @@ class CookieTokenAuthentication(TokenAuthentication):
     """
 
     def authenticate(self, request):
-        # Check if 'token_auth' is in the request query params.
-        # Give precedence to 'Authorization' header.
+        """
+        Check if 'token_auth' is in the request query params.
+        Give precedence to 'Authorization' header.
+        """
         if (
             "auth_token" in request.COOKIES
             and "HTTP_AUTHORIZATION" not in request.META
@@ -17,3 +19,9 @@ class CookieTokenAuthentication(TokenAuthentication):
             return self.authenticate_credentials(request.COOKIES.get("auth_token"))
         else:
             return super(CookieTokenAuthentication, self).authenticate(request)
+
+    def get_user_by_cookie_auth_token(self, request):
+        """
+        Retrieve the user and token based on a cookie auth token.
+        """
+        return self.authenticate_credentials(request.COOKIES.get("auth_token"))

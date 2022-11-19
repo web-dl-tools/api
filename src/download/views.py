@@ -6,24 +6,17 @@ Due to the polymorphic nature of the BaseRequests
 and use of the polymorphic serializers all registered
 handler Requests are automatically handled by this viewset.
 """
-import json
-
 from django.db.models import QuerySet
 from rest_framework import viewsets, mixins
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import TokenAuthentication
-from rest_framework.views import APIView
-from asgiref.sync import async_to_sync
-from channels.layers import get_channel_layer
 
 from .models import BaseRequest
 from .serializers import PolymorphicRequestSerializer, RequestLogSerializer
 from .tasks import download_request, compress_request
-from .utils import list_files, prepare_path, validate_for_request,  validate_for_archive, log_file_access,\
-    create_file_streaming_response
-from src.auth_token.authentication import CookieTokenAuthentication
+from .utils import list_files
 
 
 class RequestViewSet(
@@ -137,41 +130,3 @@ class RequestViewSet(
             return Response(serializer.data)
 
 
-class GetFileView(APIView):
-    """
-    An APIView for retrieving a file.
-    """
-
-    authentication_classes = [CookieTokenAuthentication]
-    permission_classes = [IsAuthenticated]
-
-    def get(self, request, path, *args, **kwargs):
-        """
-        Retrieve a single file from a download request.
-
-        :param path: user provided path
-        :param request: Request
-        :param args: *
-        :param kwargs: *
-        :return: Response|FileResponse
-        """
-        path = prepare_path(path)
-        is_validate_for_request = validate_for_request(path, self.request.user)
-        is_validate_for_archive = validate_for_archive(path, self.request.user)
-
-        if is_validate_for_request or is_validate_for_archive:
-            if is_validate_for_request:
-                file_log = log_file_access(path)
-                async_to_sync(get_channel_layer().group_send)(
-                    f"requests.group.{request.user.id}",
-                    {
-                        "type": "websocket.send",
-                        "data": {
-                            "type": "requests.files.retrieved",
-                            "message": json.dumps(list_files(file_log.request.path), default=str),
-                        },
-                    },
-                )
-            return create_file_streaming_response(path)
-
-        return Response(status=403, data="You're not authorized to access this resource or the resource doesn't exist.")

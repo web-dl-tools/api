@@ -15,7 +15,7 @@ from corsheaders.defaults import default_headers
 
 
 # Build information of the Web DL API
-VERSION = '2.26.1'
+VERSION = '3.0.0'
 REPOSITORY = 'https://github.com/web-dl-tools/api.git'
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -65,7 +65,7 @@ LOCAL_APPS = [
     "src.db",
     "src.user",
     "src.application",
-    "src.auth_token",
+    "src.authentication",
     "src.download",
     "src.handlers",
     "src.handlers.audio_visual",
@@ -194,8 +194,8 @@ CACHES = {
 }
 CHANNEL_LAYERS = {
     "default": {
-        "BACKEND": "channels_redis.core.RedisChannelLayer",
-        "CONFIG": {"hosts": [("redis", 6379)]},
+        "BACKEND": "channels_redis.pubsub.RedisPubSubChannelLayer",
+        "CONFIG": {"hosts": [f'{BROKER_URL}:6379']},
     },
 }
 

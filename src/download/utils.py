@@ -4,14 +4,9 @@ Download utils.
 This file contains functions and action not fit for standard Django files.
 """
 import os
-import magic
 
-from base64 import b64decode
 from urllib.parse import unquote
 from datetime import datetime
-
-from wsgiref.util import FileWrapper
-from django.http import FileResponse
 
 from src.user.models import User
 from .models import BaseRequest, FilesLog
@@ -84,10 +79,7 @@ def prepare_path(path: str) -> str:
     :param path: The raw user provided path value.
     :return: A decoded and normalized path.
     """
-    path = unquote(b64decode(path).decode('utf-8'))
-    path = os.path.normpath(path)
-
-    return path
+    return os.path.normpath(path)
 
 
 def validate_user_path(path_parts: list, user: User) -> bool:
@@ -174,37 +166,5 @@ def log_file_access(path: str) -> FilesLog:
     """
     :param path: A str containing the relative file path.
     """
+    path = unquote(path)
     return FilesLog.objects.create(request=get_request(path), path=path)
-
-
-def create_file_streaming_response(path: str) -> FileResponse:
-    """
-    Create a streaming file response to serve the file while
-    reducing the memory usage in order to support large file
-    downloads, particularly on memory limited hardware.
-    The file will always be force downloaded as attachment if
-    the file size exceeds a given limit, else it is up to the
-    client to decide how to process and view the file.
-
-    :param path: A str containing the relative file path.
-    :return: A FileResponse containing a streaming file.
-    """
-    filename = os.path.basename(path)
-    filename = filename.replace(',', '').replace(';', '-')
-    file_size = os.path.getsize(path)
-    mime = magic.Magic(mime=True)
-    attachment = file_size > 5000000  # 5 MB
-    chunk_size = 32000    # 32 KB
-
-    response = FileResponse(
-        FileWrapper(open(path, "rb", buffering=chunk_size), blksize=chunk_size),
-        as_attachment=attachment
-    )
-
-    response["Content-Length"] = os.path.getsize(path)
-    response["Content-Type"] = mime.from_file(path)
-    response[
-        "Content-Disposition"
-    ] = f"{'attachment' if attachment else 'inline'}; filename=\"{filename}\""
-
-    return response

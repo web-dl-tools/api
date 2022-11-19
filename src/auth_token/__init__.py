@@ -1,3 +1,0 @@
-"""
-Auth token package init.
-"""

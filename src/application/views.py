@@ -4,9 +4,13 @@ Application views.
 This file contains the views for the custom application endpoints.
 """
 from django.http import JsonResponse
+from rest_framework.decorators import api_view
+
 from .utils import get_build_info
 
-def build_info(request):
+
+@api_view(['GET'])
+def build_info(_):
     """
     Return information about the current build of the API.
     """
