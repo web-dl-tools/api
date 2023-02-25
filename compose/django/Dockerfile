@@ -19,11 +19,11 @@ RUN apt-get purge python python3 -y
 WORKDIR /install
 RUN apt-get install build-essential zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libsqlite3-dev \
 libreadline-dev libffi-dev curl libbz2-dev -y
-RUN wget https://www.python.org/ftp/python/3.11.0/Python-3.11.0.tar.xz
-RUN tar -xf Python-3.11.0.tar.xz
+RUN wget https://www.python.org/ftp/python/3.11.2/Python-3.11.2.tar.xz
+RUN tar -xf Python-3.11.2.tar.xz
 
 # Configure Python
-WORKDIR /install/Python-3.11.0
+WORKDIR /install/Python-3.11.2
 RUN ./configure --enable-optimizations
 RUN make install
 
