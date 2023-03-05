@@ -61,7 +61,7 @@ class TorrentHandler(BaseHandler):
         self.logger.debug(f"Waiting for qBittorrent pre-processing to complete.")
         while len(self.qb.torrents()) == 0:
             time.sleep(5)
-        self.logger.debug(f"qBittorrent pre-processing has completed.")
+        self.logger.debug(f"qBitTorrent pre-processing has completed.")
 
         torrent = self.qb.torrents()[0]
         self.hash = torrent["hash"]
@@ -76,32 +76,31 @@ class TorrentHandler(BaseHandler):
                 if progress > self.request.progress:
                     self.request.set_progress(progress)
 
-                if torrent["state"] == "error":
+                if torrent["state"] in ("error", "missingFiles"):
                     self.qb.delete(self.hash)
                     raise Exception("An error occurred in qBittorrent.")
-                elif torrent["state"] not in (
-                        "metaDL",
-                        "queuedDL",
-                        "checkingDL",
-                        "stalledDL",
-                        "downloading",
-                        "pausedDL",
+                elif torrent["state"] in (
+                    "uploading",
+                    "stalledUP",
+                    "checkingUP",
+                    "pausedUP",
+                    "queuedUP",
+                    "forcedUP",
                 ):
+                    self.logger.debug(f'Torrent reached uploading state: {torrent["state"]}')
                     active = False
                 else:
                     time.sleep(5)
             except SocketError as e:
                 """
-                Required due to qBittorrent API bug 
+                Required due to a qBittorrent API bug
                 intermittently resetting the connection.
                 """
                 if e.errno != errno.ECONNRESET:
-                    self.logger.error(
-                        "Connection with qBittorrent was closed. Reconnecting..."
-                    )
+                    self.logger.error("Connection with qBittorrent was closed. Reconnecting...")
                     self.connect()
                 else:
-                    pass
+                    raise e
 
         self.logger.info("Torrent has completed download.")
         self.request.set_data(torrent)
@@ -115,11 +114,11 @@ class TorrentHandler(BaseHandler):
         :return: None
         """
         self.qb.delete(self.hash)
-        self.logger.debug(f"Torrent has been removed from qBittorrent.")
+        self.logger.debug(f"Torrent has been removed from qBitTorrent.")
 
     def connect(self) -> None:
         """
-        Create an connection with the qBittorrent API.
+        Create a connection with the qBittorrent API.
 
         :return: None
         """
@@ -127,4 +126,4 @@ class TorrentHandler(BaseHandler):
 
         self.qb = Client("http://qbittorrent:8001/")
         self.qb.login("admin", "adminadmin")
-        self.logger.debug("Connected with qBittorrent.")
+        self.logger.debug("Connected with qBitTorrent.")
