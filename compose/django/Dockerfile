@@ -1,4 +1,4 @@
-FROM rust:1.64.0-buster
+FROM rust:1.71.0-buster
 
 # Setup labels
 LABEL version = "2.0"
