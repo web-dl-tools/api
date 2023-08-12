@@ -18,7 +18,7 @@ RUN apt-get purge python python3 -y
 # Install Python
 WORKDIR /install
 RUN apt-get install build-essential zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libsqlite3-dev \
-libreadline-dev libffi-dev curl libbz2-dev -y
+libreadline-dev libffi-dev curl libbz2-dev git -y
 RUN wget https://www.python.org/ftp/python/3.11.2/Python-3.11.2.tar.xz
 RUN tar -xf Python-3.11.2.tar.xz
 
