@@ -58,7 +58,7 @@ services:
       - ${FILES_PATH}:/code/files
 
   redis:
-    image: redis:7.0.5-bullseye
+    image: redis:7.2.3-bookworm
     container_name: web-dl_redis
     deploy:
       resources:

@@ -1,4 +1,4 @@
-FROM python:3.11.2-buster
+FROM python:3.12.1-bullseye
 
 # Setup labels
 LABEL version = "1.0"
@@ -16,12 +16,12 @@ RUN apt-get install unzip xvfb libxi6 libgconf-2-4 default-jdk -y
 # Install Chrome driver
 WORKDIR /install
 # Uncomment below for development on x64. e.g. Intel® Core™, AMD Ryzen™, etc.
-#RUN wget -O chromedriver.zip https://github.com/electron/electron/releases/download/v12.2.3/chromedriver-v12.2.3-linux-x64.zip
+#RUN wget -O chromedriver.zip https://github.com/electron/electron/releases/download/v25.9.8/chromedriver-v25.9.8-linux-x64.zip
 # Uncomment below for development on arm64. e.g. Apple Silicon™.
-# RUN wget -O chromedriver.zip https://github.com/electron/electron/releases/download/v12.2.3/chromedriver-v12.2.3-linux-arm64.zip
+# RUN wget -O chromedriver.zip https://github.com/electron/electron/releases/download/v25.9.8/chromedriver-v25.9.8-linux-arm64.zip
 # Comment below temporarily during development when using an overwrite from above.
 # Uncomment below for runtime on armv7. e.g. Raspberry Pi chipsets and similar.
-RUN wget -O chromedriver.zip https://github.com/electron/electron/releases/download/v12.2.3/chromedriver-v12.2.3-linux-armv7l.zip
+RUN wget -O chromedriver.zip https://github.com/electron/electron/releases/download/v25.9.8/chromedriver-v25.9.8-linux-armv7l.zip
 RUN unzip chromedriver.zip
 RUN mv chromedriver /usr/bin/chromedriver
 RUN chown root:root /usr/bin/chromedriver
